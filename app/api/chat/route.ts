@@ -70,20 +70,9 @@ export async function POST(req: Request) {
       );
     }
 
-    // ── Paywall: free users max FREE_LIMIT runs ───────────────────────────────
-    const isPro = profile.subscription_status === 'pro';
+    // ── Paywall: DISABLED for feedback phase ────────────────────────────────
+    const isPro = true;
     const currentRuns = profile.run_count ?? 0;
-
-    if (!isPro && currentRuns >= FREE_LIMIT) {
-      return NextResponse.json(
-        {
-          error: 'Free limit reached. Upgrade to Pro for unlimited runs.',
-          code: 'PAYWALL',
-          upgradeUrl: '/pricing',
-        },
-        { status: 402 }
-      );
-    }
 
     // ── Streaming path ────────────────────────────────────────────────────────
     if (useStream) {

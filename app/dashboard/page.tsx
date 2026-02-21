@@ -39,10 +39,10 @@ export default function Dashboard() {
   const outputRef = useRef<HTMLDivElement>(null);
 
   const supabase = createClient();
-  const isPro = profile?.subscription_status === 'pro';
+  const isPro = true; // Temporary: everything is free for feedback phase
   const runsUsed = profile?.run_count ?? 0;
-  const runsLeft = isPro ? Infinity : FREE_LIMIT - runsUsed;
-  const isLocked = !isPro && runsUsed >= FREE_LIMIT;
+  const runsLeft = Infinity;
+  const isLocked = false;
 
   // ── Fetch user profile on mount ──
   useEffect(() => {
@@ -171,26 +171,19 @@ export default function Dashboard() {
 
           {/* Run counter + status */}
           <div className="flex items-center gap-3">
-            {isPro ? (
-              <span className="status-pill-pro flex items-center gap-1.5">
-                <Crown className="w-3 h-3" />
-                PRO — Unlimited
-              </span>
-            ) : (
-              <span className="status-pill-free">
-                {Math.max(0, runsLeft)} free run{runsLeft !== 1 ? 's' : ''} left
-              </span>
-            )}
+            <span className="status-pill-pro flex items-center gap-1.5 border-[#ffd700]/50 text-[#ffd700]">
+              <Zap className="w-3 h-3" />
+              BETA ACCESS — FREE
+            </span>
 
-            {!isPro && (
-              <a
-                href="/pricing"
-                className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wide bg-[#ffd700] text-black px-3 py-1.5 rounded hover:shadow-[0_0_15px_rgba(255,215,0,0.4)] transition-all"
-              >
-                <Crown className="w-3 h-3" />
-                Go Pro — $15/mo
-              </a>
-            )}
+            <a
+              href="https://t.me/brandonswayze"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wide bg-[#00ff88] text-black px-3 py-1.5 rounded hover:shadow-[0_0_15px_rgba(0,255,136,0.4)] transition-all"
+            >
+              Give Feedback
+            </a>
           </div>
         </div>
 
@@ -416,13 +409,26 @@ export default function Dashboard() {
                 </div>
 
                 {/* Output footer */}
-                <div className="px-6 py-3 border-t border-white/5 bg-[#0f0f0f] flex items-center justify-between">
-                  <span className="text-[10px] font-mono text-[#222] uppercase tracking-widest">
-                    Marketing Maverick v1.0 · Swayze Media
-                  </span>
-                  <span className="text-[10px] font-mono text-[#222]">
-                    run #{runsUsed}
-                  </span>
+                <div className="px-6 py-4 border-t border-white/5 bg-[#0f0f0f] flex flex-col md:flex-row items-center justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <span className="text-[10px] font-mono text-[#222] uppercase tracking-widest">
+                      Marketing Maverick v1.0 · Swayze Media
+                    </span>
+                    <span className="text-[10px] font-mono text-[#222]">
+                      run #{runsUsed}
+                    </span>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 bg-[#00ff88]/5 border border-[#00ff88]/20 rounded-lg px-3 py-1.5">
+                    <span className="text-[10px] font-bold text-[#00ff88] uppercase tracking-wider">Help us improve:</span>
+                    <a 
+                      href="https://t.me/brandonswayze" 
+                      target="_blank"
+                      className="text-[10px] font-black text-white hover:text-[#00ff88] underline underline-offset-2 transition-colors uppercase"
+                    >
+                      Send Feedback →
+                    </a>
+                  </div>
                 </div>
               </div>
             )}
