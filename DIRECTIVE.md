@@ -76,6 +76,13 @@ marketing-maverick/
 - Verify Vercel auto-deploy is triggered.
 - Document all findings in `memory/daily/nighttime-qa-YYYY-MM-DD.md`.
 
+### **[ADDENDUM] PHASE 4: Attribution Bridge**
+- **Objective:** Enable performance marketers to join Ad Spend (Meta/Google) with CRM/Source of Truth (GHL/Salesforce) via CSV.
+- **Route:** `app/dashboard/attribution/page.tsx`.
+- **UI:** Split-pane drag-and-drop. Column mapping with AI auto-detection.
+- **Logic:** Inner-join on `utm_content` or `campaign_id`.
+- **Metrics:** Calculate True CPA, True ROAS, and the "Tracking Gap" (Ad Platform vs. CRM).
+
 ---
 
 ## 🛡️ 5. SECURITY RULES

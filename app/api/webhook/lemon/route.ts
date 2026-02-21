@@ -5,6 +5,7 @@
 //           → flip user to 'pro' + reset run_count to 0
 //           subscription_cancelled / subscription_expired
 //           → flip user back to 'free' (graceful downgrade)
+//           order_refunded → downgrade to free (fraud protection)
 // ──────────────────────────────────────────────────────────────────────────────
 import { NextResponse } from 'next/server';
 import { createServiceRoleClient } from '@/lib/supabase-server';
@@ -23,6 +24,10 @@ interface LSEvent {
     attributes?: {
       status?: string;
       user_email?: string;
+      first_subscription_item?: {
+        subscription_id?: number;
+        price_id?: number;
+      };
     };
   };
 }
@@ -61,6 +66,7 @@ const UPGRADE_EVENTS = new Set([
   'subscription_updated',
   'subscription_payment_success',
   'subscription_resumed',
+  'order_created',         // One-time purchase confirmation
 ]);
 
 // ─── Events that trigger a downgrade to free ─────────────────────────────────
@@ -68,6 +74,7 @@ const DOWNGRADE_EVENTS = new Set([
   'subscription_cancelled',
   'subscription_expired',
   'subscription_paused',
+  'order_refunded',        // Refund → revoke pro access
 ]);
 
 // ─── POST Handler ─────────────────────────────────────────────────────────────
@@ -123,7 +130,7 @@ export async function POST(req: Request) {
       .from('users')
       .update({
         subscription_status: 'pro',
-        run_count: 0,
+        run_count: 0,             // ← RESET — critical for upgrade flow
         updated_at: new Date().toISOString(),
       })
       .eq('id', userId);
@@ -134,11 +141,11 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Database update failed' }, { status: 500 });
     }
 
-    console.log(`[Webhook] ✅ Upgraded user ${userId} to Pro via "${eventName}" — run_count reset`);
+    console.log(`[Webhook] ✅ Upgraded user ${userId} to Pro via "${eventName}" — run_count reset to 0`);
   }
 
   if (isDowngrade) {
-    // Graceful downgrade: flip back to free (keep run_count as-is)
+    // Graceful downgrade: flip back to free (keep run_count as-is — they used those runs)
     const { error } = await supabase
       .from('users')
       .update({

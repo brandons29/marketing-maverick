@@ -41,7 +41,7 @@ export default function Home() {
           </h1>
 
           <p className="text-lg text-[#666] max-w-2xl mx-auto mb-10 leading-relaxed font-medium">
-            Marketing Maverick is a ruthless AI copywiter powered by <strong className="text-white">your own OpenAI key</strong>.
+            Marketing Maverick is a ruthless AI copywriter powered by <strong className="text-white">your own OpenAI key</strong>.
             Pick a weapon. Drop a brief. Get copy that sells — in seconds.
           </p>
 
@@ -65,9 +65,10 @@ export default function Home() {
 
       {/* ── WEAPONS TICKER ── */}
       <section className="border-y border-white/5 bg-[#0a0a0a] py-4 overflow-hidden">
-        <div className="flex gap-8 whitespace-nowrap">
-          {[...weapons, ...weapons].map((w, i) => (
-            <span key={i} className="text-xs font-black uppercase tracking-widest text-[#333]">
+        <div className="ticker-track">
+          {/* Duplicate set so it loops seamlessly */}
+          {[...weapons, ...weapons, ...weapons, ...weapons].map((w, i) => (
+            <span key={i} className="text-xs font-black uppercase tracking-widest text-[#333] mr-10">
               <span className="text-[#00ff88]">⚡</span> {w}
             </span>
           ))}
