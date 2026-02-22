@@ -1,261 +1,74 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ─── Swayze Media Brand Tokens ─────────────────────────────────────────── */
+/* ─── Elite Institutional Design System ────────────────────────────────── */
 :root {
-  /* Backgrounds — deep forest green-black (matches swayzemedia.com) */
-  --bg-page:    #0a1a0c;   /* deepest — page background */
-  --bg-card:    #0f2011;   /* card surfaces */
-  --bg-card-2:  #142814;   /* elevated card / hover */
-  --bg-input:   #0d1e0f;   /* form inputs */
+  /* Backgrounds: Pure Performance depth */
+  --bg-page:    #000000;
+  --bg-card:    #080808;
+  --bg-card-2:  #0c0c0c;
+  --bg-input:   #050505;
 
-  /* Accents */
-  --orange:     #f5a623;   /* primary CTA — Swayze orange */
-  --orange-dim: #c8841a;   /* hover / dimmed orange */
-  --green:      #39e75f;   /* section labels, icons, checks */
-  --green-dim:  #2bc44d;   /* hover / dimmed green */
-
+  /* Institutional Accents */
+  --maverick-neon:   #00cc66;  /* Elite Green */
+  --maverick-gold:   #c5a059;  /* Sophisticated Gold */
+  --maverick-muted:  #555555;
+  --maverick-border: #1a1a1a;
+  
   /* Text */
-  --text-primary:   #ffffff;
-  --text-secondary: #9ca3af;
-  --text-muted:     #4b5563;
-
-  /* Borders */
-  --border-subtle:  #1a3020;
-  --border-card:    #1e3525;
-  --border-input:   #1a3020;
-
-  /* Legacy aliases (kept for compatibility with existing components) */
-  --black:      var(--bg-page);
-  --dark-1:     var(--bg-card);
-  --dark-2:     var(--bg-card-2);
-  --dark-3:     #1e3525;
-  --neon:       var(--green);
-  --neon-blue:  #00d4ff;
-  --neon-pink:  #ff00aa;
-  --gold:       var(--orange);
-  --gold-dim:   var(--orange-dim);
-  --gold-bright: #f7b84b;
-  --text-primary: #ffffff;
-  --text-secondary: #9ca3af;
+  --text-primary:    #ffffff;
+  --text-secondary:  #a1a1a1;
+  --text-muted:      #525252;
 }
 
-* {
-  box-sizing: border-box;
+@layer base {
+  body {
+    @apply bg-black text-white antialiased;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+  
+  h1, h2, h3, h4, .font-display {
+    @apply tracking-tighter;
+  }
 }
 
-html {
-  scroll-behavior: smooth;
+@layer components {
+  /* High-Readability Cards */
+  .elite-card {
+    @apply bg-[#080808] border border-white/[0.03] rounded-[2rem] shadow-2xl transition-all duration-500 hover:border-white/[0.08];
+  }
+
+  /* Sophisticated Typography */
+  .performance-label {
+    @apply text-[10px] font-black uppercase tracking-[0.4em] text-[#555] mb-2 block;
+  }
+
+  .performance-value {
+    @apply text-2xl font-black italic tracking-tighter text-white;
+  }
+
+  /* Precise Inputs */
+  .elite-input {
+    @apply w-full bg-black/50 border border-white/5 rounded-2xl p-6 text-sm text-white placeholder:text-[#333] outline-none focus:border-[#00cc66]/30 transition-all duration-300 font-medium;
+  }
+
+  /* Master CTAs */
+  .btn-synapse {
+    @apply px-12 py-5 bg-[#00cc66] text-black font-black uppercase tracking-[0.3em] rounded-2xl hover:shadow-[0_0_50px_rgba(0,204,102,0.3)] transition-all active:scale-95 italic text-xs;
+  }
+  
+  .btn-ghost {
+    @apply px-8 py-4 border border-white/5 text-white/40 font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl hover:bg-white/5 hover:text-white transition-all;
+  }
 }
 
-body {
-  background-color: var(--bg-page);
-  color: var(--text-primary);
-  font-family: 'Inter', system-ui, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* ─── Typography helpers ─────────────────────────────────────────────────── */
-.section-label {
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--green);
-}
-
-.neon-text {
-  color: var(--green);
-}
-
-.gold-text {
-  color: var(--orange);
-}
-
-.neon-blue-text {
-  color: var(--neon-blue);
-}
-
-/* ─── Buttons ────────────────────────────────────────────────────────────── */
-/* Primary — Swayze orange (matches swayzemedia.com "Get Started") */
-.btn-primary {
-  background: var(--orange);
-  color: #000;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  border: none;
-  padding: 0.875rem 1.75rem;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
-  box-shadow: 0 2px 12px rgba(245, 166, 35, 0.35);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.btn-primary:hover {
-  background: var(--orange-dim);
-  box-shadow: 0 4px 20px rgba(245, 166, 35, 0.5);
-  transform: translateY(-1px);
-}
-
-.btn-primary:active {
-  transform: scale(0.97);
-}
-
-/* Secondary — outlined green (matches swayzemedia.com "See Our Services") */
-.btn-secondary {
-  background: transparent;
-  color: var(--text-primary);
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  border: 1px solid var(--border-card);
-  padding: 0.875rem 1.75rem;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.btn-secondary:hover {
-  border-color: var(--green);
-  color: var(--green);
-}
-
-/* Gold alias — now maps to orange for Swayze branding */
-.btn-gold {
-  background: var(--orange);
-  color: #000;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  border: none;
-  padding: 0.875rem 1.75rem;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
-  box-shadow: 0 2px 12px rgba(245, 166, 35, 0.35);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.btn-gold:hover {
-  background: var(--orange-dim);
-  box-shadow: 0 4px 20px rgba(245, 166, 35, 0.5);
-  transform: translateY(-1px);
-}
-
-/* ─── Cards ──────────────────────────────────────────────────────────────── */
-.card-dark {
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: 0.75rem;
-}
-
-.card-panel {
-  background: var(--bg-card-2);
-  border: 1px solid var(--border-subtle);
-  border-radius: 0.75rem;
-}
-
-/* ─── Inputs ─────────────────────────────────────────────────────────────── */
-.input-dark {
-  background: var(--bg-input);
-  border: 1px solid var(--border-input);
-  color: var(--text-primary);
-  border-radius: 0.375rem;
-  padding: 0.875rem 1rem;
-  font-size: 0.95rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  outline: none;
-  width: 100%;
-}
-
-.input-dark::placeholder {
-  color: var(--text-muted);
-}
-
-.input-dark:focus {
-  border-color: var(--green);
-  box-shadow: 0 0 0 2px rgba(57, 231, 95, 0.12);
-}
-
-/* ─── Nav ────────────────────────────────────────────────────────────────── */
-.nav-glass {
-  background: rgba(10, 26, 12, 0.95);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-/* ─── Weapon selector ────────────────────────────────────────────────────── */
-.weapon-item {
-  border: 1px solid transparent;
-  border-radius: 0.375rem;
-  padding: 0.625rem 0.75rem;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.weapon-item:hover {
-  border-color: rgba(57, 231, 95, 0.3);
-  background: rgba(57, 231, 95, 0.04);
-}
-
-.weapon-item.selected {
-  border-color: var(--green);
-  background: rgba(57, 231, 95, 0.08);
-}
-
-/* ─── Output prose ───────────────────────────────────────────────────────── */
-.maverick-output {
-  font-size: 0.95rem;
-  line-height: 1.75;
-  color: #e0e0e0;
-}
-
-.maverick-output strong {
-  color: var(--orange);
-  font-weight: 700;
-}
-
-.maverick-output em {
-  color: var(--green);
-}
-
-/* ─── Status pills ───────────────────────────────────────────────────────── */
-.status-pill-free {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-card);
-  color: var(--text-muted);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-}
-
-.status-pill-pro {
-  background: rgba(245, 166, 35, 0.1);
-  border: 1px solid rgba(245, 166, 35, 0.4);
-  color: var(--orange);
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-}
+/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #00cc66; }
 
 /* ─── Ticker / Marquee ───────────────────────────────────────────────────── */
 @keyframes ticker-scroll {
@@ -266,128 +79,13 @@ body {
 .ticker-track {
   display: flex;
   width: max-content;
-  animation: ticker-scroll 28s linear infinite;
+  animation: ticker-scroll 40s linear infinite;
 }
 
-.ticker-track:hover {
-  animation-play-state: paused;
+/* ─── Grid Texture ──────────────────────────────────────────────────────── */
+.grid-overlay {
+  background-image: 
+    linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
 }
-
-/* ─── Gradient text ──────────────────────────────────────────────────────── */
-.gradient-neon-gold {
-  background: linear-gradient(135deg, var(--green) 0%, var(--orange) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ─── Attribution / drop zone ────────────────────────────────────────────── */
-.drop-zone {
-  border: 2px dashed var(--border-card);
-  border-radius: 0.75rem;
-  padding: 2rem;
-  text-align: center;
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.drop-zone.over {
-  border-color: var(--green);
-  background: rgba(57, 231, 95, 0.04);
-}
-
-.drop-zone.has-file {
-  border-color: rgba(57, 231, 95, 0.35);
-  background: rgba(57, 231, 95, 0.04);
-}
-
-.col-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border-card);
-  border-radius: 999px;
-  padding: 0.2rem 0.65rem;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
-  cursor: grab;
-  user-select: none;
-}
-
-.col-pill:hover {
-  border-color: var(--green);
-  color: var(--green);
-}
-
-.metric-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-radius: 0.75rem;
-  padding: 1.25rem;
-}
-
-.metric-card .metric-label {
-  font-size: 0.6rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--text-muted);
-  margin-bottom: 0.35rem;
-}
-
-.metric-card .metric-value {
-  font-size: 1.75rem;
-  font-weight: 900;
-  color: var(--text-primary);
-  line-height: 1;
-}
-
-.metric-card .metric-delta {
-  font-size: 0.7rem;
-  font-weight: 700;
-  margin-top: 0.35rem;
-}
-
-.metric-card .metric-delta.good    { color: var(--green); }
-.metric-card .metric-delta.bad     { color: #ff4466; }
-.metric-card .metric-delta.neutral { color: var(--text-muted); }
-
-/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: var(--bg-card); }
-::-webkit-scrollbar-thumb { background: var(--border-card); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--green); }
-
-/* ─── Animations ─────────────────────────────────────────────────────────── */
-@keyframes pulse-neon {
-  0%, 100% { box-shadow: 0 0 20px rgba(57, 231, 95, 0.3); }
-  50%       { box-shadow: 0 0 40px rgba(57, 231, 95, 0.6); }
-}
-
-.animate-pulse-neon {
-  animation: pulse-neon 2.5s ease-in-out infinite;
-}
-
-/* ─── Scanline (legacy, kept for compat) ─────────────────────────────────── */
-.scanlines::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.08) 2px,
-    rgba(0, 0, 0, 0.08) 4px
-  );
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* ─── Border glow helpers (legacy) ──────────────────────────────────────── */
-.border-neon { border-color: var(--green); }
-.border-gold { border-color: var(--orange); }
