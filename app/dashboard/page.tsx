@@ -11,20 +11,14 @@ import {
   Copy,
   RotateCcw,
   AlertTriangle,
-  Crown,
-  Lock,
   CheckCheck,
 } from 'lucide-react';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 interface UserProfile {
   run_count: number;
-  subscription_status: 'free' | 'pro';
   api_key: string | null;
 }
-
-// ─── Constants ──────────────────────────────────────────────────────────────
-const FREE_LIMIT = 5;
 
 // ─── Component ──────────────────────────────────────────────────────────────
 export default function Dashboard() {
@@ -39,10 +33,7 @@ export default function Dashboard() {
   const outputRef = useRef<HTMLDivElement>(null);
 
   const supabase = createClient();
-  const isPro = true; // Temporary: everything is free for feedback phase
   const runsUsed = profile?.run_count ?? 0;
-  const runsLeft = Infinity;
-  const isLocked = false;
 
   // ── Fetch user profile on mount ──
   useEffect(() => {
@@ -55,7 +46,7 @@ export default function Dashboard() {
 
       const { data } = await supabase
         .from('users')
-        .select('run_count, subscription_status, api_key')
+        .select('run_count, api_key')
         .eq('id', user.id)
         .single();
 
@@ -81,10 +72,6 @@ export default function Dashboard() {
   // ── Send to Maverick ──
   const handleUnleash = async () => {
     if (!message.trim()) return;
-    if (isLocked) {
-      window.location.href = '/pricing';
-      return;
-    }
     setLoading(true);
     setError('');
     setResponse('');
@@ -100,8 +87,7 @@ export default function Dashboard() {
 
       if (!res.ok) {
         if (res.status === 402) {
-          window.location.href = '/pricing';
-          return;
+          throw new Error('OpenAI billing issue — check your API key quota.');
         }
         if (res.status === 403 && json.error?.includes('No API key')) {
           window.location.href = '/settings';
@@ -309,16 +295,7 @@ export default function Dashboard() {
                   <span className="ml-2 opacity-50">· ⌘+Enter to fire</span>
                 </p>
 
-                {isLocked ? (
-                  <a
-                    href="/pricing"
-                    className="flex items-center gap-2 bg-[#ffd700] text-black px-6 py-2.5 rounded-xl font-black text-sm uppercase tracking-wider hover:shadow-[0_0_20px_rgba(255,215,0,0.4)] transition-all"
-                  >
-                    <Lock className="w-3.5 h-3.5" />
-                    Unlock — $15/mo
-                  </a>
-                ) : (
-                  <button
+                <button
                     onClick={handleUnleash}
                     disabled={loading || !message.trim()}
                     className="flex items-center gap-2 btn-primary py-2.5 px-6 text-sm disabled:opacity-40 disabled:transform-none disabled:shadow-none"
@@ -335,7 +312,6 @@ export default function Dashboard() {
                       </>
                     )}
                   </button>
-                )}
               </div>
             </div>
 

@@ -1,12 +1,10 @@
 // app/api/chat/route.ts — The Maverick Engine
 // Proxies OpenAI calls using the user's BYOK API key.
-// Enforces free-tier paywall (5 runs max) with atomic DB increment.
+// All users have unlimited access — no paywall.
 // Supports both standard and streaming response modes.
 import { NextResponse } from 'next/server';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
 import { callOpenAI, streamOpenAI } from '@/lib/openai';
-
-const FREE_LIMIT = 5;
 
 export async function POST(req: Request) {
   try {
@@ -39,10 +37,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // ── Fetch profile: key + subscription + run count ─────────────────────────
+    // ── Fetch profile: api_key + run_count ────────────────────────────────────
     const { data: profile, error: profileError } = await supabase
       .from('users')
-      .select('api_key, subscription_status, run_count')
+      .select('api_key, run_count')
       .eq('id', user.id)
       .single();
 
@@ -70,10 +68,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // ── Paywall: DISABLED for feedback phase ────────────────────────────────
-    const isPro = true;
-    const currentRuns = profile.run_count ?? 0;
-
     // ── Streaming path ────────────────────────────────────────────────────────
     if (useStream) {
       const stream = await streamOpenAI(
@@ -98,7 +92,7 @@ export async function POST(req: Request) {
         headers: {
           'Content-Type': 'text/event-stream',
           'Cache-Control': 'no-cache, no-store, no-transform',
-          'X-Runs-Left': isPro ? 'unlimited' : String(Math.max(0, FREE_LIMIT - currentRuns - 1)),
+          'X-Runs-Left': 'unlimited',
         },
       });
     }
@@ -130,7 +124,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       content,
       runCount: newRunCount,
-      runsLeft: isPro ? null : Math.max(0, FREE_LIMIT - newRunCount),
+      runsLeft: null, // unlimited
     });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : 'Internal server error';
