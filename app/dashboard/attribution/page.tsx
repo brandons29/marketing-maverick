@@ -15,7 +15,8 @@ import {
   TrendingUp,
   Percent,
   Download,
-  Info
+  Info,
+  Activity
 } from 'lucide-react';
 import { mapAdSpendCSV, joinAdData, AdSpendRow, InternalConversionRow } from '@/lib/attribution/csv-mapper';
 
