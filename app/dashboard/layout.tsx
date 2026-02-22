@@ -1,6 +1,7 @@
 // app/dashboard/layout.tsx — Auth guard for dashboard routes
 import { redirect } from 'next/navigation';
 import { createServerSupabaseClient } from '@/lib/supabase-server';
+import { DashboardNav } from '@/components/DashboardNav';
 
 export default async function DashboardLayout({
   children,
@@ -17,5 +18,14 @@ export default async function DashboardLayout({
     redirect('/auth/signup');
   }
 
-  return <>{children}</>;
+  return (
+    <div className="min-h-screen bg-maverick-black">
+      <DashboardNav userEmail={user.email} />
+      <main className="lg:pl-64 pt-16 lg:pt-0">
+        <div className="animate-in fade-in duration-700">
+          {children}
+        </div>
+      </main>
+    </div>
+  );
 }

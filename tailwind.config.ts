@@ -9,22 +9,26 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Matte Black / Cyber Neon / Gold palette
+        // Institutional / Swayze Media Elite palette
         maverick: {
-          black: '#0a0a0a',
-          'dark-1': '#111111',
-          'dark-2': '#1a1a1a',
-          'dark-3': '#242424',
-          neon: '#00ff88',        // Cyber green
-          'neon-blue': '#00d4ff', // Cyber blue
-          'neon-pink': '#ff00aa', // Cyber pink
-          gold: '#ffd700',
-          'gold-dim': '#c9a227',
-          'gold-bright': '#ffe44d',
+          black: '#000000',
+          'dark-1': '#0a0a0a',
+          'dark-2': '#111111',
+          'dark-3': '#161616',
+          // Performance Institutional
+          neon: '#00cc66',        // Muted Elite Green
+          'neon-blue': '#0066ff', // Pro Blue
+          gold: '#c5a059',        // Sophisticated Gold
+          'gold-dim': '#8c7340',
+          'gold-bright': '#e8d4a5',
+          accent: '#ffffff',
+          muted: '#444444',
         },
       },
       fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+        display: ['Lexend', 'Inter', 'sans-serif'],
       },
       boxShadow: {
         'neon-green': '0 0 20px rgba(0,255,136,0.4), 0 0 40px rgba(0,255,136,0.1)',
