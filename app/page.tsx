@@ -8,8 +8,8 @@ import {
   Activity, 
   LayoutDashboard, 
   RefreshCcw,
-  FileSpreadsheet,
   TrendingUp,
+  FileSpreadsheet,
   BarChart3
 } from 'lucide-react';
 
@@ -25,7 +25,6 @@ export default function Home() {
 
       {/* ── HERO ── */}
       <section className="relative overflow-hidden px-6 pt-32 pb-40 text-center min-h-[90vh] flex flex-col items-center justify-center">
-        {/* Subtle grid overlay — matches swayzemedia.com texture */}
         <div
           className="absolute inset-0 opacity-[0.03] pointer-events-none"
           style={{
@@ -35,7 +34,6 @@ export default function Home() {
         />
 
         <div className="relative max-w-5xl mx-auto z-10">
-          {/* Section label — Elite branding */}
           <div className="inline-flex items-center gap-3 mb-10 px-5 py-2.5 rounded-full bg-maverick-neon/5 border border-maverick-neon/20 animate-in fade-in slide-in-from-top-4 duration-1000">
             <div className="w-2 h-2 rounded-full bg-maverick-neon shadow-[0_0_15px_rgba(0,204,102,0.8)]" />
             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-maverick-neon">
@@ -45,11 +43,11 @@ export default function Home() {
 
           <h1 className="text-5xl md:text-8xl font-black uppercase tracking-tighter text-white mb-8 leading-[0.9] italic animate-in fade-in slide-in-from-bottom-8 duration-1000">
             Performance AI<br />
-            <span className="text-maverick-gold">For $10M+ Scale.</span>
+            <span className="text-maverick-gold">Built For The Scale.</span>
           </h1>
 
           <p className="text-sm md:text-base max-w-2xl mx-auto mb-14 leading-relaxed font-mono uppercase tracking-[0.2em] text-maverick-muted animate-in fade-in duration-1000 delay-300">
-            Marketing Maverick is the institutional Strategy Engine for elite performance marketers. Synapse ad spend, bridge attribution gaps, and execute data-backed creative synapse.
+            Marketing Maverick bridges the gap between ad spend and elite strategy. Bridge attribution, recover ROAS, and execute institutional-grade performance assets.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-in fade-in duration-1000 delay-500">
@@ -57,20 +55,34 @@ export default function Home() {
               href="/auth/signup"
               className="w-full sm:w-auto px-16 py-6 bg-maverick-neon text-black font-black uppercase tracking-[0.3em] rounded-2xl hover:shadow-[0_0_50px_rgba(0,204,102,0.4)] transition-all active:scale-95 italic text-sm shadow-xl"
             >
-              Execute Synapse
+              Start Free Synapse
             </Link>
             <Link
               href="/auth/login"
               className="text-[10px] font-black uppercase tracking-[0.3em] text-maverick-muted hover:text-white transition-colors"
             >
-              Access Command Center →
+              Already Have Access →
             </Link>
           </div>
         </div>
       </section>
 
+      {/* ── THE PROBLEM (HOOK) ── */}
+      <section className="px-6 py-32 bg-maverick-dark-1/20 border-y border-white/5">
+        <div className="max-w-4xl mx-auto text-center">
+          <p className="text-[10px] font-black uppercase tracking-[0.5em] text-red-500 mb-6">The Problem</p>
+          <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter italic text-white mb-8">
+            Ad Platforms are lying to you.<br />
+            <span className="text-maverick-muted">CRMs are hiding the truth.</span>
+          </h2>
+          <p className="text-sm md:text-lg font-mono uppercase tracking-widest text-maverick-muted leading-relaxed">
+            Marketers managing $10M+ shouldn't be guessing. The "Tracking Gap" is costing you 20-30% in wasted spend. Marketing Maverick exposes the leak.
+          </p>
+        </div>
+      </section>
+
       {/* ── WEAPONS TICKER ── */}
-      <section className="py-8 overflow-hidden border-y border-white/5 bg-maverick-dark-1/50 backdrop-blur-sm relative z-20">
+      <section className="py-8 overflow-hidden border-b border-white/5 bg-maverick-dark-1/50 backdrop-blur-sm relative z-20">
         <div className="ticker-track">
           {[...weapons, ...weapons, ...weapons, ...weapons].map((w, i) => (
             <span key={i} className="text-[10px] font-black uppercase tracking-[0.4em] mr-20 text-maverick-muted whitespace-nowrap">
@@ -80,15 +92,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── PERFORMANCE INFRASTRUCTURE ── */}
+      {/* ── PERFORMANCE INFRASTRUCTURE (STORY) ── */}
       <section className="px-6 py-40 bg-maverick-black relative">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-24">
-            <p className="text-[10px] font-black uppercase tracking-[0.6em] text-maverick-neon mb-6">The Infrastructure</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.6em] text-maverick-neon mb-6">The Strategy</p>
             <h2 className="text-4xl md:text-7xl font-black uppercase tracking-tighter italic text-white mb-8 leading-tight">
-              Built By Media Buyers.<br />
-              <span className="text-maverick-muted opacity-40">Not Prompt Engineers.</span>
+              Institutional Intelligence.<br />
+              <span className="text-maverick-muted opacity-40">Zero Gatekeeping.</span>
             </h2>
+            <p className="max-w-2xl mx-auto text-[10px] font-mono uppercase tracking-[0.3em] text-maverick-muted">
+              We built the engine we needed at Swayze Media. A tool that actually speaks performance, not just prompts.
+            </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -145,7 +160,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── CALL TO ACTION ── */}
+      {/* ── THE OFFER ── */}
       <section className="px-6 py-48 border-t border-white/5 relative overflow-hidden bg-maverick-black">
          <div
           className="absolute inset-0 opacity-[0.02] pointer-events-none"
