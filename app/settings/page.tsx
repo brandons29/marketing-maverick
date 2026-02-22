@@ -7,14 +7,15 @@ import { Shield, ExternalLink, Key, Info, HelpCircle } from 'lucide-react';
 import { ApiHelpModal } from '@/components/ApiHelpModal';
 
 export default function Settings() {
-  const [hasSavedKey, setHasSavedKey] = useState(false);
+  const [savedProviders, setSavedProviders] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [rawKeyData, setRawKeyData] = useState<string | null>(null);
 
   const supabase = createClient();
 
-  const checkKey = useCallback(async () => {
+  const checkKeys = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       window.location.href = '/auth/login';
@@ -29,37 +30,78 @@ export default function Settings() {
       .eq('id', user.id)
       .single();
 
-    setHasSavedKey(!!data?.api_key);
+    if (data?.api_key) {
+      setRawKeyData(data.api_key);
+      try {
+        const parsed = JSON.parse(data.api_key);
+        setSavedProviders(Object.keys(parsed).filter(k => !!parsed[k]));
+      } catch {
+        // Legacy support: single string = openai
+        setSavedProviders(['openai']);
+      }
+    } else {
+      setSavedProviders([]);
+    }
     setLoading(false);
   }, [supabase]);
 
   useEffect(() => {
-    checkKey();
-  }, [checkKey]);
+    checkKeys();
+  }, [checkKeys]);
 
-  const handleSave = async (key: string) => {
+  const handleSave = async (key: string, provider: string) => {
     if (!userId) throw new Error('Not authenticated');
 
+    let currentKeys: Record<string, string> = {};
+    if (rawKeyData) {
+      try {
+        currentKeys = JSON.parse(rawKeyData);
+      } catch {
+        currentKeys = { openai: rawKeyData };
+      }
+    }
+
+    const updatedKeys = {
+      ...currentKeys,
+      [provider]: key
+    };
+
+    const jsonString = JSON.stringify(updatedKeys);
+
     const { error } = await supabase.from('users').upsert(
-      { id: userId, api_key: key, updated_at: new Date().toISOString() },
+      { id: userId, api_key: jsonString, updated_at: new Date().toISOString() },
       { onConflict: 'id' }
     );
 
     if (error) throw new Error(error.message);
-    setHasSavedKey(true);
+    setRawKeyData(jsonString);
+    setSavedProviders(Object.keys(updatedKeys).filter(k => !!updatedKeys[k]));
   };
 
-  const handleRemove = async () => {
-    if (!userId) return;
-    const confirmed = window.confirm('Remove your OpenAI key? Your runs will stop working until you add a new one.');
+  const handleRemove = async (provider: string) => {
+    if (!userId || !rawKeyData) return;
+    const confirmed = window.confirm(`Disconnect ${provider.toUpperCase()} key?`);
     if (!confirmed) return;
 
-    const { error } = await supabase
-      .from('users')
-      .update({ api_key: null, updated_at: new Date().toISOString() })
-      .eq('id', userId);
+    let currentKeys: Record<string, string> = {};
+    try {
+      currentKeys = JSON.parse(rawKeyData);
+    } catch {
+      currentKeys = { openai: rawKeyData };
+    }
 
-    if (!error) setHasSavedKey(false);
+    const { [provider]: _, ...updatedKeys } = currentKeys;
+    const jsonString = JSON.stringify(updatedKeys);
+
+    const { error } = await supabase.from('users').update({
+      api_key: Object.keys(updatedKeys).length > 0 ? jsonString : null,
+      updated_at: new Date().toISOString()
+    }).eq('id', userId);
+
+    if (!error) {
+      setRawKeyData(Object.keys(updatedKeys).length > 0 ? jsonString : null);
+      setSavedProviders(Object.keys(updatedKeys));
+    }
   };
 
   if (loading) {
@@ -87,7 +129,7 @@ export default function Settings() {
               </h1>
             </div>
             <p className="text-sm font-medium text-maverick-muted leading-relaxed uppercase tracking-wider">
-              Secure your synapse. Connect your LLM.
+              Multi-Provider Synapse · Secure Intelligence
             </p>
           </div>
           <button 
@@ -103,22 +145,30 @@ export default function Settings() {
         <div className="elite-card p-8 lg:p-12 mb-8">
           <div className="space-y-8">
             <div className="space-y-4">
-              <p className="text-[11px] font-black uppercase tracking-[0.2em] text-maverick-gold italic">Strategic Requirement</p>
+              <p className="text-[11px] font-black uppercase tracking-[0.2em] text-maverick-gold italic">Intelligence Management</p>
               <p className="text-sm leading-relaxed text-white/80 font-medium">
-                Maverick provides the frameworks and expert-level logic—you provide the <span className="text-white font-black italic underline decoration-maverick-neon/40 underline-offset-4">Intelligence power</span> via your OpenAI API key.
+                Switch providers and link keys below. Your strategy engine supports <span className="text-white font-black italic underline decoration-maverick-neon/40 underline-offset-4">OpenAI, Anthropic, Google, and xAI</span> simultaneously.
               </p>
             </div>
 
-            <ApiKeyInput onSave={handleSave} hasSavedKey={hasSavedKey} />
+            <ApiKeyInput onSave={handleSave} savedProviders={savedProviders} />
 
-            {hasSavedKey && (
-              <div className="pt-4 border-t border-white/5">
-                <button
-                  onClick={handleRemove}
-                  className="text-[9px] font-black uppercase tracking-widest text-red-500/50 hover:text-red-500 transition-colors"
-                >
-                  Disconnect saved key
-                </button>
+            {savedProviders.length > 0 && (
+              <div className="pt-8 border-t border-white/5 space-y-4">
+                <p className="performance-label">Active Connections</p>
+                <div className="flex flex-wrap gap-2">
+                  {savedProviders.map(p => (
+                    <div key={p} className="flex items-center gap-3 px-4 py-2 bg-white/[0.03] border border-white/5 rounded-xl">
+                      <span className="text-[10px] font-black text-white uppercase">{p}</span>
+                      <button 
+                        onClick={() => handleRemove(p)}
+                        className="text-[10px] font-bold text-red-500/50 hover:text-red-500 transition-colors px-1"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
@@ -126,18 +176,18 @@ export default function Settings() {
 
         {/* Info Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-6 bg-white/[0.02] border border-white/5 rounded-[2rem] space-y-3">
+          <div className="p-6 bg-white/[0.02] border border-white/5 rounded-[2.5rem] space-y-3">
             <Shield className="w-4 h-4 text-maverick-neon" />
             <h4 className="text-[10px] font-black uppercase tracking-widest text-white">Encrypted Vault</h4>
             <p className="text-[9px] font-mono text-maverick-muted leading-relaxed uppercase">
-              Keys are stored with AES-256 row-level encryption. We never see your key in plaintext.
+              Keys are stored with AES-256 row-level encryption. Multi-provider JSON is encrypted before storage.
             </p>
           </div>
           <div className="p-6 bg-white/[0.02] border border-white/5 rounded-[2rem] space-y-3">
             <Info className="w-4 h-4 text-maverick-gold" />
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-white">Usage Control</h4>
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-white">Execution Control</h4>
             <p className="text-[9px] font-mono text-maverick-muted leading-relaxed uppercase">
-              You own the cost. We recommend setting a $5-$10 usage cap on your OpenAI dashboard.
+              We charge nothing. You pay your providers directly for the tokens you consume.
             </p>
           </div>
         </div>

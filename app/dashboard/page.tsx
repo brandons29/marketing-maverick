@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/lib/supabase';
 import { skills } from '@/prompts/marketing';
+import { MODEL_CATALOG, getProviderForModel } from '@/lib/ai-engine';
 import {
   Zap,
   ChevronRight,
@@ -25,12 +26,6 @@ import {
 
 interface UserProfile { api_key: string | null; }
 interface SynapseHistory { brief: string; module: string; response: string; model: string; ts: Date; }
-
-const MODELS = [
-  { id: 'gpt-4o-mini', label: 'Fast', desc: 'Instant · Low Cost', icon: Zap },
-  { id: 'gpt-4o',      label: 'Elite', desc: 'Best Quality · GPT-4o', icon: Sparkles },
-  { id: 'o1-mini',     label: 'Reasoning', desc: 'Deep Strategy · Complex', icon: BrainCircuit },
-];
 
 export default function Dashboard() {
   const [message, setMessage] = useState('');
@@ -87,11 +82,10 @@ export default function Dashboard() {
 
       if (!res.ok) {
         const json = await res.json();
-        if (res.status === 403 && json.error?.includes('No API key')) { window.location.href = '/settings'; return; }
+        if (res.status === 403 && json.error?.includes('key not configured')) { window.location.href = '/settings'; return; }
         throw new Error(json.error || 'Synapse failed');
       }
 
-      // Stream the response
       const reader = res.body?.getReader();
       const decoder = new TextDecoder();
       let fullResponse = '';
@@ -121,7 +115,6 @@ export default function Dashboard() {
       setResponse(fullResponse);
       setStreamBuffer('');
 
-      // Save to history
       const moduleName = selectedWeapons.length > 0
         ? skills.find(s => s.id === selectedWeapons[0])?.name ?? 'Custom'
         : 'General';
@@ -153,7 +146,7 @@ export default function Dashboard() {
   const handleRemix = () => { setResponse(''); setMessage(''); setError(''); window.scrollTo({ top: 0, behavior: 'smooth' }); };
   const loadFromHistory = (item: SynapseHistory) => { setMessage(item.brief); setResponse(item.response); setHistoryOpen(false); };
 
-  const activeModel = MODELS.find(m => m.id === selectedModel) || MODELS[0];
+  const activeModel = MODEL_CATALOG.find(m => m.id === selectedModel) || MODEL_CATALOG[0];
   const currentOutput = streaming ? streamBuffer : response;
 
   if (profileLoading) {
@@ -167,11 +160,31 @@ export default function Dashboard() {
     );
   }
 
+  // Check if current provider key is configured
+  const provider = getProviderForModel(selectedModel);
+  let isKeyConfigured = false;
+  if (profile?.api_key) {
+    try {
+      const keys = JSON.parse(profile.api_key);
+      isKeyConfigured = !!keys[provider];
+    } catch {
+      // Legacy: if it's not JSON, it's OpenAI
+      isKeyConfigured = provider === 'openai' && !!profile.api_key;
+    }
+  }
+
   const dashboardStats = [
     { label: 'Sessions Today', value: synapseHistory.length.toString(), change: `+${synapseHistory.length}`, icon: Activity },
     { label: 'Active Module', value: selectedWeapons.length > 0 ? `${selectedWeapons.length} Loaded` : 'None', change: '', icon: Target },
     { label: 'Engine Mode', value: activeModel.label, change: '', icon: Cpu },
   ];
+
+  // Group models by company for a cleaner UI
+  const groupedModels = MODEL_CATALOG.reduce((acc, model) => {
+    if (!acc[model.group]) acc[model.group] = [];
+    acc[model.group].push(model);
+    return acc;
+  }, {} as Record<string, typeof MODEL_CATALOG>);
 
   return (
     <div className="min-h-screen px-4 py-8 lg:px-10 lg:py-12 pb-32 lg:pb-12">
@@ -181,7 +194,7 @@ export default function Dashboard() {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-2 h-2 rounded-full bg-maverick-neon shadow-[0_0_10px_rgba(0,204,102,0.5)]" />
+              <div className="w-2 h-2 rounded-full bg-maverick-neon shadow-[0_0_10px_rgba(0,255,136,0.5)]" />
               <h1 className="text-3xl font-black uppercase tracking-tighter text-white italic">Strategy Engine</h1>
             </div>
             <p className="text-[10px] text-maverick-muted font-mono uppercase tracking-[0.4em]">
@@ -189,7 +202,6 @@ export default function Dashboard() {
             </p>
           </div>
           <div className="flex items-center gap-3">
-            {/* History button */}
             {synapseHistory.length > 0 && (
               <button
                 onClick={() => setHistoryOpen(!historyOpen)}
@@ -267,12 +279,12 @@ export default function Dashboard() {
         </div>
 
         {/* ── MISSING API KEY BANNER ── */}
-        {!profile?.api_key && (
+        {!isKeyConfigured && (
           <div className="mb-8 flex items-center gap-4 rounded-2xl px-6 py-4 bg-maverick-gold/5 border border-maverick-gold/20">
             <AlertTriangle className="w-5 h-5 shrink-0 text-maverick-gold" />
             <div className="flex-1">
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-maverick-gold mb-1">Infrastructure Alert</p>
-              <p className="text-sm font-medium text-white/80">No performance intelligence key detected. Connect your LLM key to unlock the Strategy Engine.</p>
+              <p className="text-sm font-medium text-white/80">No {provider.toUpperCase()} intelligence key detected for {activeModel.label}. Connect your key to unlock this engine.</p>
             </div>
             <a href="/settings" className="px-6 py-2 bg-maverick-gold text-black text-[10px] font-black uppercase tracking-widest rounded-xl transition-all italic">Connect Key →</a>
           </div>
@@ -311,14 +323,6 @@ export default function Dashboard() {
                 );
               })}
             </div>
-
-            {selectedWeapons.length > 0 && (
-              <div className="mt-6 pt-6 border-t border-white/5">
-                <p className="text-[8px] font-mono text-maverick-neon uppercase tracking-[0.3em] italic">
-                  {selectedWeapons.length} Module{selectedWeapons.length > 1 ? 's' : ''} Synapsing
-                </p>
-              </div>
-            )}
           </aside>
 
           {/* ── EXECUTION ── */}
@@ -342,13 +346,11 @@ export default function Dashboard() {
 
               {/* Model Selector + Execute Button */}
               <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between mt-6 gap-4">
-                {/* Model Selector */}
                 <div className="relative">
                   <button
                     onClick={() => setModelOpen(!modelOpen)}
                     className="flex items-center gap-3 px-4 py-3 bg-black/50 border border-white/10 rounded-xl hover:border-white/20 transition-colors group"
                   >
-                    <activeModel.icon className="w-3.5 h-3.5 text-maverick-neon" />
                     <div className="text-left">
                       <p className="text-[8px] font-mono text-maverick-muted uppercase tracking-widest">Engine</p>
                       <p className="text-[10px] font-black text-white uppercase italic">{activeModel.label}</p>
@@ -357,21 +359,29 @@ export default function Dashboard() {
                   </button>
 
                   {modelOpen && (
-                    <div className="absolute bottom-full mb-2 left-0 w-64 bg-maverick-dark-2 border border-white/10 rounded-2xl overflow-hidden shadow-2xl z-50 animate-in fade-in slide-in-from-bottom-2 duration-200">
-                      {MODELS.map(m => (
-                        <button
-                          key={m.id}
-                          onClick={() => { setSelectedModel(m.id); setModelOpen(false); }}
-                          className={`w-full flex items-center gap-4 px-5 py-4 transition-colors ${selectedModel === m.id ? 'bg-maverick-neon/5' : 'hover:bg-white/[0.02]'}`}
-                        >
-                          <m.icon className={`w-4 h-4 shrink-0 ${selectedModel === m.id ? 'text-maverick-neon' : 'text-maverick-muted'}`} />
-                          <div className="text-left">
-                            <p className={`text-[10px] font-black uppercase italic ${selectedModel === m.id ? 'text-maverick-neon' : 'text-white'}`}>{m.label}</p>
-                            <p className="text-[8px] font-mono text-maverick-muted uppercase tracking-widest">{m.desc}</p>
+                    <div className="absolute bottom-full mb-2 left-0 w-80 bg-maverick-dark-2 border border-white/10 rounded-2xl overflow-hidden shadow-2xl z-50 animate-in fade-in slide-in-from-bottom-2 duration-200">
+                      <div className="max-h-[60vh] overflow-y-auto">
+                        {Object.entries(groupedModels).map(([group, models]) => (
+                          <div key={group} className="border-b border-white/5 last:border-0">
+                            <div className="px-5 py-2 bg-white/[0.01]">
+                              <p className="text-[8px] font-black text-maverick-muted uppercase tracking-[0.2em]">{group}</p>
+                            </div>
+                            {models.map(m => (
+                              <button
+                                key={m.id}
+                                onClick={() => { setSelectedModel(m.id); setModelOpen(false); }}
+                                className={`w-full flex items-center gap-4 px-5 py-4 transition-colors ${selectedModel === m.id ? 'bg-maverick-neon/5' : 'hover:bg-white/[0.02]'}`}
+                              >
+                                <div className="text-left">
+                                  <p className={`text-[10px] font-black uppercase italic ${selectedModel === m.id ? 'text-maverick-neon' : 'text-white'}`}>{m.label}</p>
+                                  <p className="text-[8px] font-mono text-maverick-muted uppercase tracking-widest">{m.desc}</p>
+                                </div>
+                                {selectedModel === m.id && <CheckCheck className="w-3.5 h-3.5 text-maverick-neon ml-auto" />}
+                              </button>
+                            ))}
                           </div>
-                          {selectedModel === m.id && <CheckCheck className="w-3.5 h-3.5 text-maverick-neon ml-auto" />}
-                        </button>
-                      ))}
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -379,7 +389,7 @@ export default function Dashboard() {
                 <button
                   onClick={handleUnleash}
                   disabled={loading || !message.trim()}
-                  className="flex-1 md:flex-none flex items-center justify-center gap-3 px-12 py-4 bg-maverick-neon text-black font-black text-[10px] uppercase tracking-[0.3em] rounded-2xl hover:shadow-[0_0_40px_rgba(0,204,102,0.3)] transition-all active:scale-95 disabled:opacity-10 disabled:grayscale disabled:cursor-not-allowed italic"
+                  className="flex-1 md:flex-none flex items-center justify-center gap-3 px-12 py-4 bg-maverick-neon text-black font-black text-[10px] uppercase tracking-[0.3em] rounded-2xl hover:shadow-[0_0_40px_rgba(0,255,136,0.3)] transition-all active:scale-95 disabled:opacity-10 disabled:grayscale disabled:cursor-not-allowed italic"
                 >
                   {loading ? (
                     <><RotateCcw className="w-4 h-4 animate-spin" />Synapsing...</>
@@ -390,7 +400,6 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Error */}
             {error && (
               <div className="flex items-start gap-4 rounded-2xl px-6 py-4 bg-red-500/5 border border-red-500/20 animate-in fade-in">
                 <AlertCircle className="w-5 h-5 text-red-500 mt-0.5 shrink-0" />
@@ -401,12 +410,11 @@ export default function Dashboard() {
               </div>
             )}
 
-            {/* ── OUTPUT PANEL ── */}
             {(currentOutput || loading) && (
               <div ref={outputRef} className="rounded-3xl overflow-hidden bg-maverick-dark-1 border border-white/5 shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-700">
                 <div className="flex items-center justify-between px-8 py-6 border-b border-white/5 bg-white/[0.01]">
                   <div className="flex items-center gap-3">
-                    <div className={`w-2 h-2 rounded-full ${streaming ? 'animate-pulse bg-maverick-gold' : 'bg-maverick-neon'} shadow-[0_0_10px_rgba(0,204,102,0.5)]`} />
+                    <div className={`w-2 h-2 rounded-full ${streaming ? 'animate-pulse bg-maverick-gold' : 'bg-maverick-neon'} shadow-[0_0_10px_rgba(0,255,136,0.5)]`} />
                     <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white">
                       {streaming ? 'Synapsing...' : 'Elite Performance Asset'}
                     </span>
@@ -442,16 +450,9 @@ export default function Dashboard() {
                   />
                   {streaming && <span className="inline-block w-1.5 h-4 bg-maverick-neon animate-pulse ml-1 rounded-sm" />}
                 </div>
-
-                {!streaming && response && (
-                  <div className="px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-6 border-t border-white/5 bg-white/[0.01]">
-                    <p className="text-[8px] font-mono text-maverick-muted uppercase tracking-[0.5em] italic">Performance Intelligence Engine · Swayze Media</p>
-                  </div>
-                )}
               </div>
             )}
 
-            {/* Empty state */}
             {!currentOutput && !loading && !error && (
               <div className="flex flex-col items-center justify-center text-center py-24 rounded-3xl border border-dashed border-white/5 bg-white/[0.01]">
                 <div className="w-16 h-16 rounded-full bg-maverick-dark-1 border border-white/5 flex items-center justify-center mb-6">
