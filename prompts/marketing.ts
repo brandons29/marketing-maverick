@@ -1,55 +1,62 @@
 // prompts/marketing.ts
-export const corePrompt = `You are Marketing Maverick: sharp, no-BS copywriter who turns ideas into cash. Tone: confident, witty, direct. Output markdown. Emojis? Only if they punch. If vague—ask.`;
+export const corePrompt = `You are Marketing Maverick: An elite Performance Intelligence Engine built by ads professionals managing $10M+ in annual spend. 
+Identity: Direct, ruthless, data-obsessed, conversion-driven. 
+Tone: Sophisticated, institutional, confident. No fluff. No corporate jargon. 
+Output: High-density performance assets. Markdown only.
+Rules: 
+1. Focus on ROAS and CPA.
+2. Every output must be an 'Elite Performance Asset'.
+3. Use data-backed psychological triggers.`;
 
 export const skills = [
   {
-    id: 'cold-dm',
-    name: 'Cold DMs',
-    prompt: "Write 5 LinkedIn DMs for : under 100 chars, hook first line, curious tone, end with a question. Make 'em feel like they missed out."
+    id: 'scale-creative',
+    name: 'Scale Strategy',
+    prompt: "Develop a scaling framework for . Define: 1. Creative Winners (The Control), 2. Testing Sandbox (The Variable), 3. Audience Expansion (Broad vs Advantage+). Focus on maintaining efficiency while 3xing spend."
   },
   {
-    id: 'linkedin-hook',
-    name: 'LinkedIn Hooks',
-    prompt: "3 scroll-stopping openers for a post about . End with a question that begs a reply. Max 15 words each."
+    id: 'ad-copy-synapse',
+    name: 'Ad Copy Synapse',
+    prompt: "Generate 3 high-performance ad copy variations for . Strategy: 1. Direct-Response (The Hook), 2. Social Proof (The Trust), 3. Data-Driven (The Proof). Include 5 variations of 'Feed-Optimized Headlines' (max 40 chars)."
   },
   {
-    id: 'ad-ab',
-    name: 'Ad Copy A/B',
-    prompt: "Rewrite this headline 3 ways: 1. emotional, 2. benefit-first, 3. fear-of-missing-out. Then rate each 1–10 for click-through."
+    id: 'landing-optimization',
+    name: 'CRO Synapse',
+    prompt: "Audit the psychological flow for . Provide: 1. The 'Hero' Headline (Focus on the ONE big promise), 2. The Friction Killer (Handling the top objection), 3. The Elite CTA (Low-friction, high-intent)."
   },
   {
-    id: 'seo-rewrite',
-    name: 'SEO Blog Intro',
-    prompt: "Optimize this intro for Google—add keywords naturally, keep it human. Aim for 150-200 words, hook first sentence, include 2-3 LSI terms."
+    id: 'creative-briefing',
+    name: 'Visual Briefing',
+    prompt: "Write a high-performance visual brief for an editor/designer regarding . Define: The 'First 3 Seconds' Hook, the Mid-Roll Social Proof, and the End-Card Offer. Focus on UGC/Lo-fi vs High-Prod balance."
   },
   {
-    id: 'twitter-thread',
-    name: 'Twitter Thread',
-    prompt: "Turn this idea into a 7-tweet thread: punchy, numbered, cliffhanger every 2 tweets. End with CTA: 'RT if this hit.'"
+    id: 'offer-engineering',
+    name: 'Offer Engineering',
+    prompt: "Engineer an 'Irresistible Performance Offer' for . Objective: Maximize LTV and Front-end ROAS. Structure: The Base Offer, The Value Stack, and The Scarcity Trigger."
   },
   {
-    id: 'email-subject',
-    name: 'Email Subjects',
-    prompt: "5 subject lines for a cold outreach email about . Make 'em curiosity killers—under 50 chars, no spam vibes."
+    id: 'funnel-synapse',
+    name: 'Funnel Synapse',
+    prompt: "Map out a 3-stage full-funnel performance strategy for . TOF (Brand Awareness/Broad), MOF (Retargeting/Education), BOF (Closing/Incentive). Define KPIs for each stage."
   },
   {
-    id: 'testimonial-spin',
-    name: 'Testimonial Rewrite',
-    prompt: "Rewrite this customer quote to sound 10x more epic—keep it real, add emotion, make it shareable."
+    id: 'meta-retargeting',
+    name: 'Retargeting Blitz',
+    prompt: "Develop a 7-day retargeting sequences for . Focus on 'Dynamic Creative' triggers based on visitor behavior (ATC vs Product View). Write copy that handles the 'Price' and 'Trust' objections."
   },
   {
-    id: 'value-prop',
-    name: 'Value Prop',
-    prompt: "Craft a 1-sentence value prop for : 'We help X do Y so they can Z'—make it irresistible."
+    id: 'lead-gen-elite',
+    name: 'Lead Gen Elite',
+    prompt: "Optimize a Lead Gen strategy for . Focus on: High-intent Lead Form questions vs Landing Page conversion. Write the 'Welcome Email' that ensures a 50%+ book rate."
   },
   {
-    id: 'objection-killer',
-    name: 'Objection Crusher',
-    prompt: "Handle these 3 objections to buying : 'too expensive', 'not sure it works', 'already have something'. Flip 'em into wins."
+    id: 'roas-recovery',
+    name: 'ROAS Recovery',
+    prompt: "Campaign performance is dipping for . Provide a 'Red Team' audit: 1. Frequency Check, 2. Creative Fatigue Analysis, 3. Audience Overlap Killers. Provide 3 immediate pivots to restore target CPA."
   },
   {
-    id: 'landing-headline',
-    name: 'Landing Headline',
-    prompt: "Write 3 killer headlines for a landing page selling . First: bold promise. Second: question that stings. Third: 'How X finally got Y.' Keep each under 10 words, no fluff."
+    id: 'hooks-unleashed',
+    name: 'Performance Hooks',
+    prompt: "Generate 10 scroll-stopping video hooks for . Focus on: The 'Pattern Interrupt', The 'Fear of Missing Out', and The 'Direct Benefit'. Must be under 3 seconds in length."
   }
 ];
