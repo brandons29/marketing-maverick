@@ -82,25 +82,20 @@ export default async function RootLayout({
               <div className="flex items-center gap-5">
                 <Link
                   href="/dashboard"
-                  className="text-sm font-semibold transition-colors duration-150 uppercase tracking-wide"
-                  style={{ color: 'var(--text-secondary)' }}
-                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--green)')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--text-secondary)')}
+                  className="text-sm font-semibold uppercase tracking-wide text-white/60 hover:text-maverick-neon transition-colors duration-150"
                 >
                   Dashboard
                 </Link>
                 <Link
                   href="/settings"
-                  className="text-sm font-semibold transition-colors duration-150 uppercase tracking-wide"
-                  style={{ color: 'var(--text-secondary)' }}
+                  className="text-sm font-semibold uppercase tracking-wide text-white/60 hover:text-white transition-colors duration-150"
                 >
                   API Key
                 </Link>
                 <form action="/api/auth/signout" method="post">
                   <button
                     type="submit"
-                    className="text-xs font-bold transition-colors duration-150 uppercase tracking-widest px-3 py-1.5 rounded"
-                    style={{ color: 'var(--text-muted)', border: '1px solid var(--border-subtle)' }}
+                    className="text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded text-white/30 border border-white/10 hover:text-white hover:border-white/30 transition-colors"
                   >
                     Sign Out
                   </button>
@@ -110,18 +105,15 @@ export default async function RootLayout({
               <div className="flex items-center gap-4">
                 <Link
                   href="/auth/login"
-                  className="text-sm font-semibold transition-colors duration-150 uppercase tracking-wide"
-                  style={{ color: 'var(--text-secondary)' }}
+                  className="text-sm font-semibold uppercase tracking-wide text-white/60 hover:text-white transition-colors duration-150"
                 >
                   Login
                 </Link>
-                {/* Orange CTA button — matches swayzemedia.com "Get Started" */}
                 <Link
                   href="/auth/signup"
-                  className="btn-primary text-sm px-5 py-2.5"
-                  style={{ borderRadius: '0.375rem' }}
+                  className="px-5 py-2.5 bg-maverick-neon text-black text-xs font-black uppercase tracking-widest rounded-xl hover:shadow-[0_0_20px_rgba(0,204,102,0.3)] transition-all"
                 >
-                  Get Started
+                  Get Started Free
                 </Link>
               </div>
             )}
