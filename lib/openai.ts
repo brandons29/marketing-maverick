@@ -95,7 +95,7 @@ export async function streamOpenAI(
   }
 }
 
-function buildSystemPrompt(selectedSkills: string[]): string {
+export function buildSystemPrompt(selectedSkills: string[]): string {
   if (!selectedSkills.length) {
     return `${corePrompt}\n\nDefault mode: Execute high-performance strategic analysis. No fluff. All results. Focus on ROAS and CPA.`;
   }
