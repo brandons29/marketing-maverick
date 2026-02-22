@@ -12,6 +12,11 @@ import {
   RotateCcw,
   AlertTriangle,
   CheckCheck,
+  Activity,
+  Target,
+  ShieldCheck,
+  TrendingUp,
+  AlertCircle
 } from 'lucide-react';
 
 interface UserProfile {
