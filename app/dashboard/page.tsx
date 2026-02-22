@@ -1,6 +1,6 @@
 'use client';
 // app/dashboard/page.tsx — Marketing Maverick Command Center
-// Matte Black · Cyber Neon · Gold — full Weapon Picker sidebar
+// Swayze Media branded — forest green-black, orange CTAs, neon green accents
 
 import { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/lib/supabase';
@@ -14,13 +14,10 @@ import {
   CheckCheck,
 } from 'lucide-react';
 
-// ─── Types ──────────────────────────────────────────────────────────────────
 interface UserProfile {
-  run_count: number;
   api_key: string | null;
 }
 
-// ─── Component ──────────────────────────────────────────────────────────────
 export default function Dashboard() {
   const [message, setMessage] = useState('');
   const [response, setResponse] = useState('');
@@ -33,7 +30,6 @@ export default function Dashboard() {
   const outputRef = useRef<HTMLDivElement>(null);
 
   const supabase = createClient();
-  const runsUsed = profile?.run_count ?? 0;
 
   // ── Fetch user profile on mount ──
   useEffect(() => {
@@ -46,30 +42,22 @@ export default function Dashboard() {
 
       const { data } = await supabase
         .from('users')
-        .select('run_count, api_key')
+        .select('api_key')
         .eq('id', user.id)
         .single();
 
       if (data) setProfile(data as UserProfile);
-
-      // Handle post-upgrade redirect
-      if (window.location.search.includes('upgrade=true')) {
-        window.history.replaceState(null, '', '/dashboard');
-      }
-
       setProfileLoading(false);
     };
     init();
   }, [supabase]);
 
-  // ── Toggle weapon selection ──
   const toggleWeapon = (id: string) => {
     setSelectedWeapons((prev) =>
       prev.includes(id) ? prev.filter((w) => w !== id) : [...prev, id]
     );
   };
 
-  // ── Send to Maverick ──
   const handleUnleash = async () => {
     if (!message.trim()) return;
     setLoading(true);
@@ -97,11 +85,6 @@ export default function Dashboard() {
       }
 
       setResponse(json.content ?? '');
-      setProfile((prev) =>
-        prev ? { ...prev, run_count: prev.run_count + 1 } : prev
-      );
-
-      // Smooth scroll to output
       setTimeout(() => outputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Unknown error';
@@ -111,7 +94,6 @@ export default function Dashboard() {
     }
   };
 
-  // ── Copy output ──
   const handleCopy = () => {
     if (!response) return;
     navigator.clipboard.writeText(response).then(() => {
@@ -120,7 +102,6 @@ export default function Dashboard() {
     });
   };
 
-  // ── Remix (clear & reuse weapons) ──
   const handleRemix = () => {
     setResponse('');
     setMessage('');
@@ -131,9 +112,9 @@ export default function Dashboard() {
   // ── Loading skeleton ──
   if (profileLoading) {
     return (
-      <div className="min-h-[calc(100vh-60px)] flex items-center justify-center">
-        <div className="flex items-center gap-3 text-[#444]">
-          <div className="w-5 h-5 border-2 border-[#00ff88]/30 border-t-[#00ff88] rounded-full animate-spin" />
+      <div className="min-h-[calc(100vh-64px)] flex items-center justify-center">
+        <div className="flex items-center gap-3" style={{ color: 'var(--text-muted)' }}>
+          <div className="w-5 h-5 border-2 rounded-full animate-spin" style={{ borderColor: 'rgba(57,231,95,0.3)', borderTopColor: 'var(--green)' }} />
           <span className="font-mono text-sm uppercase tracking-widest">Loading arsenal...</span>
         </div>
       </div>
@@ -141,32 +122,35 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-60px)] px-4 py-8">
+    <div className="min-h-[calc(100vh-64px)] px-4 py-8">
       <div className="max-w-6xl mx-auto">
 
         {/* ── TOP BAR ── */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
+            <p className="section-label mb-1">Command Center</p>
             <h1 className="text-2xl font-black uppercase tracking-tight text-white">
-              Command Center
+              Marketing Maverick
             </h1>
-            <p className="text-xs text-[#444] font-mono mt-1 uppercase tracking-widest">
+            <p className="text-xs font-mono mt-1 uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
               Pick weapons · Brief Maverick · Unleash
             </p>
           </div>
 
-          {/* Run counter + status */}
           <div className="flex items-center gap-3">
-            <span className="status-pill-pro flex items-center gap-1.5 border-[#ffd700]/50 text-[#ffd700]">
+            <span
+              className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full"
+              style={{ backgroundColor: 'rgba(57,231,95,0.1)', border: '1px solid rgba(57,231,95,0.3)', color: 'var(--green)' }}
+            >
               <Zap className="w-3 h-3" />
-              BETA ACCESS — FREE
+              Free — Unlimited
             </span>
 
             <a
               href="https://t.me/brandonswayze"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wide bg-[#00ff88] text-black px-3 py-1.5 rounded hover:shadow-[0_0_15px_rgba(0,255,136,0.4)] transition-all"
+              className="btn-primary text-xs px-3 py-1.5"
             >
               Give Feedback
             </a>
@@ -175,11 +159,14 @@ export default function Dashboard() {
 
         {/* ── MISSING API KEY BANNER ── */}
         {!profile?.api_key && (
-          <div className="mb-6 flex items-center gap-3 bg-[#ffd700]/8 border border-[#ffd700]/30 rounded-xl px-4 py-3">
-            <AlertTriangle className="w-4 h-4 text-[#ffd700] shrink-0" />
-            <p className="text-sm text-[#c9a227] font-medium">
+          <div
+            className="mb-6 flex items-center gap-3 rounded-xl px-4 py-3"
+            style={{ backgroundColor: 'rgba(245,166,35,0.08)', border: '1px solid rgba(245,166,35,0.3)' }}
+          >
+            <AlertTriangle className="w-4 h-4 shrink-0" style={{ color: 'var(--orange)' }} />
+            <p className="text-sm font-medium" style={{ color: 'var(--orange)' }}>
               No OpenAI key detected.{' '}
-              <a href="/settings" className="text-[#ffd700] font-bold hover:underline">
+              <a href="/settings" className="font-bold hover:underline" style={{ color: 'var(--orange)' }}>
                 Add your key →
               </a>
             </p>
@@ -192,17 +179,20 @@ export default function Dashboard() {
           {/* ════════════════════════════════════════
               WEAPON PICKER SIDEBAR
           ════════════════════════════════════════ */}
-          <aside className="bg-[#0f0f0f] border border-white/6 rounded-2xl p-5 h-fit md:sticky md:top-[76px]">
-
+          <aside
+            className="rounded-2xl p-5 h-fit md:sticky md:top-[80px]"
+            style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-card)' }}
+          >
             {/* Sidebar header */}
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[#555]">
+              <h2 className="text-xs font-black uppercase tracking-[0.2em]" style={{ color: 'var(--text-muted)' }}>
                 ⚔ Weapons
               </h2>
               {selectedWeapons.length > 0 && (
                 <button
                   onClick={() => setSelectedWeapons([])}
-                  className="text-[10px] font-bold text-[#333] hover:text-red-400 uppercase tracking-wider transition-colors"
+                  className="text-[10px] font-bold uppercase tracking-wider transition-colors hover:text-red-400"
+                  style={{ color: 'var(--text-muted)' }}
                 >
                   Clear all
                 </button>
@@ -219,13 +209,12 @@ export default function Dashboard() {
                     onClick={() => toggleWeapon(skill.id)}
                     className={`weapon-item w-full text-left flex items-center gap-3 ${isSelected ? 'selected' : ''}`}
                   >
-                    {/* Checkbox indicator */}
                     <span
-                      className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all ${
-                        isSelected
-                          ? 'border-[#00ff88] bg-[#00ff88]'
-                          : 'border-[#333]'
-                      }`}
+                      className="w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all"
+                      style={{
+                        borderColor: isSelected ? 'var(--green)' : 'var(--border-card)',
+                        backgroundColor: isSelected ? 'var(--green)' : 'transparent',
+                      }}
                     >
                       {isSelected && (
                         <svg viewBox="0 0 10 8" className="w-2.5 h-2.5 fill-black">
@@ -234,12 +223,12 @@ export default function Dashboard() {
                       )}
                     </span>
 
-                    <span className="text-sm font-semibold text-[#888] group-hover:text-white transition-colors">
+                    <span className="text-sm font-semibold transition-colors" style={{ color: isSelected ? 'white' : 'var(--text-secondary)' }}>
                       {skill.name}
                     </span>
 
                     {isSelected && (
-                      <ChevronRight className="w-3 h-3 text-[#00ff88] ml-auto shrink-0" />
+                      <ChevronRight className="w-3 h-3 ml-auto shrink-0" style={{ color: 'var(--green)' }} />
                     )}
                   </button>
                 );
@@ -248,16 +237,16 @@ export default function Dashboard() {
 
             {/* Selected count */}
             {selectedWeapons.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-white/5">
-                <p className="text-xs font-mono text-[#00ff88]">
+              <div className="mt-4 pt-4" style={{ borderTop: '1px solid var(--border-subtle)' }}>
+                <p className="text-xs font-mono" style={{ color: 'var(--green)' }}>
                   {selectedWeapons.length} weapon{selectedWeapons.length > 1 ? 's' : ''} loaded
                 </p>
               </div>
             )}
 
             {/* Tip */}
-            <div className="mt-5 pt-4 border-t border-white/5">
-              <p className="text-[10px] text-[#333] font-mono leading-relaxed">
+            <div className="mt-5 pt-4" style={{ borderTop: '1px solid var(--border-subtle)' }}>
+              <p className="text-[10px] font-mono leading-relaxed" style={{ color: 'var(--text-muted)' }}>
                 Stack weapons for compound output. e.g. Value Prop + Landing Headline = 🔥
               </p>
             </div>
@@ -269,8 +258,11 @@ export default function Dashboard() {
           <section className="flex flex-col gap-6">
 
             {/* Input area */}
-            <div className="bg-[#0f0f0f] border border-white/6 rounded-2xl p-6">
-              <label className="block text-xs font-black uppercase tracking-[0.2em] text-[#555] mb-3">
+            <div
+              className="rounded-2xl p-6"
+              style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-card)' }}
+            >
+              <label className="block text-xs font-black uppercase tracking-[0.2em] mb-3" style={{ color: 'var(--text-muted)' }}>
                 Brief Maverick
               </label>
               <textarea
@@ -290,38 +282,41 @@ export default function Dashboard() {
               />
 
               <div className="flex items-center justify-between mt-4">
-                <p className="text-xs text-[#333] font-mono">
+                <p className="text-xs font-mono" style={{ color: 'var(--text-muted)' }}>
                   {selectedWeapons.length === 0 ? 'No weapons selected' : `${selectedWeapons.length} skill${selectedWeapons.length > 1 ? 's' : ''} active`}
                   <span className="ml-2 opacity-50">· ⌘+Enter to fire</span>
                 </p>
 
                 <button
-                    onClick={handleUnleash}
-                    disabled={loading || !message.trim()}
-                    className="flex items-center gap-2 btn-primary py-2.5 px-6 text-sm disabled:opacity-40 disabled:transform-none disabled:shadow-none"
-                  >
-                    {loading ? (
-                      <>
-                        <div className="w-3.5 h-3.5 border-2 border-black/40 border-t-black rounded-full animate-spin" />
-                        Thinking...
-                      </>
-                    ) : (
-                      <>
-                        <Zap className="w-3.5 h-3.5" />
-                        UNLEASH
-                      </>
-                    )}
-                  </button>
+                  onClick={handleUnleash}
+                  disabled={loading || !message.trim()}
+                  className="btn-primary py-2.5 px-6 text-sm disabled:opacity-40 disabled:transform-none disabled:shadow-none"
+                >
+                  {loading ? (
+                    <>
+                      <div className="w-3.5 h-3.5 border-2 border-black/40 border-t-black rounded-full animate-spin" />
+                      Thinking...
+                    </>
+                  ) : (
+                    <>
+                      <Zap className="w-3.5 h-3.5" />
+                      UNLEASH
+                    </>
+                  )}
+                </button>
               </div>
             </div>
 
             {/* Error */}
             {error && (
-              <div className="flex items-start gap-3 bg-red-500/8 border border-red-500/25 rounded-xl px-4 py-3">
+              <div
+                className="flex items-start gap-3 rounded-xl px-4 py-3"
+                style={{ backgroundColor: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.25)' }}
+              >
                 <AlertTriangle className="w-4 h-4 text-red-400 mt-0.5 shrink-0" />
                 <div>
                   <p className="text-sm font-bold text-red-400">Maverick hit a wall</p>
-                  <p className="text-xs text-red-400/70 mt-0.5">{error}</p>
+                  <p className="text-xs mt-0.5" style={{ color: 'rgba(248,113,113,0.7)' }}>{error}</p>
                 </div>
               </div>
             )}
@@ -330,31 +325,36 @@ export default function Dashboard() {
             {response && (
               <div
                 ref={outputRef}
-                className="bg-[#0a0a0a] border border-[#00ff88]/20 rounded-2xl overflow-hidden shadow-[0_0_40px_rgba(0,255,136,0.06)]"
+                className="rounded-2xl overflow-hidden"
+                style={{ backgroundColor: 'var(--bg-page)', border: '1px solid rgba(57,231,95,0.2)' }}
               >
                 {/* Output header */}
-                <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#0f0f0f]">
+                <div
+                  className="flex items-center justify-between px-6 py-4"
+                  style={{ borderBottom: '1px solid var(--border-subtle)', backgroundColor: 'var(--bg-card)' }}
+                >
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-[#00ff88] animate-pulse" />
-                    <span className="text-xs font-black uppercase tracking-[0.2em] text-[#00ff88]">
+                    <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: 'var(--green)' }} />
+                    <span className="text-xs font-black uppercase tracking-[0.2em]" style={{ color: 'var(--green)' }}>
                       Maverick Output
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={handleRemix}
-                      className="flex items-center gap-1.5 text-xs font-bold text-[#555] hover:text-[#888] transition-colors px-2 py-1 rounded border border-transparent hover:border-white/10"
+                      className="flex items-center gap-1.5 text-xs font-bold transition-colors px-2 py-1 rounded"
+                      style={{ color: 'var(--text-muted)', border: '1px solid transparent' }}
                     >
                       <RotateCcw className="w-3 h-3" />
                       Remix
                     </button>
                     <button
                       onClick={handleCopy}
-                      className={`flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded border transition-all ${
-                        copied
-                          ? 'text-[#00ff88] border-[#00ff88]/40 bg-[#00ff88]/8'
-                          : 'text-[#555] border-white/10 hover:text-white hover:border-white/20'
-                      }`}
+                      className="flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded transition-all"
+                      style={copied
+                        ? { color: 'var(--green)', border: '1px solid rgba(57,231,95,0.4)', backgroundColor: 'rgba(57,231,95,0.08)' }
+                        : { color: 'var(--text-muted)', border: '1px solid var(--border-card)' }
+                      }
                     >
                       {copied ? (
                         <>
@@ -385,22 +385,24 @@ export default function Dashboard() {
                 </div>
 
                 {/* Output footer */}
-                <div className="px-6 py-4 border-t border-white/5 bg-[#0f0f0f] flex flex-col md:flex-row items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <span className="text-[10px] font-mono text-[#222] uppercase tracking-widest">
-                      Marketing Maverick v1.0 · Swayze Media
-                    </span>
-                    <span className="text-[10px] font-mono text-[#222]">
-                      run #{runsUsed}
-                    </span>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 bg-[#00ff88]/5 border border-[#00ff88]/20 rounded-lg px-3 py-1.5">
-                    <span className="text-[10px] font-bold text-[#00ff88] uppercase tracking-wider">Help us improve:</span>
-                    <a 
-                      href="https://t.me/brandonswayze" 
+                <div
+                  className="px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4"
+                  style={{ borderTop: '1px solid var(--border-subtle)', backgroundColor: 'var(--bg-card)' }}
+                >
+                  <span className="text-[10px] font-mono uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
+                    Marketing Maverick · Swayze Media
+                  </span>
+
+                  <div
+                    className="flex items-center gap-2 rounded-lg px-3 py-1.5"
+                    style={{ backgroundColor: 'rgba(57,231,95,0.05)', border: '1px solid rgba(57,231,95,0.2)' }}
+                  >
+                    <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: 'var(--green)' }}>Help us improve:</span>
+                    <a
+                      href="https://t.me/brandonswayze"
                       target="_blank"
-                      className="text-[10px] font-black text-white hover:text-[#00ff88] underline underline-offset-2 transition-colors uppercase"
+                      className="text-[10px] font-black text-white hover:underline uppercase transition-colors"
+                      style={{ color: 'var(--green)' }}
                     >
                       Send Feedback →
                     </a>
@@ -411,12 +413,15 @@ export default function Dashboard() {
 
             {/* Empty state */}
             {!response && !loading && !error && (
-              <div className="flex flex-col items-center justify-center text-center py-16 border border-dashed border-white/8 rounded-2xl">
+              <div
+                className="flex flex-col items-center justify-center text-center py-16 rounded-2xl"
+                style={{ border: '1px dashed var(--border-card)' }}
+              >
                 <div className="text-4xl mb-4">⚡</div>
-                <p className="text-sm font-bold text-[#444] uppercase tracking-widest mb-1">
+                <p className="text-sm font-bold uppercase tracking-widest mb-1" style={{ color: 'var(--text-muted)' }}>
                   Awaiting orders
                 </p>
-                <p className="text-xs text-[#333] font-mono">
+                <p className="text-xs font-mono" style={{ color: 'var(--text-muted)' }}>
                   Pick a weapon · Drop your brief · Hit Unleash
                 </p>
               </div>
