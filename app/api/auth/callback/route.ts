@@ -26,21 +26,37 @@ export async function GET(request: Request) {
       }
     );
     
-    await supabase.auth.exchangeCodeForSession(code);
+    // Exchange the code for a session
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
     
-    // Initialize user profile
-    try {
-      await fetch(`${requestUrl.origin}/api/user/init`, {
-        method: 'POST',
-        headers: {
-          Cookie: cookieStore.toString(),
-        },
-      });
-    } catch (e) {
-      console.error('Failed to init user on callback', e);
+    if (error) {
+      console.error('Auth callback error:', error.message);
+      return NextResponse.redirect(`${requestUrl.origin}/auth/login?error=${encodeURIComponent(error.message)}`);
+    }
+
+    if (data.session) {
+      // Initialize user profile directly here instead of an internal fetch call
+      // which often fails in serverless environments due to networking/loopback issues
+      const { error: upsertError } = await supabase
+        .from('users')
+        .upsert(
+          {
+            id: data.session.user.id,
+            run_count: 0,
+            subscription_status: 'free',
+          },
+          {
+            onConflict: 'id',
+            ignoreDuplicates: true,
+          }
+        );
+
+      if (upsertError) {
+        console.error('[UserInit] Callback upsert failed:', upsertError.message);
+      }
     }
   }
 
-  // URL to redirect to after sign in process completes
+  // Final redirect to dashboard
   return NextResponse.redirect(`${requestUrl.origin}/dashboard`);
 }
