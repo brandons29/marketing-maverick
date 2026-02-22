@@ -19,20 +19,20 @@ export interface ProviderKeys {
 
 export const MODEL_CATALOG = [
   // OpenAI
-  { id: 'gpt-4o-mini',    provider: 'openai'    as Provider, label: 'GPT-4o Mini',    desc: 'Fast · Low Cost',       group: 'OpenAI' },
-  { id: 'gpt-4o',         provider: 'openai'    as Provider, label: 'GPT-4o',         desc: 'Elite · Best Quality',  group: 'OpenAI' },
-  { id: 'o1-mini',        provider: 'openai'    as Provider, label: 'o1-Mini',         desc: 'Deep Reasoning',        group: 'OpenAI' },
-  { id: 'o3-mini',        provider: 'openai'    as Provider, label: 'o3-Mini',         desc: 'New Reasoning · Fast',  group: 'OpenAI' },
+  { id: 'gpt-5.3-codex',  provider: 'openai'    as Provider, label: 'GPT-5.3 Codex',  desc: 'Agentic · Ultra High Speed', group: 'OpenAI' },
+  { id: 'gpt-5',          provider: 'openai'    as Provider, label: 'GPT-5',          desc: 'Elite · Multi-Model Logic', group: 'OpenAI' },
+  { id: 'gpt-4o',         provider: 'openai'    as Provider, label: 'GPT-4o',         desc: 'Stable · Production', group: 'OpenAI' },
   // Anthropic
-  { id: 'claude-3-7-sonnet-20250219', provider: 'anthropic' as Provider, label: 'Claude 3.7 Sonnet', desc: 'Newest · Hybrid Reasoning', group: 'Claude' },
-  { id: 'claude-3-5-sonnet-20241022', provider: 'anthropic' as Provider, label: 'Claude 3.5 Sonnet', desc: 'Legacy Elite Strategy', group: 'Claude' },
+  { id: 'claude-5-sonnet-202602',     provider: 'anthropic' as Provider, label: 'Claude 5 Sonnet', desc: 'Cutting Edge · Newest', group: 'Claude' },
+  { id: 'claude-4-6-sonnet-202601',   provider: 'anthropic' as Provider, label: 'Claude 4.6 Sonnet', desc: 'Ultra High Performance', group: 'Claude' },
+  { id: 'claude-3-7-sonnet-20250219', provider: 'anthropic' as Provider, label: 'Claude 3.7 Sonnet', desc: 'Stable Elite Strategy', group: 'Claude' },
   // Google
-  { id: 'gemini-3-flash-preview',     provider: 'google'    as Provider, label: 'Gemini 3.0 Flash',  desc: 'Cutting Edge · Ultra Fast', group: 'Gemini' },
-  { id: 'gemini-2.0-pro-exp-02-05',   provider: 'google'    as Provider, label: 'Gemini 2.0 Pro',    desc: 'Experimental Elite', group: 'Gemini' },
-  { id: 'gemini-2.0-flash',           provider: 'google'    as Provider, label: 'Gemini 2.0 Flash',  desc: 'Stable · Production', group: 'Gemini' },
+  { id: 'gemini-3-1-pro',             provider: 'google'    as Provider, label: 'Gemini 3.1 Pro',  desc: 'Apex · 1M Context', group: 'Gemini' },
+  { id: 'gemini-3-0-flash',           provider: 'google'    as Provider, label: 'Gemini 3.0 Flash',  desc: 'Ultra Fast Intelligence', group: 'Gemini' },
+  { id: 'gemini-2-0-pro-exp-02-05',   provider: 'google'    as Provider, label: 'Gemini 2.0 Pro',    desc: 'Experimental Pro', group: 'Gemini' },
   // xAI
-  { id: 'grok-3',                     provider: 'xai'       as Provider, label: 'Grok-3',            desc: 'Supreme Intel · Real-time', group: 'Grok' },
-  { id: 'grok-2-1212',                provider: 'xai'       as Provider, label: 'Grok-2',            desc: 'Stable Grok Intelligence', group: 'Grok' },
+  { id: 'grok-4-1',                   provider: 'xai'       as Provider, label: 'Grok-4.1',          desc: 'Supreme · Real-time Intel', group: 'Grok' },
+  { id: 'grok-3',                     provider: 'xai'       as Provider, label: 'Grok-3',            desc: 'Stable Grok Intelligence', group: 'Grok' },
 ];
 
 export function getProviderForModel(modelId: string): Provider {
