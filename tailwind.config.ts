@@ -11,12 +11,12 @@ const config: Config = {
       colors: {
         maverick: {
           black: '#000000',
-          dark: '#080808',
-          'dark-alt': '#0c0c0c',
-          neon: '#00cc66',
-          gold: '#c5a059',
-          muted: '#525252',
-          border: '#1a1a1a',
+          dark: '#0a0a0a',
+          'dark-alt': '#111111',
+          neon: '#00ff88',
+          gold: '#d4af37',
+          muted: '#a3a3a3',
+          border: '#262626',
         },
       },
       fontFamily: {

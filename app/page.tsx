@@ -3,148 +3,119 @@
 import Link from 'next/link';
 import { 
   Zap, 
-  ShieldCheck, 
   Target, 
   Activity, 
-  LayoutDashboard, 
-  RefreshCcw,
-  TrendingUp,
-  FileSpreadsheet,
-  BarChart3,
   Cpu,
-  Lock,
-  ChevronRight
+  ChevronRight,
+  Sparkles,
+  Layers,
+  Shield,
+  ArrowUpRight
 } from 'lucide-react';
-
-const weapons = [
-  'Scale Strategy', 'Ad Copy Synapse', 'CRO Synapse', 'Visual Briefing',
-  'Offer Engineering', 'Funnel Synapse', 'Retargeting Blitz',
-  'Lead Gen Elite', 'ROAS Recovery', 'Performance Hooks',
-];
 
 export default function Home() {
   return (
-    <div className="relative bg-black overflow-x-hidden min-h-screen">
+    <div className="relative bg-black overflow-x-hidden min-h-screen grid-complex mesh-gradient">
 
-      {/* ── HERO ── */}
-      <section className="relative overflow-hidden px-6 pt-32 pb-40 text-center min-h-[95vh] flex flex-col items-center justify-center">
-        {/* Refined Grid Overlay */}
-        <div className="absolute inset-0 grid-overlay pointer-events-none" />
+      {/* ── HERO SECTION ── */}
+      <section className="relative px-6 pt-32 pb-40 text-center min-h-screen flex flex-col items-center justify-center">
         
-        {/* Subtle Radial Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-maverick-neon/5 rounded-full blur-[120px] pointer-events-none" />
+        {/* Floating Decorative Elements (Meng To Style) */}
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-maverick-neon/10 rounded-full blur-[120px] animate-pulse pointer-events-none" />
+        <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-maverick-gold/5 rounded-full blur-[120px] animate-pulse pointer-events-none" />
 
-        <div className="relative max-w-5xl mx-auto z-10">
-          <div className="inline-flex items-center gap-3 mb-10 px-5 py-2.5 rounded-full bg-maverick-neon/5 border border-maverick-neon/20 animate-in fade-in slide-in-from-top-4 duration-1000">
-            <div className="w-2 h-2 rounded-full bg-maverick-neon shadow-[0_0_15px_rgba(0,255,136,1)]" />
-            <span className="text-[11px] font-black uppercase tracking-[0.4em] text-maverick-neon">
-              Swayze Media Elite · Performance Synapse
+        <div className="relative max-w-6xl mx-auto z-10">
+          <div className="inline-flex items-center gap-3 mb-12 px-6 py-2 rounded-full glass-panel animate-in fade-in slide-in-from-top-4 duration-1000">
+            <div className="w-1.5 h-1.5 rounded-full bg-maverick-neon animate-ping" />
+            <span className="text-[10px] font-black uppercase tracking-[0.5em] text-white/60">
+              Swayze Media · 2026 Protocol
             </span>
           </div>
 
-          <h1 className="text-5xl md:text-9xl font-black uppercase tracking-tighter text-white mb-10 leading-[0.85] italic animate-in fade-in slide-in-from-bottom-8 duration-1000">
-            Performance AI<br />
-            <span className="text-maverick-gold">Built to Scale.</span>
+          <h1 className="text-6xl md:text-[11rem] font-black uppercase tracking-tighter text-white mb-12 leading-[0.8] italic animate-in fade-in slide-in-from-bottom-8 duration-1000">
+            AI <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white/40 to-white">Maverick</span><br />
+            <span className="text-maverick-neon drop-shadow-[0_0_30px_rgba(0,255,136,0.3)]">Built to Scale.</span>
           </h1>
 
-          <div className="max-w-3xl mx-auto space-y-6 mb-16 animate-in fade-in duration-1000 delay-300">
-            <p className="text-base md:text-xl font-bold text-white uppercase italic tracking-tight">
-              Expert Execution Logic + Your Intelligence Engine.
+          <div className="max-w-3xl mx-auto space-y-8 mb-20 animate-in fade-in duration-1000 delay-300">
+            <p className="text-lg md:text-2xl font-bold text-white/90 uppercase italic tracking-tight leading-tight">
+              The $100M+ Strategy OS for High-Density Performance.
             </p>
-            <p className="performance-subheadline mx-auto uppercase tracking-widest text-[11px] md:text-sm">
-              Marketing Maverick is a 100% Free Strategy Engine. We provide the $100M+ tactical logic—you power the synapse with your own LLM API key.
+            <p className="text-xs md:text-sm text-maverick-muted font-mono uppercase tracking-[0.3em] leading-relaxed max-w-2xl mx-auto border-l border-white/10 pl-6">
+              A 100% Free Strategy Engine. We provide the institutional logic—you power the synapse with your own LLM API key.
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-8 animate-in fade-in duration-1000 delay-500">
-            <Link href="/auth/signup" className="btn-synapse w-full sm:w-auto shadow-2xl">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-10 animate-in fade-in duration-1000 delay-500">
+            <Link href="/auth/signup" className="btn-synapse scale-110 px-16 group">
               Start Free Synapse
+              <ArrowUpRight className="inline-block w-4 h-4 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
             </Link>
-            <Link href="/auth/login" className="text-[11px] font-black uppercase tracking-[0.4em] text-maverick-muted hover:text-white transition-colors">
-              Already Have Access →
+            <Link href="/auth/login" className="text-[10px] font-black uppercase tracking-[0.4em] text-white/30 hover:text-white transition-colors border-b border-white/5 pb-1">
+              Access Intelligence →
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ── THE PROBLEM (HOOK) ── */}
-      <section className="px-6 py-40 bg-[#050505] border-y border-white/[0.05]">
-        <div className="max-w-4xl mx-auto text-center space-y-10">
-          <div className="space-y-4">
-            <p className="performance-label text-red-500">The Problem</p>
-            <h2 className="text-4xl md:text-7xl font-black uppercase tracking-tighter italic text-white leading-none">
-              Ad Platforms Lie.<br />
-              <span className="opacity-30">CRMs Hide The Truth.</span>
-            </h2>
+      {/* ── BENTO GRID FEATURES (JrGarcia Style) ── */}
+      <section className="px-6 py-40 border-t border-white/5 relative">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-12 gap-6">
+          
+          <div className="md:col-span-7 glass-card p-12 flex flex-col justify-between group">
+            <div>
+              <Layers className="w-10 h-10 text-maverick-neon mb-8" />
+              <h2 className="text-4xl font-black uppercase italic text-white mb-6 tracking-tighter">Multi-Engine<br/>Fidelity</h2>
+              <p className="text-sm text-maverick-muted uppercase font-mono tracking-widest leading-loose">
+                Switch between OpenAI, Claude, Gemini, and Grok on the fly. One interface for all commercial apex models.
+              </p>
+            </div>
+            <div className="mt-12 flex gap-4">
+              {['GPT-5', 'CLAUDE 5', 'GEMINI 3.1'].map(t => (
+                <span key={t} className="px-4 py-1.5 rounded-lg bg-white/5 border border-white/5 text-[9px] font-black text-white/40">{t}</span>
+              ))}
+            </div>
           </div>
-          <p className="text-sm md:text-base font-medium text-white/60 leading-relaxed uppercase tracking-[0.2em] max-w-2xl mx-auto">
-            Media buyers managing $10M+ shouldn't be guessing. The "Tracking Gap" wastes 20-30% of your budget. Maverick exposes the leak and recovers your ROAS.
+
+          <div className="md:col-span-5 glass-card p-12 group bg-maverick-neon/[0.02]">
+            <Target className="w-10 h-10 text-maverick-gold mb-8" />
+            <h2 className="text-4xl font-black uppercase italic text-white mb-6 tracking-tighter">Strategic<br/>Modules</h2>
+            <p className="text-sm text-maverick-muted uppercase font-mono tracking-widest leading-loose">
+              14+ Elite modules including AEO Visibility, Visual Audit, and Offer Math. Custom-built for $10M+ scale.
+            </p>
+          </div>
+
+          <div className="md:col-span-5 glass-card p-12 group">
+            <Shield className="w-10 h-10 text-white/20 mb-8" />
+            <h2 className="text-4xl font-black uppercase italic text-white mb-6 tracking-tighter">Zero-Trust<br/>Vault</h2>
+            <p className="text-sm text-maverick-muted uppercase font-mono tracking-widest leading-loose">
+              BYOK Encryption. Your keys are AES-256 secured at the browser level. We never see your plaintext.
+            </p>
+          </div>
+
+          <div className="md:col-span-7 glass-card p-12 group bg-gradient-to-br from-maverick-neon/5 to-transparent">
+            <Activity className="w-10 h-10 text-maverick-neon mb-8" />
+            <h2 className="text-4xl font-black uppercase italic text-white mb-6 tracking-tighter">Visual<br/>Intelligence</h2>
+            <p className="text-sm text-maverick-muted uppercase font-mono tracking-widest leading-loose">
+              Drop ad creatives for instant vision-based scorecarding. Recover ROAS by auditing creative energy vs framework math.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FOOTER ── */}
+      <footer className="py-24 border-t border-white/5 text-center bg-black/50 backdrop-blur-md relative overflow-hidden">
+        <div className="absolute inset-0 grid-complex opacity-20" />
+        <div className="relative z-10 space-y-6">
+          <p className="text-[10px] font-mono uppercase tracking-[1em] text-white/20">
+            © 2026 Swayze Media · Performance Intelligence
           </p>
-        </div>
-      </section>
-
-      {/* ── HOW IT WORKS ── */}
-      <section className="px-6 py-40">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-24 space-y-4">
-            <p className="performance-label text-maverick-neon">The Protocol</p>
-            <h2 className="text-4xl md:text-7xl font-black uppercase tracking-tighter italic text-white">How it Works</h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-12">
-            {[
-              {
-                step: '01',
-                title: 'Connect LLM',
-                body: 'Bring your own OpenAI API key. We provide a 100% secure, encrypted bridge to your engine.',
-                icon: Cpu
-              },
-              {
-                step: '02',
-                title: 'Load Strategy',
-                body: 'Access the collective knowledge of $100M+ in managed spend via our elite strategy modules.',
-                icon: Target
-              },
-              {
-                step: '03',
-                title: 'Execute Results',
-                body: 'Synapse ad data with expert logic to generate institutional-grade performance assets.',
-                icon: Zap
-              }
-            ].map((s) => (
-              <div key={s.step} className="elite-card p-10 space-y-6 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 p-8 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity">
-                  <s.icon className="w-32 h-32" />
-                </div>
-                <span className="text-[11px] font-black text-maverick-neon/40 uppercase tracking-widest font-mono">Step {s.step}</span>
-                <h3 className="text-xl font-black text-white uppercase italic tracking-tighter">{s.title}</h3>
-                <p className="text-sm text-maverick-muted font-medium leading-loose uppercase tracking-wider">{s.body}</p>
-              </div>
-            ))}
+          <div className="flex justify-center gap-12 text-[9px] font-black uppercase tracking-[0.3em] text-white/40">
+            <Link href="/terms" className="hover:text-maverick-neon transition-colors">Protocol</Link>
+            <Link href="/settings" className="hover:text-maverick-neon transition-colors">Terminal</Link>
+            <Link href="/dashboard" className="hover:text-maverick-neon transition-colors">Synapse</Link>
           </div>
         </div>
-      </section>
-
-      {/* ── CTA ── */}
-      <section className="px-6 py-60 border-t border-white/[0.05] relative overflow-hidden">
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <h2 className="text-6xl md:text-[10rem] font-black uppercase tracking-tighter italic text-white mb-12 leading-[0.8] animate-pulse duration-[4000ms]">
-            Start<br />
-            <span className="text-maverick-neon">Synapse.</span>
-          </h2>
-          <p className="text-xs font-mono uppercase tracking-[0.6em] text-maverick-muted mb-16 max-w-md mx-auto leading-relaxed">
-            Free for elite performance marketers.<br />No card. No gatekeeping. No fluff.
-          </p>
-          <Link href="/auth/signup" className="btn-synapse scale-125 px-20">
-            Access Intelligence
-          </Link>
-        </div>
-      </section>
-
-      <footer className="py-12 border-t border-white/[0.05] text-center bg-black">
-        <p className="text-[9px] font-mono uppercase tracking-[0.6em] text-white/20">
-          © 2026 Swayze Media · Performance Intelligence · Institutional Grade
-        </p>
       </footer>
     </div>
   );
