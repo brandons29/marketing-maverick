@@ -7,6 +7,7 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import './globals.css';
 import { CMOChatbot } from '@/components/CMOChatbot';
+import { AnimatedSynapseLogo } from '@/components/AnimatedSynapseLogo';
 
 const inter = Inter({ subsets: ['latin'], weight: ['400', '500', '600', '700', '800', '900'] });
 
@@ -62,8 +63,11 @@ export default async function RootLayout({
         <nav className="nav-glass sticky top-0 z-50 px-6 py-0">
           <div className="max-w-6xl mx-auto flex justify-between items-center h-[64px]">
 
-            {/* Logo — actual Swayze Media logo image */}
+            {/* Logo — actual Swayze Media logo image + Animated Synapse */}
             <Link href="/" className="flex items-center gap-3 group">
+              <div className="scale-75 -ml-2">
+                <AnimatedSynapseLogo />
+              </div>
               <Image
                 src="/swayze-logo-white.png"
                 alt="Swayze Media"
