@@ -1,6 +1,4 @@
 'use client';
-// app/dashboard/attribution/page.tsx — Attribution Bridge (PHASE 4)
-// High-performance CSV joiner for Marketers.
 
 import { useState } from 'react';
 import { 
@@ -18,7 +16,7 @@ import {
   Info,
   Activity
 } from 'lucide-react';
-import { mapAdSpendCSV, joinAdData, AdSpendRow, InternalConversionRow } from '@/lib/attribution/csv-mapper';
+import { mapAdSpendCSV, joinAdData, type AdSpendRow, type InternalConversionRow } from '@/lib/attribution/csv-mapper';
 
 export default function AttributionPage() {
   const [isOver, setIsOver] = useState(false);
@@ -50,18 +48,19 @@ export default function AttributionPage() {
       
       // Basic CRM mapping - in a real app, this would use AI/Mapping UI
       const crmData: InternalConversionRow[] = (await new Promise((resolve) => {
-        const Papa = require('papaparse');
-        Papa.parse(crmText, {
-          header: true,
-          skipEmptyLines: true,
-          complete: (results: any) => {
-            resolve(results.data.map((row: any) => ({
-              date: row.date || row.Date,
-              campaign_id: row.campaign_id || row['Campaign ID'],
-              revenue: parseFloat(row.revenue || row.Amount || '0'),
-              conversions: parseInt(row.conversions || row.Leads || '0'),
-            })));
-          }
+        import('papaparse').then((Papa) => {
+          Papa.parse(crmText, {
+            header: true,
+            skipEmptyLines: true,
+            complete: (results: any) => {
+              resolve(results.data.map((row: any) => ({
+                date: row.date || row.Date,
+                campaign_id: row.campaign_id || row['Campaign ID'],
+                revenue: parseFloat(row.revenue || row.Amount || '0'),
+                conversions: parseInt(row.conversions || row.Leads || '0'),
+              })));
+            }
+          });
         });
       })) as InternalConversionRow[];
 
