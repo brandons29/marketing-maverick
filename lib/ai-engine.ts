@@ -8,13 +8,14 @@ import Anthropic from '@anthropic-ai/sdk';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { buildSystemPrompt } from './openai';
 
-export type Provider = 'openai' | 'anthropic' | 'google' | 'xai';
+export type Provider = 'openai' | 'anthropic' | 'google' | 'xai' | 'maton';
 
 export interface ProviderKeys {
   openai?: string;
   anthropic?: string;
   google?: string;
   xai?: string;
+  maton?: string;
 }
 
 export const MODEL_CATALOG = [

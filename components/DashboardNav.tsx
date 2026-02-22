@@ -23,7 +23,7 @@ export function DashboardNav({ userEmail }: { userEmail: string | undefined }) {
   const links = [
     { name: 'Analytics', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Attribution', href: '/dashboard/attribution', icon: Target },
-    { name: 'Performance AI', href: '/dashboard/ai', icon: Zap },
+    { name: 'Operations', href: '/dashboard/operations', icon: Zap },
     { name: 'Settings', href: '/settings', icon: Settings },
   ];
 

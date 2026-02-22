@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Shield, Lock, Eye, EyeOff, CheckCircle2, ChevronDown, Sparkles, BrainCircuit, Zap, Cpu } from 'lucide-react';
+import { Shield, Lock, Eye, EyeOff, CheckCircle2, ChevronDown, Sparkles, BrainCircuit, Zap, Cpu, Layers } from 'lucide-react';
 
 interface ApiKeyInputProps {
   onSave: (key: string, provider: string) => Promise<void>;
@@ -13,6 +13,7 @@ const PROVIDERS = [
   { id: 'anthropic', name: 'Anthropic', icon: BrainCircuit, placeholder: 'sk-ant-...' },
   { id: 'google',    name: 'Google',    icon: Zap,          placeholder: 'AIza...' },
   { id: 'xai',       name: 'xAI',       icon: Cpu,          placeholder: 'xai-...' },
+  { id: 'maton',     name: 'Maton AI',   icon: Layers,       placeholder: 'maton_...' },
 ];
 
 export default function ApiKeyInput({ onSave, savedProviders }: ApiKeyInputProps) {
