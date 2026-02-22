@@ -47,7 +47,7 @@ export default function Home() {
           </h1>
 
           <p className="text-sm md:text-base max-w-2xl mx-auto mb-14 leading-relaxed font-mono uppercase tracking-[0.2em] text-maverick-muted animate-in fade-in duration-1000 delay-300">
-            Marketing Maverick bridges the gap between ad spend and elite strategy. Bridge attribution, recover ROAS, and execute institutional-grade performance assets.
+            Marketing Maverick is a 100% Free Strategy Engine. Connect your LLM of choice to unlock the executional strategies and tribal knowledge of a $100M+ performance marketing team.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-in fade-in duration-1000 delay-500">
@@ -102,7 +102,7 @@ export default function Home() {
               <span className="text-maverick-muted opacity-40">Zero Gatekeeping.</span>
             </h2>
             <p className="max-w-2xl mx-auto text-[10px] font-mono uppercase tracking-[0.3em] text-maverick-muted">
-              We built the engine we needed at Swayze Media. A tool that actually speaks performance, not just prompts.
+              The engine we needed at Swayze Media. A 100% free synapse between your LLM and $100M+ in collective performance intelligence.
             </p>
           </div>
 
@@ -175,7 +175,7 @@ export default function Home() {
             <span className="text-maverick-neon">Start Executing.</span>
           </h2>
           <p className="text-[10px] font-mono uppercase tracking-[0.5em] text-maverick-muted mb-16 leading-loose max-w-xl mx-auto">
-            Marketing Maverick is free for elite performance marketers. No card. No fluff. Pure synapse.
+            Marketing Maverick is 100% free. No card. No gatekeeping. Just connect your API key to unlock $100M+ in collective performance intelligence.
           </p>
           <Link
             href="/auth/signup"
