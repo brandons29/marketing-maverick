@@ -1,15 +1,16 @@
 'use client';
-// app/settings/page.tsx — API Key management — Swayze Media branded
 
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase';
 import ApiKeyInput from '@/components/ApiKeyInput';
-import { Shield, ExternalLink, Key, Info } from 'lucide-react';
+import { Shield, ExternalLink, Key, Info, HelpCircle } from 'lucide-react';
+import { ApiHelpModal } from '@/components/ApiHelpModal';
 
 export default function Settings() {
   const [hasSavedKey, setHasSavedKey] = useState(false);
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
+  const [helpOpen, setHelpOpen] = useState(false);
 
   const supabase = createClient();
 
@@ -63,117 +64,85 @@ export default function Settings() {
 
   if (loading) {
     return (
-      <div className="min-h-[calc(100vh-64px)] flex items-center justify-center">
-        <div className="flex items-center gap-3" style={{ color: 'var(--text-muted)' }}>
-          <div className="w-5 h-5 border-2 rounded-full animate-spin" style={{ borderColor: 'rgba(57,231,95,0.3)', borderTopColor: 'var(--green)' }} />
-          <span className="font-mono text-sm uppercase tracking-widest">Loading...</span>
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="flex items-center gap-3 text-maverick-muted">
+          <div className="w-5 h-5 border-2 rounded-full animate-spin border-maverick-neon/30 border-t-maverick-neon" />
+          <span className="font-mono text-[10px] uppercase tracking-widest">Accessing Secure Vault...</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-[calc(100vh-64px)] px-4 py-12">
-      <div className="max-w-lg mx-auto">
+    <div className="min-h-screen px-4 py-16 lg:py-24 bg-black">
+      <div className="max-w-xl mx-auto">
 
         {/* Page Header */}
-        <div className="mb-8">
-          <div
-            className="inline-flex items-center justify-center w-12 h-12 rounded-xl mb-4"
-            style={{ backgroundColor: 'rgba(57,231,95,0.1)', border: '1px solid rgba(57,231,95,0.3)' }}
-          >
-            <Key className="w-6 h-6" style={{ color: 'var(--green)' }} />
+        <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div>
+            <div className="flex items-center gap-3 mb-3">
+              <Key className="w-5 h-5 text-maverick-neon" />
+              <h1 className="text-2xl font-black uppercase tracking-tighter text-white italic">
+                Engine Connection
+              </h1>
+            </div>
+            <p className="text-sm font-medium text-maverick-muted leading-relaxed uppercase tracking-wider">
+              Secure your synapse. Connect your LLM.
+            </p>
           </div>
-          <h1 className="text-2xl font-black uppercase tracking-tight text-white mb-1">
-            API Key
-          </h1>
-          <p className="text-sm font-mono" style={{ color: 'var(--text-muted)' }}>
-            Your key. Your bill. We&apos;re just the engine.
-          </p>
+          <button 
+            onClick={() => setHelpOpen(true)}
+            className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-maverick-neon hover:text-white transition-colors border border-maverick-neon/20 px-4 py-2 rounded-full"
+          >
+            <HelpCircle className="w-3 h-3" />
+            Connection Guide
+          </button>
         </div>
 
         {/* Main Card */}
-        <div
-          className="rounded-2xl p-6 shadow-2xl"
-          style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-card)' }}
-        >
-          <p className="text-sm leading-relaxed mb-6" style={{ color: 'var(--text-secondary)' }}>
-            Marketing Maverick runs entirely on{' '}
-            <strong className="text-white">your own OpenAI API key</strong>.
-            We route calls on your behalf. Your key is stored in Supabase with
-            row-level security and is{' '}
-            <strong className="text-white">never logged or exposed</strong>.
-          </p>
-
-          <ApiKeyInput onSave={handleSave} hasSavedKey={hasSavedKey} />
-
-          {hasSavedKey && (
-            <div className="mt-4">
-              <button
-                onClick={handleRemove}
-                className="text-xs font-mono underline underline-offset-2 transition-colors hover:text-red-400"
-                style={{ color: 'var(--text-muted)' }}
-              >
-                Remove saved key
-              </button>
+        <div className="elite-card p-8 lg:p-12 mb-8">
+          <div className="space-y-8">
+            <div className="space-y-4">
+              <p className="text-[11px] font-black uppercase tracking-[0.2em] text-maverick-gold italic">Strategic Requirement</p>
+              <p className="text-sm leading-relaxed text-white/80 font-medium">
+                Maverick provides the frameworks and expert-level logic—you provide the <span className="text-white font-black italic underline decoration-maverick-neon/40 underline-offset-4">Intelligence power</span> via your OpenAI API key.
+              </p>
             </div>
-          )}
 
-          <div className="mt-6 pt-5" style={{ borderTop: '1px solid var(--border-subtle)' }}>
-            <a
-              href="https://platform.openai.com/account/api-keys"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-xs font-mono transition-colors hover:text-white"
-              style={{ color: 'var(--text-muted)' }}
-            >
-              <ExternalLink className="w-3 h-3" />
-              Get your key at platform.openai.com →
-            </a>
+            <ApiKeyInput onSave={handleSave} hasSavedKey={hasSavedKey} />
+
+            {hasSavedKey && (
+              <div className="pt-4 border-t border-white/5">
+                <button
+                  onClick={handleRemove}
+                  className="text-[9px] font-black uppercase tracking-widest text-red-500/50 hover:text-red-500 transition-colors"
+                >
+                  Disconnect saved key
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Security Callout */}
-        <div
-          className="mt-5 flex items-start gap-3 rounded-xl px-4 py-3.5"
-          style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}
-        >
-          <Shield className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'var(--green)' }} />
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: 'var(--text-muted)' }}>Security</p>
-            <p className="text-xs leading-relaxed font-mono" style={{ color: 'var(--text-muted)' }}>
-              Keys are stored in Supabase with row-level security —{' '}
-              <code style={{ color: 'var(--text-secondary)' }}>auth.uid() = id</code>. Only your session
-              can read your row. We recommend setting a{' '}
-              <a
-                href="https://platform.openai.com/account/billing/overview"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline hover:text-white transition-colors"
-                style={{ color: 'var(--text-muted)' }}
-              >
-                usage cap
-              </a>{' '}
-              on your OpenAI key as an extra safety net.
+        {/* Info Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="p-6 bg-white/[0.02] border border-white/5 rounded-[2rem] space-y-3">
+            <Shield className="w-4 h-4 text-maverick-neon" />
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-white">Encrypted Vault</h4>
+            <p className="text-[9px] font-mono text-maverick-muted leading-relaxed uppercase">
+              Keys are stored with AES-256 row-level encryption. We never see your key in plaintext.
+            </p>
+          </div>
+          <div className="p-6 bg-white/[0.02] border border-white/5 rounded-[2rem] space-y-3">
+            <Info className="w-4 h-4 text-maverick-gold" />
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-white">Usage Control</h4>
+            <p className="text-[9px] font-mono text-maverick-muted leading-relaxed uppercase">
+              You own the cost. We recommend setting a $5-$10 usage cap on your OpenAI dashboard.
             </p>
           </div>
         </div>
 
-        {/* Usage tip */}
-        <div
-          className="mt-4 flex items-start gap-3 rounded-xl px-4 py-3.5"
-          style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}
-        >
-          <Info className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'var(--orange)' }} />
-          <div>
-            <p className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: 'var(--text-muted)' }}>Model</p>
-            <p className="text-xs leading-relaxed font-mono" style={{ color: 'var(--text-muted)' }}>
-              Maverick uses <code style={{ color: 'var(--text-secondary)' }}>gpt-4o-mini</code> by
-              default — fast, cheap, and sharp enough to write killer copy. Access to
-              GPT-4o requires a paid OpenAI plan.
-            </p>
-          </div>
-        </div>
+        <ApiHelpModal isOpen={helpOpen} onClose={() => setHelpOpen(false)} />
 
       </div>
     </div>

@@ -5,22 +5,22 @@
 
 /* ─── Elite Institutional Design System ────────────────────────────────── */
 :root {
-  /* Backgrounds: Pure Performance depth */
+  /* Backgrounds: High-Contrast Depth */
   --bg-page:    #000000;
-  --bg-card:    #080808;
-  --bg-card-2:  #0c0c0c;
+  --bg-card:    #0a0a0a;
+  --bg-card-2:  #111111;
   --bg-input:   #050505;
 
   /* Institutional Accents */
-  --maverick-neon:   #00cc66;  /* Elite Green */
-  --maverick-gold:   #c5a059;  /* Sophisticated Gold */
-  --maverick-muted:  #555555;
-  --maverick-border: #1a1a1a;
+  --maverick-neon:   #00ff88;  /* Brightened for Readability */
+  --maverick-gold:   #d4af37;  /* High-Contrast Gold */
+  --maverick-muted:  #a3a3a3;  /* Increased brightness from #555 */
+  --maverick-border: #262626;
   
   /* Text */
   --text-primary:    #ffffff;
-  --text-secondary:  #a1a1a1;
-  --text-muted:      #525252;
+  --text-secondary:  #e5e5e5;
+  --text-muted:      #a3a3a3;
 }
 
 @layer base {
@@ -37,38 +37,42 @@
 @layer components {
   /* High-Readability Cards */
   .elite-card {
-    @apply bg-[#080808] border border-white/[0.03] rounded-[2rem] shadow-2xl transition-all duration-500 hover:border-white/[0.08];
+    @apply bg-[#0a0a0a] border border-white/[0.08] rounded-[2.5rem] shadow-2xl transition-all duration-500 hover:border-white/[0.15];
   }
 
   /* Sophisticated Typography */
   .performance-label {
-    @apply text-[10px] font-black uppercase tracking-[0.4em] text-[#555] mb-2 block;
+    @apply text-[11px] font-black uppercase tracking-[0.4em] text-[#a3a3a3] mb-3 block;
   }
 
   .performance-value {
-    @apply text-2xl font-black italic tracking-tighter text-white;
+    @apply text-3xl font-black italic tracking-tighter text-white;
+  }
+
+  .performance-subheadline {
+    @apply text-sm md:text-base font-medium leading-relaxed text-[#d4d4d4] max-w-2xl;
   }
 
   /* Precise Inputs */
   .elite-input {
-    @apply w-full bg-black/50 border border-white/5 rounded-2xl p-6 text-sm text-white placeholder:text-[#333] outline-none focus:border-[#00cc66]/30 transition-all duration-300 font-medium;
+    @apply w-full bg-black border border-white/10 rounded-2xl p-6 text-sm text-white placeholder:text-[#525252] outline-none focus:border-[#00ff88]/40 transition-all duration-300 font-medium;
   }
 
   /* Master CTAs */
   .btn-synapse {
-    @apply px-12 py-5 bg-[#00cc66] text-black font-black uppercase tracking-[0.3em] rounded-2xl hover:shadow-[0_0_50px_rgba(0,204,102,0.3)] transition-all active:scale-95 italic text-xs;
+    @apply px-12 py-5 bg-[#00ff88] text-black font-black uppercase tracking-[0.3em] rounded-2xl hover:shadow-[0_0_50px_rgba(0,255,136,0.4)] transition-all active:scale-95 italic text-xs;
   }
   
   .btn-ghost {
-    @apply px-8 py-4 border border-white/5 text-white/40 font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl hover:bg-white/5 hover:text-white transition-all;
+    @apply px-8 py-4 border border-white/10 text-white/60 font-black text-[10px] uppercase tracking-[0.2em] rounded-2xl hover:bg-white/5 hover:text-white transition-all;
   }
 }
 
 /* ─── Scrollbar ──────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: #00cc66; }
+::-webkit-scrollbar-thumb { background: #262626; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #00ff88; }
 
 /* ─── Ticker / Marquee ───────────────────────────────────────────────────── */
 @keyframes ticker-scroll {
@@ -85,7 +89,7 @@
 /* ─── Grid Texture ──────────────────────────────────────────────────────── */
 .grid-overlay {
   background-image: 
-    linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
   background-size: 60px 60px;
 }
