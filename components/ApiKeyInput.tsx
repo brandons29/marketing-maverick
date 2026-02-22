@@ -15,8 +15,13 @@ export default function ApiKeyInput({ onSave, hasSavedKey = false }: ApiKeyInput
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
+  const [agreed, setAgreed] = useState(false);
 
   const handleSave = async () => {
+    if (!agreed) {
+      setError('You must acknowledge the Maverick Clause before saving.');
+      return;
+    }
     if (!key.trim()) {
       setError('Paste your OpenAI key first.');
       return;
@@ -78,10 +83,26 @@ export default function ApiKeyInput({ onSave, hasSavedKey = false }: ApiKeyInput
         <p className="text-red-400 text-sm font-medium">{error}</p>
       )}
 
+      {/* Legal Shield Checklist */}
+      <div className="bg-black/40 border border-white/5 rounded-xl p-4 space-y-3">
+        <label className="flex items-start gap-3 cursor-pointer group">
+          <input 
+            type="checkbox" 
+            checked={agreed}
+            onChange={(e) => setAgreed(e.target.checked)}
+            className="mt-1 w-4 h-4 rounded border-white/10 bg-black text-maverick-neon focus:ring-maverick-neon/20"
+          />
+          <span className="text-[10px] leading-relaxed text-maverick-muted group-hover:text-white/60 transition-colors">
+            I acknowledge the <strong className="text-maverick-gold uppercase tracking-tighter italic">Maverick Clause</strong>: 
+            I am solely responsible for all costs incurred on my OpenAI account and I indemnify Swayze Media against any liability regarding my API key usage or marketing outcomes.
+          </span>
+        </label>
+      </div>
+
       {/* Save button */}
       <button
         onClick={handleSave}
-        disabled={loading || !key.trim()}
+        disabled={loading || !key.trim() || !agreed}
         className="flex items-center gap-2 btn-primary py-2.5 px-6 text-sm disabled:opacity-40 disabled:transform-none disabled:shadow-none"
       >
         {loading ? (

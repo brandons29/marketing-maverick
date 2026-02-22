@@ -13,11 +13,16 @@ export default function Signup() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [agreed, setAgreed] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!agreed) {
+      setError('You must accept the Terms of Service to proceed.');
+      return;
+    }
     setLoading(true);
     setError('');
 
@@ -148,10 +153,25 @@ export default function Signup() {
               </div>
             )}
 
+            {/* Legal Consent */}
+            <div className="mb-6">
+              <label className="flex items-start gap-3 cursor-pointer group">
+                <input 
+                  type="checkbox" 
+                  checked={agreed}
+                  onChange={(e) => setAgreed(e.target.checked)}
+                  className="mt-0.5 w-4 h-4 rounded border-white/10 bg-black text-maverick-neon focus:ring-maverick-neon/20"
+                />
+                <span className="text-[10px] leading-relaxed text-maverick-muted group-hover:text-white/60 transition-colors">
+                  I agree to the <Link href="/terms" className="text-white hover:underline underline-offset-2">Terms of Service</Link> and understand that Marketing Maverick is provided "as-is" with no liability assumed by Swayze Media.
+                </span>
+              </label>
+            </div>
+
             {/* Submit — orange button matching swayzemedia.com */}
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !agreed}
               className="w-full btn-primary justify-center py-3.5 mt-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             >
               {loading ? (
