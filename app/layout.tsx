@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import './globals.css';
+import { CMOChatbot } from '@/components/CMOChatbot';
 
 const inter = Inter({ subsets: ['latin'], weight: ['400', '500', '600', '700', '800', '900'] });
 
@@ -55,7 +56,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.className} min-h-screen`} style={{ backgroundColor: 'var(--bg-page)', color: 'var(--text-primary)' }}>
+      <body className={`${inter.className} min-h-screen relative`} style={{ backgroundColor: 'var(--bg-page)', color: 'var(--text-primary)' }}>
 
         {/* ── STICKY NAV ── */}
         <nav className="nav-glass sticky top-0 z-50 px-6 py-0">
@@ -124,6 +125,9 @@ export default async function RootLayout({
         <main className="relative z-0">
           {children}
         </main>
+
+        {/* ── BRANDON SWAYZE CMO CHATBOT ── */}
+        <CMOChatbot />
 
         {/* ── FOOTER — matches swayzemedia.com footer style ── */}
         <footer className="mt-20 py-8 px-6" style={{ borderTop: '1px solid var(--border-subtle)' }}>
