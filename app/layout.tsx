@@ -1,6 +1,7 @@
 // app/layout.tsx — Swayze Media branded global layout
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import Image from 'next/image';
 import Link from 'next/link';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
@@ -60,17 +61,16 @@ export default async function RootLayout({
         <nav className="nav-glass sticky top-0 z-50 px-6 py-0">
           <div className="max-w-6xl mx-auto flex justify-between items-center h-[64px]">
 
-            {/* Logo — styled like swayzemedia.com nav */}
-            <Link href="/" className="flex items-center gap-2.5 group">
-              {/* Swayze wordmark style */}
-              <div className="flex flex-col leading-none">
-                <span className="text-white font-black text-[1.1rem] tracking-tight" style={{ fontFamily: 'Inter, sans-serif' }}>
-                  Swayze
-                </span>
-                <span className="text-[0.6rem] font-semibold tracking-[0.2em] uppercase" style={{ color: 'var(--green)', marginTop: '-1px' }}>
-                  media
-                </span>
-              </div>
+            {/* Logo — actual Swayze Media logo image */}
+            <Link href="/" className="flex items-center gap-3 group">
+              <Image
+                src="/swayze-logo-white.png"
+                alt="Swayze Media"
+                width={120}
+                height={40}
+                className="h-9 w-auto object-contain"
+                priority
+              />
               <span style={{ color: 'var(--border-card)', fontSize: '1rem', fontWeight: 300 }}>|</span>
               <span className="text-white font-black text-sm tracking-wider uppercase">
                 Maverick
@@ -138,10 +138,13 @@ export default async function RootLayout({
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             {/* Logo */}
             <div className="flex items-center gap-2">
-              <div className="flex flex-col leading-none">
-                <span className="text-white font-black text-sm tracking-tight">Swayze</span>
-                <span className="text-[0.5rem] font-semibold tracking-[0.2em] uppercase" style={{ color: 'var(--green)', marginTop: '-1px' }}>media</span>
-              </div>
+              <Image
+                src="/swayze-logo-white.png"
+                alt="Swayze Media"
+                width={80}
+                height={27}
+                className="h-6 w-auto object-contain opacity-80"
+              />
             </div>
 
             {/* Nav links */}
