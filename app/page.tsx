@@ -1,228 +1,184 @@
-// app/page.tsx — Marketing Maverick Landing Page
-// Swayze Media branded — forest green-black, orange CTAs, neon green accents
+'use client';
 
 import Link from 'next/link';
-import { Zap, Key, Shield, Target, FileText, Mail } from 'lucide-react';
+import { 
+  Zap, 
+  ShieldCheck, 
+  Target, 
+  Activity, 
+  LayoutDashboard, 
+  RefreshCcw,
+  FileSpreadsheet,
+  TrendingUp,
+  BarChart3
+} from 'lucide-react';
 
 const weapons = [
-  'Cold DMs', 'LinkedIn Hooks', 'Ad Copy A/B', 'SEO Blog Intros',
-  'Twitter Threads', 'Email Subjects', 'Testimonial Rewrites',
-  'Value Props', 'Objection Crushers', 'Landing Headlines',
+  'Scale Strategy', 'Ad Copy Synapse', 'CRO Synapse', 'Visual Briefing',
+  'Offer Engineering', 'Funnel Synapse', 'Retargeting Blitz',
+  'Lead Gen Elite', 'ROAS Recovery', 'Performance Hooks',
 ];
 
 export default function Home() {
   return (
-    <div className="relative" style={{ backgroundColor: 'var(--bg-page)' }}>
+    <div className="relative bg-maverick-black overflow-x-hidden">
 
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden px-6 pt-28 pb-32 text-center">
+      <section className="relative overflow-hidden px-6 pt-32 pb-40 text-center min-h-[90vh] flex flex-col items-center justify-center">
         {/* Subtle grid overlay — matches swayzemedia.com texture */}
         <div
-          className="absolute inset-0 opacity-[0.025]"
+          className="absolute inset-0 opacity-[0.03] pointer-events-none"
           style={{
-            backgroundImage: 'linear-gradient(rgba(57,231,95,1) 1px, transparent 1px), linear-gradient(90deg, rgba(57,231,95,1) 1px, transparent 1px)',
-            backgroundSize: '60px 60px',
+            backgroundImage: 'linear-gradient(rgba(0,204,102,1) 1px, transparent 1px), linear-gradient(90deg, rgba(0,204,102,1) 1px, transparent 1px)',
+            backgroundSize: '80px 80px',
           }}
         />
 
-        <div className="relative max-w-4xl mx-auto">
-          {/* Section label — matches swayzemedia.com "WHAT WE DO" style */}
-          <div className="inline-flex items-center gap-2 mb-6 px-4 py-1.5 rounded-full" style={{ background: 'rgba(57,231,95,0.08)', border: '1px solid rgba(57,231,95,0.2)' }}>
-            <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: 'var(--green)' }} />
-            <span className="text-xs font-bold uppercase tracking-[0.2em]" style={{ color: 'var(--green)' }}>
-              Free Tool by Swayze Media
+        <div className="relative max-w-5xl mx-auto z-10">
+          {/* Section label — Elite branding */}
+          <div className="inline-flex items-center gap-3 mb-10 px-5 py-2.5 rounded-full bg-maverick-neon/5 border border-maverick-neon/20 animate-in fade-in slide-in-from-top-4 duration-1000">
+            <div className="w-2 h-2 rounded-full bg-maverick-neon shadow-[0_0_15px_rgba(0,204,102,0.8)]" />
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-maverick-neon">
+              Performance Intelligence · Swayze Media Elite
             </span>
           </div>
 
-          <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tight text-white mb-6 leading-none">
-            AI Copy That{' '}
-            <span style={{ color: 'var(--orange)' }}>Converts.</span>
-            <br />
-            <span className="text-[0.65em]" style={{ color: 'var(--text-muted)' }}>No Fluff. Pure Results.</span>
+          <h1 className="text-5xl md:text-8xl font-black uppercase tracking-tighter text-white mb-8 leading-[0.9] italic animate-in fade-in slide-in-from-bottom-8 duration-1000">
+            Performance AI<br />
+            <span className="text-maverick-gold">For $10M+ Scale.</span>
           </h1>
 
-          <p className="text-lg max-w-2xl mx-auto mb-10 leading-relaxed font-medium" style={{ color: 'var(--text-secondary)' }}>
-            Marketing Maverick is a free AI copywriting tool from{' '}
-            <a href="https://swayzemedia.com" target="_blank" rel="noopener noreferrer" className="font-bold text-white hover:underline">
-              Swayze Media
-            </a>
-            . Bring your own OpenAI key, pick a weapon, and generate copy that sells — in seconds.
+          <p className="text-sm md:text-base max-w-2xl mx-auto mb-14 leading-relaxed font-mono uppercase tracking-[0.2em] text-maverick-muted animate-in fade-in duration-1000 delay-300">
+            Marketing Maverick is the institutional Strategy Engine for elite performance marketers. Synapse ad spend, bridge attribution gaps, and execute data-backed creative synapse.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            {/* Primary CTA — orange, matches swayzemedia.com "Get Started" */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 animate-in fade-in duration-1000 delay-500">
             <Link
               href="/auth/signup"
-              className="btn-primary text-base px-8 py-4"
+              className="w-full sm:w-auto px-16 py-6 bg-maverick-neon text-black font-black uppercase tracking-[0.3em] rounded-2xl hover:shadow-[0_0_50px_rgba(0,204,102,0.4)] transition-all active:scale-95 italic text-sm shadow-xl"
             >
-              <Zap className="w-4 h-4" />
-              Get Started Free
+              Execute Synapse
             </Link>
             <Link
               href="/auth/login"
-              className="text-sm font-bold uppercase tracking-wider transition-colors"
-              style={{ color: 'var(--text-muted)' }}
+              className="text-[10px] font-black uppercase tracking-[0.3em] text-maverick-muted hover:text-white transition-colors"
             >
-              Already have an account →
+              Access Command Center →
             </Link>
           </div>
         </div>
       </section>
 
       {/* ── WEAPONS TICKER ── */}
-      <section className="py-4 overflow-hidden" style={{ borderTop: '1px solid var(--border-subtle)', borderBottom: '1px solid var(--border-subtle)', backgroundColor: 'var(--bg-card)' }}>
+      <section className="py-8 overflow-hidden border-y border-white/5 bg-maverick-dark-1/50 backdrop-blur-sm relative z-20">
         <div className="ticker-track">
           {[...weapons, ...weapons, ...weapons, ...weapons].map((w, i) => (
-            <span key={i} className="text-xs font-black uppercase tracking-widest mr-10" style={{ color: 'var(--text-muted)' }}>
-              <span style={{ color: 'var(--green)' }}>⚡</span> {w}
+            <span key={i} className="text-[10px] font-black uppercase tracking-[0.4em] mr-20 text-maverick-muted whitespace-nowrap">
+              <span className="text-maverick-neon mr-3">/</span> {w}
             </span>
           ))}
         </div>
       </section>
 
-      {/* ── WHAT YOU GET — matches swayzemedia.com "Full-Stack Growth Services" section ── */}
-      <section className="px-6 py-24">
-        <div className="max-w-5xl mx-auto">
-          {/* Section label */}
-          <p className="section-label text-center mb-3">What You Get</p>
-          <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-center text-white mb-4">
-            10 Battle-Tested Weapons
-          </h2>
-          <p className="text-center text-sm mb-14" style={{ color: 'var(--text-muted)', fontFamily: 'monospace' }}>
-            Every template is engineered for conversion — not corporate fluff.
-          </p>
+      {/* ── PERFORMANCE INFRASTRUCTURE ── */}
+      <section className="px-6 py-40 bg-maverick-black relative">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-24">
+            <p className="text-[10px] font-black uppercase tracking-[0.6em] text-maverick-neon mb-6">The Infrastructure</p>
+            <h2 className="text-4xl md:text-7xl font-black uppercase tracking-tighter italic text-white mb-8 leading-tight">
+              Built By Media Buyers.<br />
+              <span className="text-maverick-muted opacity-40">Not Prompt Engineers.</span>
+            </h2>
+          </div>
 
-          <div className="grid md:grid-cols-3 gap-5">
+          <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                icon: Key,
-                color: 'var(--green)',
-                title: 'Bring Your Own Key',
-                body: 'Connect your OpenAI key. We route the calls. You own the costs — and typically pay less than any premium tool subscription.',
+                icon: Target,
+                color: 'text-maverick-neon',
+                title: 'Attribution Bridge',
+                body: 'Synapse Meta/Google spend with CRM Source of Truth. Expose the tracking gap and calculate True ROAS in seconds.',
               },
               {
                 icon: Zap,
-                color: 'var(--orange)',
-                title: 'Unlimited Runs',
-                body: 'No caps, no limits, no upgrade prompts. Run as many copy generations as you need — completely free, forever.',
+                color: 'text-maverick-gold',
+                title: 'Strategy Engine',
+                body: 'Generate elite performance assets. Scale frameworks, creative briefs, and lead gen optimization built for high-spend accounts.',
               },
               {
-                icon: Shield,
-                color: '#00d4ff',
-                title: 'Fort Knox Security',
-                body: 'Your API key is stored with row-level security. Only your session can read your data. No logging. No leaks.',
+                icon: ShieldCheck,
+                color: 'text-blue-500',
+                title: 'Institutional Privacy',
+                body: 'Your data never leaves the client. AES-256 key encryption and row-level security ensure your account intel is for your eyes only.',
               },
               {
-                icon: Target,
-                color: 'var(--orange)',
-                title: 'Ad Copy & Hooks',
-                body: 'Generate high-converting ad copy for Meta, Google, TikTok, and LinkedIn. A/B variants included.',
+                icon: Activity,
+                color: 'text-red-500',
+                title: 'ROAS Recovery',
+                body: 'Execute "Red Team" audits on dipping campaigns. Fatigue analysis and audience overlap killers to restore target CPA.',
               },
               {
-                icon: Mail,
-                color: 'var(--green)',
-                title: 'Cold Outreach',
-                body: 'Cold DMs, cold emails, LinkedIn connection requests — written to get replies, not ignored.',
+                icon: TrendingUp,
+                color: 'text-maverick-neon',
+                title: 'Offer Engineering',
+                body: 'Synthesize high-LTV offers with psychological triggers designed to maximize front-end conversion and customer trust.',
               },
               {
-                icon: FileText,
-                color: '#00d4ff',
-                title: 'Landing Page Copy',
-                body: 'Headlines, value props, objection crushers, and CTAs — everything you need to convert visitors into buyers.',
+                icon: RefreshCcw,
+                color: 'text-maverick-gold',
+                title: 'Synapse Logic',
+                body: 'Bring Your Own OpenAI Key. Unlimited runs. Full model control. Pure performance intelligence with zero gatekeeping.',
               },
             ].map(({ icon: Icon, color, title, body }) => (
               <div
                 key={title}
-                className="rounded-xl p-6 transition-colors"
-                style={{
-                  backgroundColor: 'var(--bg-card)',
-                  border: '1px solid var(--border-card)',
-                }}
+                className="bg-maverick-dark-1 border border-white/5 p-10 rounded-[2.5rem] hover:border-white/10 transition-all group hover:bg-white/[0.01]"
               >
-                <div
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-xl mb-4"
-                  style={{ background: `${color}15`, border: `1px solid ${color}35` }}
-                >
-                  <Icon className="w-5 h-5" style={{ color }} />
+                <div className={`mb-8 ${color}`}>
+                  <Icon className="w-10 h-10 group-hover:scale-110 transition-transform duration-500" />
                 </div>
-                <h3 className="text-sm font-black uppercase tracking-wide text-white mb-2">{title}</h3>
-                <p className="text-sm leading-relaxed" style={{ color: 'var(--text-muted)' }}>{body}</p>
+                <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white mb-4 italic">{title}</h3>
+                <p className="text-[11px] leading-relaxed text-maverick-muted font-mono uppercase tracking-widest">{body}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── FREE TOOL CTA — matches swayzemedia.com pricing card style ── */}
-      <section className="px-6 py-20" style={{ borderTop: '1px solid var(--border-subtle)' }}>
-        <div className="max-w-xl mx-auto text-center">
-          {/* Section label */}
-          <p className="section-label mb-3">Pricing</p>
-          <h2 className="text-4xl font-black uppercase tracking-tight text-white mb-4">
-            100% Free.<br />
-            <span style={{ color: 'var(--orange)' }}>No Catch.</span>
+      {/* ── CALL TO ACTION ── */}
+      <section className="px-6 py-48 border-t border-white/5 relative overflow-hidden bg-maverick-black">
+         <div
+          className="absolute inset-0 opacity-[0.02] pointer-events-none"
+          style={{
+            backgroundImage: 'radial-gradient(circle, rgba(0,204,102,1) 1px, transparent 1px)',
+            backgroundSize: '40px 40px',
+          }}
+        />
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <h2 className="text-5xl md:text-9xl font-black uppercase tracking-tighter italic text-white mb-10 leading-[0.85]">
+            Stop Guessing.<br />
+            <span className="text-maverick-neon">Start Executing.</span>
           </h2>
-          <p className="text-sm mb-8 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
-            Marketing Maverick is a free tool from Swayze Media. Unlimited runs, all weapons unlocked.
-            Just bring your OpenAI key and start generating copy that converts.
+          <p className="text-[10px] font-mono uppercase tracking-[0.5em] text-maverick-muted mb-16 leading-loose max-w-xl mx-auto">
+            Marketing Maverick is free for elite performance marketers. No card. No fluff. Pure synapse.
           </p>
-
-          {/* Pricing card — styled like swayzemedia.com "Most Popular" card */}
-          <div className="rounded-xl p-8 mb-8 text-left" style={{ backgroundColor: 'var(--bg-card)', border: '2px solid var(--orange)' }}>
-            <div className="inline-block px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider mb-4" style={{ backgroundColor: 'var(--orange)', color: '#000' }}>
-              Always Free
-            </div>
-            <div className="flex items-end gap-1 mb-4">
-              <span className="text-5xl font-black text-white">$0</span>
-              <span className="text-sm mb-2" style={{ color: 'var(--text-muted)' }}>/forever</span>
-            </div>
-            <ul className="space-y-3 mb-6">
-              {[
-                'Unlimited AI copy runs — no caps ever',
-                'All 10 weapons unlocked',
-                'Bring your own OpenAI key (BYOK)',
-                'Secure key storage with RLS',
-                'Stack weapons for compound output',
-              ].map((item) => (
-                <li key={item} className="flex items-center gap-3 text-sm text-white">
-                  <span className="text-base" style={{ color: 'var(--green)' }}>✓</span>
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <Link href="/auth/signup" className="btn-primary w-full justify-center text-sm py-3">
-              <Zap className="w-4 h-4" />
-              Get Started Free →
-            </Link>
+          <Link
+            href="/auth/signup"
+            className="inline-block px-20 py-7 bg-maverick-neon text-black font-black uppercase tracking-[0.4em] rounded-2xl hover:shadow-[0_0_70px_rgba(0,204,102,0.5)] transition-all active:scale-95 italic text-sm shadow-2xl"
+          >
+            Access Command Center
+          </Link>
+          <div className="mt-24 opacity-20">
+            <p className="text-[9px] font-mono uppercase tracking-[0.8em] text-white">Swayze Media · Maverick Synapse 1.0.4 · Institutional Grade</p>
           </div>
-
-          <p className="text-xs" style={{ color: 'var(--text-muted)', fontFamily: 'monospace' }}>
-            A free tool by{' '}
-            <a href="https://swayzemedia.com" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: 'var(--green)' }}>
-              swayzemedia.com
-            </a>
-            {' '}· No credit card required
-          </p>
         </div>
       </section>
 
-      {/* ── BOTTOM CTA ── */}
-      <section className="px-6 py-20 text-center" style={{ borderTop: '1px solid var(--border-subtle)' }}>
-        <p className="section-label mb-3">Ready?</p>
-        <h2 className="text-4xl font-black uppercase tracking-tight text-white mb-4">
-          Stop Writing Like a Robot.
-        </h2>
-        <p className="text-sm mb-8" style={{ color: 'var(--text-muted)', fontFamily: 'monospace' }}>
-          Free forever. No card needed. Just results.
+      <footer className="py-12 border-t border-white/5 text-center">
+        <p className="text-[8px] font-mono uppercase tracking-[0.4em] text-maverick-muted">
+          © 2026 Swayze Media · Performance Intelligence Engine
         </p>
-        <Link
-          href="/auth/signup"
-          className="btn-primary text-base px-10 py-4"
-        >
-          <Zap className="w-4 h-4" />
-          Get Started Free
-        </Link>
-      </section>
+      </footer>
     </div>
   );
 }
