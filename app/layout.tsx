@@ -7,6 +7,7 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import './globals.css';
 import { CMOChatbot } from '@/components/CMOChatbot';
+import { OnboardingTour } from '@/components/OnboardingTour';
 import { AnimatedSynapseLogo } from '@/components/AnimatedSynapseLogo';
 
 const inter = Inter({ subsets: ['latin'], weight: ['400', '500', '600', '700', '800', '900'] });
@@ -132,6 +133,9 @@ export default async function RootLayout({
 
         {/* ── BRANDON SWAYZE CMO CHATBOT ── */}
         <CMOChatbot />
+
+        {/* ── ONBOARDING TOUR ── */}
+        <OnboardingTour />
 
         {/* ── FOOTER — matches swayzemedia.com footer style ── */}
         <footer className="mt-20 py-8 px-6" style={{ borderTop: '1px solid var(--border-subtle)' }}>
