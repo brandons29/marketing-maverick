@@ -19,6 +19,17 @@ export function ApiHelpModal({ isOpen, onClose }: { isOpen: boolean; onClose: ()
 
   const providers = [
     {
+      id: 'maton',
+      name: 'Maton AI (SaaS Actions)',
+      url: 'https://maton.ai/api-keys',
+      steps: [
+        'Sign in to maton.ai.',
+        'Navigate to API Keys and create a new "Secret Key".',
+        'Connect your SaaS units (Meta, HubSpot, Klaviyo) within Maton.',
+        'Link the key here to give Maverick "hands" to execute your strategies.'
+      ]
+    },
+    {
       id: 'openai',
       name: 'OpenAI (GPT-4o)',
       url: 'https://platform.openai.com/api-keys',

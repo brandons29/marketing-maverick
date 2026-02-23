@@ -42,8 +42,8 @@ export function CMOChatbot() {
             <Bot className="w-4 h-4 text-maverick-gold" />
           </div>
           <div>
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-white italic">Brandon Swayze</h3>
-            <p className="text-[8px] font-mono text-maverick-gold uppercase tracking-widest mt-0.5">Virtual CMO · Priority Intelligence</p>
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-white italic">Brandon</h3>
+            <p className="text-[8px] font-mono text-maverick-gold uppercase tracking-widest mt-0.5">Performance Architect · Priority Intelligence</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
