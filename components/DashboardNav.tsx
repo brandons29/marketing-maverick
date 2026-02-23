@@ -12,6 +12,7 @@ import {
   LayoutDashboard,
   Settings,
   Zap,
+  Sparkles,
   LogOut,
   ChevronRight
 } from 'lucide-react';
