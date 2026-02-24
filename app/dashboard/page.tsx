@@ -14,17 +14,14 @@ import {
   Activity,
   Target,
   ShieldCheck,
-  TrendingUp,
   AlertCircle,
   History,
   ChevronDown,
   Cpu,
   BrainCircuit,
-  Sparkles,
   Clock,
   ArrowRight,
   MonitorCheck,
-  MousePointer2,
   ArrowUpRight
 } from 'lucide-react';
 
@@ -181,6 +178,7 @@ export default function Dashboard() {
     <div className="min-h-screen bg-[#030303] text-white selection:bg-maverick-neon selection:text-black">
       <div className="max-w-[1440px] mx-auto px-6 lg:px-12 py-10 pb-40">
 
+        {/* ── HEADER ── */}
         <header className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
           <div>
             <div className="flex items-center gap-3 mb-3">
@@ -207,8 +205,10 @@ export default function Dashboard() {
           </div>
         </header>
 
+        {/* ── THE STEPPER (First Principles UI) ── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           
+          {/* STEP 1: LOAD LOGIC (Module Picker) */}
           <div className="lg:col-span-4 space-y-8">
             <section className="elite-card p-10 bg-white/[0.01]">
               <div className="flex items-center justify-between mb-10">
@@ -241,6 +241,7 @@ export default function Dashboard() {
               </div>
             </section>
 
+            {/* Archives Shortcut */}
             {historyOpen && synapseHistory.length > 0 && (
               <section className="elite-card p-8 animate-in slide-in-from-top-4 duration-500">
                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-neutral-500 mb-6">Recent Synapses</h3>
@@ -263,8 +264,10 @@ export default function Dashboard() {
             )}
           </div>
 
+          {/* STEP 2: EXECUTION SPACE */}
           <div className="lg:col-span-8 space-y-10">
             
+            {/* INPUT UNIT */}
             <section className="elite-card p-10 bg-white/[0.02] border-white/10">
               <div className="flex items-center justify-between mb-8">
                 <div className="space-y-1">
@@ -272,6 +275,7 @@ export default function Dashboard() {
                   <h2 className="text-xl font-black uppercase italic tracking-tight">Execute Protocol</h2>
                 </div>
                 
+                {/* Engine Selector */}
                 <div className="relative group">
                   <button
                     onClick={() => setModelOpen(!modelOpen)}
@@ -351,6 +355,7 @@ export default function Dashboard() {
               </div>
             </section>
 
+            {/* ERROR UNIT */}
             {error && (
               <div className="flex items-center gap-5 p-8 rounded-3xl bg-red-500/5 border border-red-500/20 animate-in shake-in duration-500">
                 <AlertCircle className="w-6 h-6 text-red-500 shrink-0" />
@@ -358,6 +363,7 @@ export default function Dashboard() {
               </div>
             )}
 
+            {/* OUTPUT UNIT */}
             {(currentOutput || loading) && (
               <div ref={outputRef} className="elite-card bg-white/[0.01] border-white/10 animate-in slide-in-from-bottom-12 duration-1000">
                 <div className="flex items-center justify-between px-10 py-8 border-b border-white/5 bg-white/[0.01]">
@@ -382,7 +388,7 @@ export default function Dashboard() {
                 </div>
 
                 <div className="p-10 lg:p-16">
-                  <article
+                  <div
                     className="prose prose-invert max-w-none text-neutral-300 leading-[2] text-sm md:text-base font-medium space-y-8"
                     dangerouslySetInnerHTML={{
                       __html: (currentOutput || '')
@@ -397,6 +403,7 @@ export default function Dashboard() {
               </div>
             )}
 
+            {/* EMPTY STATE */}
             {!currentOutput && !loading && !error && (
               <div className="flex flex-col items-center justify-center text-center py-40 rounded-[3rem] border border-dashed border-white/[0.05] bg-white/[0.005]">
                 <div className="w-20 h-20 rounded-[2rem] bg-white/[0.01] border border-white/5 flex items-center justify-center mb-8 shadow-inner">
