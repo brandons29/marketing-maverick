@@ -21,7 +21,11 @@ import {
   Cpu,
   BrainCircuit,
   Sparkles,
-  Clock
+  Clock,
+  ArrowRight,
+  MonitorCheck,
+  MousePointer2,
+  ArrowUpRight
 } from 'lucide-react';
 
 interface UserProfile { api_key: string | null; }
@@ -82,7 +86,11 @@ export default function Dashboard() {
 
       if (!res.ok) {
         const json = await res.json();
-        if (res.status === 403 && json.error?.includes('key not configured')) { window.location.href = '/settings'; return; }
+        if (res.status === 403 && json.error?.includes('key not configured')) { 
+          setError('Provider key not found. Redirecting to Vault...');
+          setTimeout(() => window.location.href = '/settings', 1500); 
+          return; 
+        }
         throw new Error(json.error || 'Synapse failed');
       }
 
@@ -118,13 +126,14 @@ export default function Dashboard() {
       const moduleName = selectedWeapons.length > 0
         ? skills.find(s => s.id === selectedWeapons[0])?.name ?? 'Custom'
         : 'General';
+      
       setSynapseHistory(prev => [{
         brief: message.slice(0, 60),
         module: moduleName,
         response: fullResponse,
         model: selectedModel,
         ts: new Date()
-      }, ...prev].slice(0, 5));
+      }, ...prev].slice(0, 10));
 
       setTimeout(() => outputRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
     } catch (err: unknown) {
@@ -143,24 +152,9 @@ export default function Dashboard() {
     });
   };
 
-  const handleRemix = () => { setResponse(''); setMessage(''); setError(''); window.scrollTo({ top: 0, behavior: 'smooth' }); };
-  const loadFromHistory = (item: SynapseHistory) => { setMessage(item.brief); setResponse(item.response); setHistoryOpen(false); };
-
   const activeModel = MODEL_CATALOG.find(m => m.id === selectedModel) || MODEL_CATALOG[0];
   const currentOutput = streaming ? streamBuffer : response;
 
-  if (profileLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="flex items-center gap-3 text-maverick-muted">
-          <div className="w-5 h-5 border-2 rounded-full animate-spin border-maverick-neon/30 border-t-maverick-neon" />
-          <span className="font-mono text-xs uppercase tracking-widest">Initializing Engine...</span>
-        </div>
-      </div>
-    );
-  }
-
-  // Check if current provider key is configured
   const provider = getProviderForModel(selectedModel);
   let isKeyConfigured = false;
   if (profile?.api_key) {
@@ -168,301 +162,251 @@ export default function Dashboard() {
       const keys = JSON.parse(profile.api_key);
       isKeyConfigured = !!keys[provider];
     } catch {
-      // Legacy: if it's not JSON, it's OpenAI
       isKeyConfigured = provider === 'openai' && !!profile.api_key;
     }
   }
 
-  const dashboardStats = [
-    { label: 'Sessions Today', value: synapseHistory.length.toString(), change: `+${synapseHistory.length}`, icon: Activity },
-    { label: 'Active Module', value: selectedWeapons.length > 0 ? `${selectedWeapons.length} Loaded` : 'None', change: '', icon: Target },
-    { label: 'Engine Mode', value: activeModel.label, change: '', icon: Cpu },
-  ];
-
-  // Group models by company for a cleaner UI
-  const groupedModels = MODEL_CATALOG.reduce((acc, model) => {
-    if (!acc[model.group]) acc[model.group] = [];
-    acc[model.group].push(model);
-    return acc;
-  }, {} as Record<string, typeof MODEL_CATALOG>);
+  if (profileLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#030303]">
+        <div className="flex flex-col items-center gap-6">
+          <div className="w-12 h-12 border-2 rounded-full animate-spin border-maverick-neon/20 border-t-maverick-neon shadow-[0_0_20px_rgba(0,255,136,0.2)]" />
+          <span className="font-mono text-[10px] uppercase tracking-[0.5em] text-maverick-neon animate-pulse">Initializing Engine</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen px-4 py-8 lg:px-10 lg:py-12 pb-32 lg:pb-12">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-[#030303] text-white selection:bg-maverick-neon selection:text-black">
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-12 py-10 pb-40">
 
-        {/* ── TOP BAR ── */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+        <header className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
           <div>
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-2 h-2 rounded-full bg-maverick-neon shadow-[0_0_10px_rgba(0,255,136,0.5)]" />
-              <h1 className="text-3xl font-black uppercase tracking-tighter text-white italic">Strategy Engine</h1>
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-2.5 h-2.5 rounded-full bg-maverick-neon shadow-[0_0_15px_rgba(0,255,136,0.6)]" />
+              <h1 className="text-4xl font-black uppercase tracking-tighter italic">Strategic Forge</h1>
             </div>
-            <p className="text-[10px] text-maverick-muted font-mono uppercase tracking-[0.4em]">
-              Performance Intelligence · Swayze Media Elite
+            <p className="text-[10px] text-neutral-500 font-mono uppercase tracking-[0.5em]">
+              Operational Intelligence · Swayze Media Protocol
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            {synapseHistory.length > 0 && (
-              <button
-                onClick={() => setHistoryOpen(!historyOpen)}
-                className="flex items-center gap-2 px-4 py-2 bg-maverick-dark-1 border border-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest text-maverick-muted hover:text-white transition-colors"
-              >
-                <History className="w-3.5 h-3.5" />
-                History ({synapseHistory.length})
-              </button>
-            )}
-            <div className="bg-maverick-dark-1 border border-white/5 rounded-xl px-4 py-2 flex items-center gap-3">
+          
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => setHistoryOpen(!historyOpen)}
+              className="flex items-center gap-3 px-6 py-3 bg-white/[0.03] border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest text-neutral-400 hover:text-white hover:border-white/20 transition-all group"
+            >
+              <History className="w-3.5 h-3.5 group-hover:rotate-[-45deg] transition-transform" />
+              Archives ({synapseHistory.length})
+            </button>
+            <div className="hidden md:flex items-center gap-4 px-6 py-3 bg-maverick-neon/[0.03] border border-maverick-neon/10 rounded-2xl">
               <ShieldCheck className="w-4 h-4 text-maverick-neon" />
-              <div>
-                <p className="text-[8px] text-maverick-muted font-mono uppercase tracking-widest">Status</p>
-                <p className="text-[10px] font-black text-white uppercase italic">Elite Pro Active</p>
-              </div>
+              <span className="text-[10px] font-black text-maverick-neon uppercase italic tracking-widest text-maverick-neon">Elite Active</span>
             </div>
           </div>
-        </div>
+        </header>
 
-        {/* ── SYNAPSE HISTORY PANEL ── */}
-        {historyOpen && synapseHistory.length > 0 && (
-          <div className="mb-8 bg-maverick-dark-1 border border-white/5 rounded-2xl overflow-hidden animate-in fade-in slide-in-from-top-4 duration-300">
-            <div className="px-6 py-4 border-b border-white/5 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <History className="w-4 h-4 text-maverick-gold" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-white">Recent Synapses</span>
-              </div>
-              <button onClick={() => setHistoryOpen(false)} className="text-[8px] text-maverick-muted hover:text-white uppercase tracking-widest font-black">Close</button>
-            </div>
-            <div className="divide-y divide-white/[0.03]">
-              {synapseHistory.map((item, i) => (
-                <div key={i} className="px-6 py-4 flex items-center justify-between gap-4 hover:bg-white/[0.01] transition-colors group">
-                  <div className="flex items-center gap-4 min-w-0">
-                    <div className="w-8 h-8 rounded-xl bg-maverick-neon/5 border border-maverick-neon/10 flex items-center justify-center shrink-0">
-                      <Zap className="w-4 h-4 text-maverick-neon" />
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-xs font-bold text-white truncate">{item.brief}{item.brief.length >= 60 ? '...' : ''}</p>
-                      <div className="flex items-center gap-2 mt-0.5">
-                        <span className="text-[8px] font-mono text-maverick-muted uppercase">{item.module}</span>
-                        <span className="text-white/10">·</span>
-                        <span className="text-[8px] font-mono text-maverick-muted uppercase">{item.model}</span>
-                        <span className="text-white/10">·</span>
-                        <Clock className="w-2.5 h-2.5 text-maverick-muted" />
-                        <span className="text-[8px] font-mono text-maverick-muted">{item.ts.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => loadFromHistory(item)}
-                    className="shrink-0 text-[8px] font-black text-maverick-neon uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    Reload →
-                  </button>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          
+          <div className="lg:col-span-4 space-y-8">
+            <section className="elite-card p-10 bg-white/[0.01]">
+              <div className="flex items-center justify-between mb-10">
+                <div className="space-y-1">
+                  <p className="text-[9px] font-black text-maverick-neon uppercase tracking-[0.3em]">Step 01</p>
+                  <h2 className="text-xl font-black uppercase italic tracking-tight">Load Logic</h2>
                 </div>
-              ))}
-            </div>
+                {selectedWeapons.length > 0 && (
+                  <button onClick={() => setSelectedWeapons([])} className="text-[9px] font-black uppercase tracking-widest text-neutral-600 hover:text-white transition-colors">Wipe All</button>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 gap-2">
+                {skills.map((skill) => {
+                  const isSelected = selectedWeapons.includes(skill.id);
+                  return (
+                    <button
+                      key={skill.id}
+                      onClick={() => toggleWeapon(skill.id)}
+                      className={`group w-full text-left flex items-center gap-4 p-4 rounded-2xl transition-all border ${isSelected ? 'bg-maverick-neon/10 border-maverick-neon/30 shadow-[0_0_20px_rgba(0,255,136,0.05)]' : 'border-white/5 hover:bg-white/[0.02]'}`}
+                    >
+                      <div className={`w-5 h-5 rounded-lg border flex items-center justify-center shrink-0 transition-all ${isSelected ? 'border-maverick-neon bg-maverick-neon' : 'border-white/10 group-hover:border-white/30'}`}>
+                        {isSelected && <CheckCheck className="w-3.5 h-3.5 text-black" />}
+                      </div>
+                      <span className={`text-[11px] font-bold uppercase tracking-widest transition-colors ${isSelected ? 'text-white' : 'text-neutral-500 group-hover:text-neutral-300'}`}>{skill.name}</span>
+                      {isSelected && <ArrowUpRight className="w-3.5 h-3.5 ml-auto text-maverick-neon animate-in slide-in-from-left-2" />}
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+
+            {historyOpen && synapseHistory.length > 0 && (
+              <section className="elite-card p-8 animate-in slide-in-from-top-4 duration-500">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-neutral-500 mb-6">Recent Synapses</h3>
+                <div className="space-y-4">
+                  {synapseHistory.map((item, i) => (
+                    <button 
+                      key={i} 
+                      onClick={() => { setMessage(item.brief); setResponse(item.response); }}
+                      className="w-full text-left p-4 rounded-xl border border-white/5 hover:bg-white/[0.02] transition-all group"
+                    >
+                      <p className="text-[11px] font-bold text-white truncate mb-2 group-hover:text-maverick-neon transition-colors">{item.brief}</p>
+                      <div className="flex items-center gap-3">
+                        <span className="text-[8px] font-mono text-neutral-600 uppercase">{item.module}</span>
+                        <span className="text-[8px] font-mono text-neutral-600 uppercase tracking-tighter">{item.ts.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
-        )}
 
-        {/* ── PERFORMANCE STATS ── */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-          {dashboardStats.map((stat) => (
-            <div key={stat.label} className="bg-maverick-dark-1 border border-white/5 p-6 rounded-2xl relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <stat.icon className="w-12 h-12" />
-              </div>
-              <p className="text-[10px] font-black text-maverick-muted uppercase tracking-widest mb-1">{stat.label}</p>
-              <div className="flex items-end gap-3">
-                <span className="text-2xl font-black italic tracking-tighter text-white">{stat.value}</span>
-                {stat.change && <span className="text-[10px] font-bold text-maverick-neon mb-1">{stat.change}</span>}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* ── MISSING API KEY BANNER ── */}
-        {!isKeyConfigured && (
-          <div className="mb-8 flex items-center gap-4 rounded-2xl px-6 py-4 bg-maverick-gold/5 border border-maverick-gold/20">
-            <AlertTriangle className="w-5 h-5 shrink-0 text-maverick-gold" />
-            <div className="flex-1">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-maverick-gold mb-1">Infrastructure Alert</p>
-              <p className="text-sm font-medium text-white/80">No {provider.toUpperCase()} intelligence key detected for {activeModel.label}. Connect your key to unlock this engine.</p>
-            </div>
-            <a href="/settings" className="px-6 py-2 bg-maverick-gold text-black text-[10px] font-black uppercase tracking-widest rounded-xl transition-all italic">Connect Key →</a>
-          </div>
-        )}
-
-        {/* ── MAIN GRID ── */}
-        <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-8">
-
-          {/* ── MODULE PICKER ── */}
-          <aside className="rounded-3xl p-6 h-fit lg:sticky lg:top-8 bg-maverick-dark-1 border border-white/5 shadow-2xl">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
-                <Activity className="w-4 h-4 text-maverick-neon" />
-                <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-maverick-muted">Strategy Modules</h2>
-              </div>
-              {selectedWeapons.length > 0 && (
-                <button onClick={() => setSelectedWeapons([])} className="text-[8px] font-black uppercase tracking-widest text-maverick-muted hover:text-white transition-colors">Reset</button>
-              )}
-            </div>
-
-            <div className="space-y-1.5">
-              {skills.map((skill) => {
-                const isSelected = selectedWeapons.includes(skill.id);
-                return (
-                  <button
-                    key={skill.id}
-                    onClick={() => toggleWeapon(skill.id)}
-                    className={`group w-full text-left flex items-center gap-3 p-3 rounded-xl transition-all border ${isSelected ? 'bg-maverick-neon/5 border-maverick-neon/20' : 'border-transparent hover:bg-white/[0.02]'}`}
-                  >
-                    <div className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-all ${isSelected ? 'border-maverick-neon bg-maverick-neon' : 'border-white/10 group-hover:border-white/30'}`}>
-                      {isSelected && <CheckCheck className="w-3 h-3 text-black" />}
-                    </div>
-                    <span className={`text-[11px] font-black uppercase tracking-widest transition-colors ${isSelected ? 'text-white' : 'text-maverick-muted group-hover:text-white'}`}>{skill.name}</span>
-                    {isSelected && <ChevronRight className="w-3 h-3 ml-auto shrink-0 text-maverick-neon" />}
-                  </button>
-                );
-              })}
-            </div>
-          </aside>
-
-          {/* ── EXECUTION ── */}
-          <section className="flex flex-col gap-8">
-            <div className="rounded-3xl p-8 bg-maverick-dark-1 border border-white/5 shadow-2xl">
-              <div className="flex items-center gap-2 mb-4">
-                <Target className="w-4 h-4 text-maverick-neon" />
-                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-maverick-muted">Performance Brief</label>
-              </div>
-
-              <textarea
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder={selectedWeapons.length > 0
-                  ? `Brief the ${skills.find(s => s.id === selectedWeapons[0])?.name} module...`
-                  : "e.g. 'Audit our Meta campaigns running at $50k/mo spend — ROAS has dropped from 4.2x to 2.8x over 3 weeks...'"
-                }
-                className="w-full bg-black/50 border border-white/10 rounded-2xl p-6 text-sm text-white placeholder:text-maverick-muted outline-none focus:border-maverick-neon/50 transition-all resize-none min-h-[160px] font-medium leading-relaxed"
-                onKeyDown={(e) => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleUnleash(); }}
-              />
-
-              {/* Model Selector + Execute Button */}
-              <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between mt-6 gap-4">
-                <div className="relative">
+          <div className="lg:col-span-8 space-y-10">
+            
+            <section className="elite-card p-10 bg-white/[0.02] border-white/10">
+              <div className="flex items-center justify-between mb-8">
+                <div className="space-y-1">
+                  <p className="text-[9px] font-black text-maverick-gold uppercase tracking-[0.3em]">Step 02</p>
+                  <h2 className="text-xl font-black uppercase italic tracking-tight">Execute Protocol</h2>
+                </div>
+                
+                <div className="relative group">
                   <button
                     onClick={() => setModelOpen(!modelOpen)}
-                    className="flex items-center gap-3 px-4 py-3 bg-black/50 border border-white/10 rounded-xl hover:border-white/20 transition-colors group"
+                    className="flex items-center gap-4 px-6 py-3 bg-black/40 border border-white/10 rounded-2xl hover:border-white/20 transition-all"
                   >
-                    <div className="text-left">
-                      <p className="text-[8px] font-mono text-maverick-muted uppercase tracking-widest">Engine</p>
+                    <div className="text-right">
+                      <p className="text-[8px] font-mono text-neutral-500 uppercase tracking-[0.2em]">Engine</p>
                       <p className="text-[10px] font-black text-white uppercase italic">{activeModel.label}</p>
                     </div>
-                    <ChevronDown className={`w-3 h-3 text-maverick-muted ml-2 transition-transform ${modelOpen ? 'rotate-180' : ''}`} />
+                    <ChevronDown className={`w-3.5 h-3.5 text-neutral-500 transition-transform ${modelOpen ? 'rotate-180' : ''}`} />
                   </button>
 
                   {modelOpen && (
-                    <div className="absolute bottom-full mb-2 left-0 w-80 bg-maverick-dark-2 border border-white/10 rounded-2xl overflow-hidden shadow-2xl z-50 animate-in fade-in slide-in-from-bottom-2 duration-200">
-                      <div className="max-h-[60vh] overflow-y-auto">
-                        {Object.entries(groupedModels).map(([group, models]) => (
-                          <div key={group} className="border-b border-white/5 last:border-0">
-                            <div className="px-5 py-2 bg-white/[0.01]">
-                              <p className="text-[8px] font-black text-maverick-muted uppercase tracking-[0.2em]">{group}</p>
+                    <div className="absolute top-full mt-4 right-0 w-80 bg-[#0a0a0a] border border-white/10 rounded-[2rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,1)] z-[100] animate-in fade-in slide-in-from-top-2 duration-300">
+                      <div className="max-h-[60vh] overflow-y-auto divide-y divide-white/5">
+                        {MODEL_CATALOG.map(m => (
+                          <button
+                            key={m.id}
+                            onClick={() => { setSelectedModel(m.id); setModelOpen(false); }}
+                            className={`w-full flex items-center gap-5 px-6 py-5 text-left transition-colors ${selectedModel === m.id ? 'bg-maverick-neon/5' : 'hover:bg-white/[0.02]'}`}
+                          >
+                            <div>
+                              <p className={`text-[11px] font-black uppercase italic ${selectedModel === m.id ? 'text-maverick-neon' : 'text-white'}`}>{m.label}</p>
+                              <p className="text-[9px] font-mono text-neutral-500 uppercase tracking-widest mt-1">{m.group}</p>
                             </div>
-                            {models.map(m => (
-                              <button
-                                key={m.id}
-                                onClick={() => { setSelectedModel(m.id); setModelOpen(false); }}
-                                className={`w-full flex items-center gap-4 px-5 py-4 transition-colors ${selectedModel === m.id ? 'bg-maverick-neon/5' : 'hover:bg-white/[0.02]'}`}
-                              >
-                                <div className="text-left">
-                                  <p className={`text-[10px] font-black uppercase italic ${selectedModel === m.id ? 'text-maverick-neon' : 'text-white'}`}>{m.label}</p>
-                                  <p className="text-[8px] font-mono text-maverick-muted uppercase tracking-widest">{m.desc}</p>
-                                </div>
-                                {selectedModel === m.id && <CheckCheck className="w-3.5 h-3.5 text-maverick-neon ml-auto" />}
-                              </button>
-                            ))}
-                          </div>
+                            {selectedModel === m.id && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-maverick-neon shadow-[0_0_10px_rgba(0,255,136,1)]" />}
+                          </button>
                         ))}
                       </div>
                     </div>
                   )}
                 </div>
+              </div>
 
+              {!isKeyConfigured && (
+                <div className="mb-8 flex items-center justify-between gap-6 p-6 rounded-[1.5rem] bg-maverick-gold/5 border border-maverick-gold/20 animate-in fade-in">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-maverick-gold/10 flex items-center justify-center border border-maverick-gold/20">
+                      <ShieldCheck className="w-5 h-5 text-maverick-gold" />
+                    </div>
+                    <p className="text-xs font-bold text-white/80 uppercase tracking-wider italic">
+                      Intelligence key missing for <span className="text-maverick-gold underline decoration-maverick-gold/40">{provider.toUpperCase()}</span>. Access Restricted.
+                    </p>
+                  </div>
+                  <a href="/settings" className="btn-synapse-gold px-8 whitespace-nowrap">Connect Vault</a>
+                </div>
+              )}
+
+              <div className="relative group">
+                <textarea
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder={selectedWeapons.length > 0
+                    ? `Instruct the ${skills.find(s => s.id === selectedWeapons[0])?.name} module...`
+                    : "Describe the performance bottleneck or scaling target..."
+                  }
+                  className="w-full bg-black/60 border border-white/5 rounded-[2rem] p-10 text-base md:text-lg text-white placeholder:text-neutral-700 outline-none focus:border-maverick-neon/30 transition-all resize-none min-h-[220px] font-medium leading-relaxed shadow-inner"
+                  onKeyDown={(e) => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleUnleash(); }}
+                />
+                <div className="absolute bottom-6 right-8 flex items-center gap-4 opacity-40 group-focus-within:opacity-100 transition-opacity">
+                   <p className="text-[8px] font-mono uppercase tracking-[0.3em] text-neutral-500">Cmd + Enter to Fire</p>
+                </div>
+              </div>
+
+              <div className="mt-8 flex justify-end">
                 <button
                   onClick={handleUnleash}
-                  disabled={loading || !message.trim()}
-                  className="flex-1 md:flex-none flex items-center justify-center gap-3 px-12 py-4 bg-maverick-neon text-black font-black text-[10px] uppercase tracking-[0.3em] rounded-2xl hover:shadow-[0_0_40px_rgba(0,255,136,0.3)] transition-all active:scale-95 disabled:opacity-10 disabled:grayscale disabled:cursor-not-allowed italic"
+                  disabled={loading || !message.trim() || !isKeyConfigured}
+                  className={`btn-synapse px-14 py-6 scale-110 flex items-center gap-4 group ${loading ? 'opacity-50' : ''}`}
                 >
                   {loading ? (
-                    <><RotateCcw className="w-4 h-4 animate-spin" />Synapsing...</>
+                    <><RotateCcw className="w-5 h-5 animate-spin" /> Forge in Progress</>
                   ) : (
-                    <><Zap className="w-4 h-4" />Execute Intelligence</>
+                    <><Zap className={`w-5 h-5 transition-transform group-hover:scale-125 ${isKeyConfigured ? 'fill-black' : ''}`} /> Unleash Intelligence</>
                   )}
                 </button>
               </div>
-            </div>
+            </section>
 
             {error && (
-              <div className="flex items-start gap-4 rounded-2xl px-6 py-4 bg-red-500/5 border border-red-500/20 animate-in fade-in">
-                <AlertCircle className="w-5 h-5 text-red-500 mt-0.5 shrink-0" />
-                <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-red-500">Synapse Interrupted</p>
-                  <p className="text-xs mt-1 text-white/60">{error}</p>
-                </div>
+              <div className="flex items-center gap-5 p-8 rounded-3xl bg-red-500/5 border border-red-500/20 animate-in shake-in duration-500">
+                <AlertCircle className="w-6 h-6 text-red-500 shrink-0" />
+                <p className="text-sm font-black uppercase italic tracking-wider text-red-400">{error}</p>
               </div>
             )}
 
             {(currentOutput || loading) && (
-              <div ref={outputRef} className="rounded-3xl overflow-hidden bg-maverick-dark-1 border border-white/5 shadow-2xl animate-in fade-in slide-in-from-bottom-8 duration-700">
-                <div className="flex items-center justify-between px-8 py-6 border-b border-white/5 bg-white/[0.01]">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-2 h-2 rounded-full ${streaming ? 'animate-pulse bg-maverick-gold' : 'bg-maverick-neon'} shadow-[0_0_10px_rgba(0,255,136,0.5)]`} />
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-white">
-                      {streaming ? 'Synapsing...' : 'Elite Performance Asset'}
-                    </span>
-                    <span className="text-[8px] font-mono text-maverick-muted uppercase px-2 py-0.5 rounded-full border border-white/5">
-                      {activeModel.label}
-                    </span>
+              <div ref={outputRef} className="elite-card bg-white/[0.01] border-white/10 animate-in slide-in-from-bottom-12 duration-1000">
+                <div className="flex items-center justify-between px-10 py-8 border-b border-white/5 bg-white/[0.01]">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-2 h-2 rounded-full ${streaming ? 'animate-pulse bg-maverick-gold shadow-[0_0_15px_rgba(212,175,55,1)]' : 'bg-maverick-neon shadow-[0_0_15px_rgba(0,255,136,1)]'}`} />
+                    <h3 className="text-xs font-black uppercase tracking-[0.4em] italic text-neutral-300">
+                      {streaming ? 'Forging Strategic Asset...' : 'Operational Blueprint Ready'}
+                    </h3>
                   </div>
+                  
                   {!streaming && response && (
-                    <div className="flex items-center gap-3">
-                      <button onClick={handleRemix} className="p-2.5 rounded-xl border border-white/5 text-maverick-muted hover:text-white hover:bg-white/5 transition-all">
-                        <RotateCcw className="w-4 h-4" />
-                      </button>
-                      <button
+                    <div className="flex items-center gap-4">
+                      <button 
                         onClick={handleCopy}
-                        className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all border ${copied ? 'bg-maverick-neon/10 border-maverick-neon text-maverick-neon' : 'bg-white/5 border-transparent text-white hover:bg-white/10'}`}
+                        className={`flex items-center gap-3 px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all border ${copied ? 'bg-maverick-neon/20 border-maverick-neon text-maverick-neon' : 'bg-white/5 border-transparent text-white hover:bg-white/10'}`}
                       >
-                        {copied ? <><CheckCheck className="w-3.5 h-3.5" />Synapsed</> : <><Copy className="w-3.5 h-3.5" />Copy Asset</>}
+                        {copied ? <CheckCheck className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                        {copied ? 'Captured' : 'Copy Protocol'}
                       </button>
                     </div>
                   )}
                 </div>
 
-                <div className="p-8 lg:p-12">
-                  <div
-                    className="text-sm lg:text-base leading-relaxed text-white/90 font-medium max-w-none"
+                <div className="p-10 lg:p-16">
+                  <article
+                    className="prose prose-invert max-w-none text-neutral-300 leading-[2] text-sm md:text-base font-medium space-y-8"
                     dangerouslySetInnerHTML={{
                       __html: (currentOutput || '')
-                        .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-black italic">$1</strong>')
-                        .replace(/\*(.*?)\*/g, '<em class="italic text-maverick-neon">$1</em>')
-                        .replace(/#{1,3} (.*?)(\n|$)/g, '<h3 class="text-white font-black italic text-lg mt-6 mb-2 uppercase tracking-tight">$1</h3>')
+                        .replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-black italic tracking-tight">$1</strong>')
+                        .replace(/\*(.*?)\*/g, '<span class="text-maverick-neon italic">$1</span>')
+                        .replace(/#{1,3} (.*?)(\n|$)/g, '<h3 class="text-white font-black uppercase italic text-2xl mt-12 mb-6 tracking-tighter border-l-2 border-maverick-neon pl-6">$1</h3>')
                         .replace(/\n/g, '<br>')
                     }}
                   />
-                  {streaming && <span className="inline-block w-1.5 h-4 bg-maverick-neon animate-pulse ml-1 rounded-sm" />}
+                  {streaming && <span className="inline-block w-2 h-6 bg-maverick-neon animate-pulse ml-2 rounded shadow-[0_0_15px_rgba(0,255,136,1)] align-middle" />}
                 </div>
               </div>
             )}
 
             {!currentOutput && !loading && !error && (
-              <div className="flex flex-col items-center justify-center text-center py-24 rounded-3xl border border-dashed border-white/5 bg-white/[0.01]">
-                <div className="w-16 h-16 rounded-full bg-maverick-dark-1 border border-white/5 flex items-center justify-center mb-6">
-                  <Activity className="w-8 h-8 text-maverick-muted opacity-20" />
+              <div className="flex flex-col items-center justify-center text-center py-40 rounded-[3rem] border border-dashed border-white/[0.05] bg-white/[0.005]">
+                <div className="w-20 h-20 rounded-[2rem] bg-white/[0.01] border border-white/5 flex items-center justify-center mb-8 shadow-inner">
+                  <BrainCircuit className="w-10 h-10 text-neutral-800" />
                 </div>
-                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-maverick-muted mb-2">Awaiting Intelligence Brief</p>
-                <p className="text-[8px] font-mono text-maverick-muted uppercase tracking-widest opacity-40">Load Module · Supply Target · Execute Synapse</p>
+                <h3 className="text-[10px] font-black uppercase tracking-[0.5em] text-neutral-600 mb-2">Engine Idle</h3>
+                <p className="text-[9px] font-mono text-neutral-800 uppercase tracking-widest italic">Awaiting Priority Logic Brief</p>
               </div>
             )}
-          </section>
+          </div>
         </div>
       </div>
     </div>
