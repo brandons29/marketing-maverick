@@ -10,32 +10,26 @@ const config: Config = {
     extend: {
       colors: {
         maverick: {
-          black: '#000000',
-          dark: '#0a0a0a',
-          'dark-alt': '#111111',
-          neon: '#00ff88',
-          gold: '#d4af37',
-          muted: '#a3a3a3',
-          border: '#262626',
+          neon: '#ff8400',
+          dark: {
+            DEFAULT: '#0a0a0a',
+            1: '#111111',
+            2: '#1a1a1a',
+            3: '#222222',
+          },
+          border: '#27272a',
         },
       },
       fontFamily: {
-        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
-      animation: {
-        'fade-in': 'fadeIn 0.5s ease-out forwards',
-        'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+      borderRadius: {
+        '2xl': '1rem',
+        '3xl': '1.5rem',
       },
-      keyframes: {
-        fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
-        },
-        slideUp: {
-          '0%': { transform: 'translateY(20px)', opacity: '0' },
-          '100%': { transform: 'translateY(0)', opacity: '1' },
-        },
+      animation: {
+        'pulse-slow': 'pulse 3s ease-in-out infinite',
       },
     },
   },

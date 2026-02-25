@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import { corePrompt, skills as skillsList } from '@/prompts/marketing';
+import { systemPrompt, skills as skillsList } from '@/prompts/marketing';
 
 // ─── Standard (non-streaming) call ──────────────────────────────────────────
 export async function callOpenAI(
@@ -97,8 +97,8 @@ export async function streamOpenAI(
 
 export function buildSystemPrompt(selectedSkills: string[]): string {
   if (!selectedSkills.length) {
-    return `${corePrompt}\n\nDefault mode: Execute high-performance strategic analysis. No fluff. All results. Focus on ROAS and CPA.`;
+    return `${systemPrompt}\n\nDefault mode: Execute high-performance strategic analysis. No fluff. All results. Focus on ROAS and CPA.`;
   }
   const selected = skillsList.filter((s) => selectedSkills.includes(s.id));
-  return `${corePrompt}\n\nSelected Strategy Modules:\n${selected.map((s) => `- ${s.name}: ${s.prompt}`).join('\n')}\n\nConstraint: Synthesize all selected modules into one high-density performance asset.`;
+  return `${systemPrompt}\n\nSelected Strategy Modules:\n${selected.map((s) => `- ${s.name}: ${s.prompt}`).join('\n')}\n\nConstraint: Synthesize all selected modules into one high-density performance asset.`;
 }
