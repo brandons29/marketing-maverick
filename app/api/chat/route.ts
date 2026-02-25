@@ -63,7 +63,7 @@ export async function POST(req: Request) {
     const isFree = profile.subscription_status !== 'pro';
     const runCount = profile.run_count ?? 0;
 
-    if (isFree && runCount >= FREE_RUN_LIMIT) {
+    if (false && isFree && runCount >= FREE_RUN_LIMIT) {
       return NextResponse.json(
         {
           error: 'paywall',
