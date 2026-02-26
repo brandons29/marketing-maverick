@@ -40,17 +40,17 @@ export default function DashboardNav({ userEmail }: DashboardNavProps) {
     const active = pathname === href;
     return `flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors ${
       active
-        ? 'bg-[#ff8400]/10 text-[#ff8400] font-medium'
+        ? 'bg-[#00ff88]/10 text-[#00ff88] font-medium'
         : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/60'
     }`;
   };
 
   return (
-    <nav className="w-56 h-screen bg-zinc-950 border-r border-zinc-800 flex flex-col justify-between p-4">
+    <nav className="fixed left-0 top-0 w-64 h-screen bg-zinc-950 border-r border-zinc-800 flex flex-col justify-between p-4 z-40">
       {/* Logo */}
       <div>
         <div className="flex items-center gap-2 px-3 mb-8">
-          <Zap className="w-6 h-6 text-[#ff8400]" />
+          <Zap className="w-6 h-6 text-[#00ff88]" />
           <span className="text-lg font-bold text-white tracking-tight">Maverick</span>
         </div>
 
