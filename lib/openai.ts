@@ -95,10 +95,15 @@ export async function streamOpenAI(
   }
 }
 
-export function buildSystemPrompt(selectedSkills: string[]): string {
+export function buildSystemPrompt(selectedSkills: string[], businessContext?: any): string {
+  let contextStr = '';
+  if (businessContext && typeof businessContext === 'object' && Object.keys(businessContext).length > 0) {
+    contextStr = `\n\nBUSINESS CONTEXT (The "Digital Twin"):\n${JSON.stringify(businessContext, null, 2)}\n\nIMPORTANT: Use this business context as the absolute source of truth for all brand values, audience demographics, and product details. Do not invent info if it is provided here.`;
+  }
+
   if (!selectedSkills.length) {
-    return `${systemPrompt}\n\nDefault mode: Execute high-performance strategic analysis. No fluff. All results. Focus on ROAS and CPA.`;
+    return `${systemPrompt}${contextStr}\n\nDefault mode: Execute high-performance strategic analysis. No fluff. All results. Focus on ROAS and CPA.`;
   }
   const selected = skillsList.filter((s) => selectedSkills.includes(s.id));
-  return `${systemPrompt}\n\nSelected Strategy Modules:\n${selected.map((s) => `- ${s.name}: ${s.prompt}`).join('\n')}\n\nConstraint: Synthesize all selected modules into one high-density performance asset.`;
+  return `${systemPrompt}${contextStr}\n\nSelected Strategy Modules:\n${selected.map((s) => `- ${s.name}: ${s.prompt}`).join('\n')}\n\nConstraint: Synthesize all selected modules into one high-density performance asset.`;
 }

@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     // ── Profile ─────────────────────────────────────────────────────────────
     const { data: profile, error: profileError } = await supabase
       .from('users')
-      .select('api_key, run_count, subscription_status')
+      .select('api_key, run_count, subscription_status, business_context')
       .eq('id', user.id)
       .single();
 
@@ -96,7 +96,8 @@ export async function POST(req: Request) {
         profile.api_key,
         message,
         selectedSkills ?? [],
-        selectedModel
+        selectedModel,
+        profile.business_context
       );
       increment();
       return new Response(stream, {
@@ -113,7 +114,8 @@ export async function POST(req: Request) {
       profile.api_key,
       message,
       selectedSkills ?? [],
-      selectedModel
+      selectedModel,
+      profile.business_context
     );
     increment();
 

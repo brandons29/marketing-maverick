@@ -54,11 +54,12 @@ export async function callAI(
   rawKey: string,
   userMessage: string,
   selectedSkills: string[],
-  modelId: string
+  modelId: string,
+  businessContext?: any
 ): Promise<string> {
   const keys = parseKeys(rawKey);
   const provider = getProviderForModel(modelId);
-  const systemContent = buildSystemPrompt(selectedSkills);
+  const systemContent = buildSystemPrompt(selectedSkills, businessContext);
 
   if (provider === 'openai') {
     const key = keys.openai;
@@ -112,11 +113,12 @@ export async function streamAI(
   rawKey: string,
   userMessage: string,
   selectedSkills: string[],
-  modelId: string
+  modelId: string,
+  businessContext?: any
 ): Promise<ReadableStream<Uint8Array>> {
   const keys = parseKeys(rawKey);
   const provider = getProviderForModel(modelId);
-  const systemContent = buildSystemPrompt(selectedSkills);
+  const systemContent = buildSystemPrompt(selectedSkills, businessContext);
   const encoder = new TextEncoder();
 
   const makeStream = (asyncIter: AsyncIterable<string>) =>

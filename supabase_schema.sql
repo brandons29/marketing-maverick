@@ -10,6 +10,7 @@ create extension if not exists pgcrypto;
 create table if not exists public.users (
   id                  uuid primary key references auth.users on delete cascade,
   api_key             text,           -- User's OpenAI key (store encrypted with pgcrypto in prod)
+  business_context    jsonb default '{}'::jsonb, -- Extracted brand/product/audience context
   subscription_status text not null default 'free' check (subscription_status in ('free', 'pro')),
   run_count           integer not null default 0 check (run_count >= 0),
   created_at          timestamptz not null default now(),
