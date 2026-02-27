@@ -13,25 +13,24 @@ export function AnimatedSynapseLogo() {
         xmlns="http://www.w3.org/2000/svg"
         className="relative z-10"
       >
-        {/* Core Nucleus */}
+        {/* Core Nucleus — Swayze orange */}
         <motion.circle
           cx="24"
           cy="24"
           r="4"
-          fill="#00ff88"
+          fill="#ff8400"
           animate={{
             scale: [1, 1.2, 1],
             opacity: [0.8, 1, 0.8],
-            filter: ["blur(0px)", "blur(2px)", "blur(0px)"]
           }}
           transition={{
             duration: 2,
             repeat: Infinity,
-            ease: "easeInOut"
+            ease: 'easeInOut',
           }}
         />
 
-        {/* Synapse Paths */}
+        {/* Synapse Paths — neon green */}
         {[0, 60, 120, 180, 240, 300].map((angle, i) => (
           <motion.path
             key={i}
@@ -42,45 +41,45 @@ export function AnimatedSynapseLogo() {
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{
               pathLength: [0, 1, 0],
-              opacity: [0, 0.4, 0]
+              opacity: [0, 0.4, 0],
             }}
             transition={{
               duration: 3,
               repeat: Infinity,
               delay: i * 0.2,
-              ease: "easeInOut"
+              ease: 'easeInOut',
             }}
           />
         ))}
 
-        {/* Outer Intelligent Orbit */}
+        {/* Outer Orbit */}
         <motion.circle
           cx="24"
           cy="24"
           r="20"
-          stroke="#00ff88"
+          stroke="#ff8400"
           strokeWidth="0.5"
           strokeDasharray="4 4"
           animate={{ rotate: 360 }}
           transition={{
             duration: 20,
             repeat: Infinity,
-            ease: "linear"
+            ease: 'linear',
           }}
         />
       </svg>
-      
+
       {/* Background Glow */}
       <motion.div
-        className="absolute inset-0 bg-maverick-neon/20 rounded-full blur-xl"
+        className="absolute inset-0 bg-[#ff8400]/20 rounded-full blur-xl"
         animate={{
           scale: [1, 1.4, 1],
-          opacity: [0.3, 0.6, 0.3]
+          opacity: [0.3, 0.6, 0.3],
         }}
         transition={{
           duration: 4,
           repeat: Infinity,
-          ease: "easeInOut"
+          ease: 'easeInOut',
         }}
       />
     </div>

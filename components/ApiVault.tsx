@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Key, Loader2, CheckCircle2, AlertCircle, ChevronRight, Shield } from 'lucide-react';
+import { Button } from '@/components/ui/base/buttons/button';
+import { CheckCircle2, AlertCircle, ChevronRight, Shield } from 'lucide-react';
 
 interface ApiVaultProps {
   onComplete: (keys: any) => void;
@@ -14,7 +15,7 @@ export default function ApiVault({ onComplete }: ApiVaultProps) {
     anthropic: '',
     google: '',
     xai: '',
-    maton: ''
+    maton: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -52,97 +53,62 @@ export default function ApiVault({ onComplete }: ApiVaultProps) {
 
   return (
     <div className="max-w-2xl mx-auto py-12 px-6">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-10"
+        className="text-center mb-8"
       >
-        <h2 className="text-3xl font-black text-white uppercase italic tracking-tighter mb-4">
-          Step 02 — <span className="text-[#ff8400]">API Vault</span>
+        <h2 className="text-2xl font-bold text-white tracking-tight mb-3">
+          API <span className="text-[#ff8400]">Vault</span>
         </h2>
-        <p className="text-zinc-400 text-sm max-w-md mx-auto">
-          Maverick is a Bring Your Own Key (BYOK) engine. Your keys are stored locally in your dedicated vault and are never shared.
+        <p className="text-sm text-white/40 max-w-md mx-auto">
+          Maverick is a BYOK (Bring Your Own Key) tool. Your keys are encrypted with AES-256 and never shared.
         </p>
       </motion.div>
 
-      <div className="bg-[#0f0f0f] border border-white/5 rounded-3xl p-8 shadow-2xl">
+      <div className="glass-card p-6">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2 block">OpenAI Key</label>
-            <input
-              type="password"
-              value={keys.openai}
-              onChange={(e) => setKeys({...keys, openai: e.target.value})}
-              placeholder="sk-..."
-              className="w-full bg-[#070707] border border-white/5 rounded-xl py-4 px-4 text-white placeholder:text-zinc-800 focus:outline-none focus:border-[#ff8400]/50 transition-all text-xs"
-            />
-          </div>
+          {[
+            { key: 'openai', label: 'OpenAI Key', placeholder: 'sk-...' },
+            { key: 'anthropic', label: 'Anthropic Key', placeholder: 'sk-ant-...' },
+            { key: 'maton', label: 'Maton Key (Integration Engine)', placeholder: 'maton_...' },
+          ].map((field) => (
+            <div key={field.key}>
+              <label className="text-xs font-bold uppercase tracking-widest text-white/30 mb-2 block">{field.label}</label>
+              <input
+                type="password"
+                value={(keys as any)[field.key]}
+                onChange={(e) => setKeys({ ...keys, [field.key]: e.target.value })}
+                placeholder={field.placeholder}
+                className="input-dark"
+              />
+            </div>
+          ))}
 
-          <div>
-            <label className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2 block">Anthropic Key</label>
-            <input
-              type="password"
-              value={keys.anthropic}
-              onChange={(e) => setKeys({...keys, anthropic: e.target.value})}
-              placeholder="sk-ant-..."
-              className="w-full bg-[#070707] border border-white/5 rounded-xl py-4 px-4 text-white placeholder:text-zinc-800 focus:outline-none focus:border-[#ff8400]/50 transition-all text-xs"
-            />
-          </div>
-
-          <div>
-            <label className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2 block">Maton Key (Integration Engine)</label>
-            <input
-              type="password"
-              value={keys.maton}
-              onChange={(e) => setKeys({...keys, maton: e.target.value})}
-              placeholder="maton_..."
-              className="w-full bg-[#070707] border border-white/5 rounded-xl py-4 px-4 text-white placeholder:text-zinc-800 focus:outline-none focus:border-[#ff8400]/50 transition-all text-xs"
-            />
-          </div>
-
-          <div className="pt-6">
-            <button
+          <div className="pt-4">
+            <Button
               type="submit"
-              disabled={loading || success}
-              className={`w-full py-5 rounded-2xl text-xs font-black uppercase tracking-[0.2em] flex items-center justify-center gap-3 transition-all ${
-                success 
-                  ? 'bg-emerald-500 text-white' 
-                  : loading
-                  ? 'bg-zinc-900 text-zinc-700'
-                  : 'bg-[#ff8400] text-black hover:shadow-[0_0_40px_rgba(255,132,0,0.3)]'
-              }`}
+              size="lg"
+              color={success ? 'secondary' : 'primary'}
+              isDisabled={loading || success}
+              isLoading={loading}
+              iconTrailing={success ? CheckCircle2 : ChevronRight}
+              className="w-full justify-center"
             >
-              {loading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Securing Vault...
-                </>
-              ) : success ? (
-                <>
-                  <CheckCircle2 className="w-4 h-4" />
-                  Vault Locked
-                </>
-              ) : (
-                <>
-                  Secure & Continue
-                  <ChevronRight className="w-4 h-4" />
-                </>
-              )}
-            </button>
+              {loading ? 'Securing...' : success ? 'Vault Secured' : 'Secure & Continue'}
+            </Button>
           </div>
 
           {error && (
-            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 flex items-center gap-3 text-red-500 text-xs font-bold">
-              <AlertCircle className="w-4 h-4" />
+            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3 flex items-center gap-2 text-red-400 text-xs font-medium">
+              <AlertCircle className="w-4 h-4 shrink-0" />
               {error}
             </div>
           )}
 
-          <div className="flex items-center justify-center gap-2 mt-6 py-4 border-t border-white/5">
+          <div className="flex items-center justify-center gap-2 mt-4 pt-4 border-t border-white/5">
             <Shield className="w-3 h-3 text-emerald-500" />
-            <span className="text-[9px] font-black uppercase tracking-widest text-zinc-600">
-              AES-256 Encryption · Client-Side Only
-            </span>
+            <span className="text-[10px] text-white/20">AES-256 Encryption · Client-Side Only</span>
           </div>
         </form>
       </div>

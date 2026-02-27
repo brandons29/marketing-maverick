@@ -12,19 +12,28 @@
     "@anthropic-ai/sdk": "^0.78.0",
     "@google/generative-ai": "^0.24.1",
     "@maton/agent-toolkit": "^0.0.10",
+    "@react-stately/utils": "^3.11.0",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.47.2",
+    "@tailwindcss/typography": "^0.5.19",
+    "@untitledui/icons": "^0.0.21",
     "framer-motion": "^12.34.3",
     "lucide-react": "^0.469.0",
     "next": "^16.1.6",
     "openai": "^4.77.0",
     "papaparse": "^5.5.3",
     "react": "^19.0.0",
+    "react-aria": "^3.46.0",
+    "react-aria-components": "^1.15.1",
     "react-dom": "^19.0.0",
     "recharts": "^3.7.0",
+    "tailwind-merge": "^3.5.0",
+    "tailwindcss-animate": "^1.0.7",
+    "tailwindcss-react-aria-components": "^2.0.1",
     "zustand": "^5.0.11"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.1",
     "@types/node": "^22.0.0",
     "@types/papaparse": "^5.5.2",
     "@types/react": "^19.0.0",
@@ -33,7 +42,7 @@
     "eslint": "^9.18.0",
     "eslint-config-next": "^16.1.6",
     "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.17",
+    "tailwindcss": "^4.2.1",
     "typescript": "^5.7.3"
   }
 }

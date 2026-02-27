@@ -1,24 +1,22 @@
 'use client';
 
 import { useState } from 'react';
-import { 
-  Upload, 
-  ArrowRightLeft, 
-  BarChart3, 
-  FileSpreadsheet, 
-  AlertCircle,
+import { Button } from '@/components/ui/base/buttons/button';
+import { Badge } from '@/components/ui/base/badges/badges';
+import {
+  Upload,
+  ArrowRightLeft,
+  BarChart3,
+  FileSpreadsheet,
   CheckCircle2,
   RefreshCcw,
   ShieldCheck,
   TrendingUp,
   Percent,
   Download,
-  Info,
-  Activity,
-  ChevronDown,
-  TrendingDown
+  TrendingDown,
 } from 'lucide-react';
-import { mapAdSpendCSV, joinAdData, type AdSpendRow, type InternalConversionRow } from '@/lib/attribution/csv-mapper';
+import { mapAdSpendCSV, joinAdData, type InternalConversionRow } from '@/lib/attribution/csv-mapper';
 
 export default function AttributionPage() {
   const [isOver, setIsOver] = useState(false);
@@ -34,8 +32,19 @@ export default function AttributionPage() {
     setIsOver(false);
     const file = e.dataTransfer.files[0];
     if (file && file.name.endsWith('.csv')) {
-      setFiles(prev => ({ ...prev, [type]: file }));
+      setFiles((prev) => ({ ...prev, [type]: file }));
     }
+  };
+
+  const handleFileSelect = (type: 'adData' | 'crmData') => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.csv';
+    input.onchange = (e: any) => {
+      const file = e.target.files[0];
+      if (file) setFiles((prev) => ({ ...prev, [type]: file }));
+    };
+    input.click();
   };
 
   const processAttribution = async () => {
@@ -47,20 +56,22 @@ export default function AttributionPage() {
       const crmText = await files.crmData.text();
 
       const adSpend = mapAdSpendCSV(adText);
-      
+
       const crmData: InternalConversionRow[] = (await new Promise((resolve) => {
         import('papaparse').then((Papa) => {
           Papa.parse(crmText, {
             header: true,
             skipEmptyLines: true,
             complete: (results: any) => {
-              resolve(results.data.map((row: any) => ({
-                date: row.date || row.Date || row['Day'],
-                campaign_id: row.campaign_id || row['Campaign ID'] || row['Campaign id'],
-                revenue: parseFloat(String(row.revenue || row.Amount || row['Revenue'] || '0').replace(/[^0-9.-]+/g,"")),
-                conversions: parseInt(String(row.conversions || row.Leads || row['Conversions'] || '0').replace(/[^0-9.-]+/g,"")),
-              })));
-            }
+              resolve(
+                results.data.map((row: any) => ({
+                  date: row.date || row.Date || row['Day'],
+                  campaign_id: row.campaign_id || row['Campaign ID'] || row['Campaign id'],
+                  revenue: parseFloat(String(row.revenue || row.Amount || row['Revenue'] || '0').replace(/[^0-9.-]+/g, '')),
+                  conversions: parseInt(String(row.conversions || row.Leads || row['Conversions'] || '0').replace(/[^0-9.-]+/g, '')),
+                }))
+              );
+            },
           });
         });
       })) as InternalConversionRow[];
@@ -74,12 +85,17 @@ export default function AttributionPage() {
     }
   };
 
-  const totals = results ? results.reduce((acc, curr) => ({
-    spend: acc.spend + curr.spend,
-    revenue: acc.revenue + curr.revenue,
-    conversions: acc.conversions + curr.conversions,
-    clicks: acc.clicks + (curr.clicks || 0),
-  }), { spend: 0, revenue: 0, conversions: 0, clicks: 0 }) : null;
+  const totals = results
+    ? results.reduce(
+        (acc, curr) => ({
+          spend: acc.spend + curr.spend,
+          revenue: acc.revenue + curr.revenue,
+          conversions: acc.conversions + curr.conversions,
+          clicks: acc.clicks + (curr.clicks || 0),
+        }),
+        { spend: 0, revenue: 0, conversions: 0, clicks: 0 }
+      )
+    : null;
 
   const trueRoas = totals && totals.spend > 0 ? (totals.revenue / totals.spend).toFixed(2) : '0.0';
   const trueCpa = totals && totals.conversions > 0 ? (totals.spend / totals.conversions).toFixed(2) : '0.00';
@@ -88,43 +104,40 @@ export default function AttributionPage() {
   return (
     <div className="min-h-screen px-4 py-8 lg:px-10 lg:py-12 pb-32">
       <div className="max-w-7xl mx-auto">
-        
+
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-2 h-2 rounded-full bg-maverick-neon shadow-[0_0_10px_rgba(0,204,102,0.5)]" />
-              <h1 className="text-3xl font-black uppercase tracking-tighter text-white italic">Attribution Bridge</h1>
+              <Badge type="pill-color" color="success" size="sm">Free</Badge>
+              <h1 className="text-2xl font-black text-white tracking-tight">Attribution Engine</h1>
             </div>
-            <p className="text-[10px] text-maverick-muted font-mono uppercase tracking-[0.4em]">
-              Data Synapse · Institutional Analytics
+            <p className="text-sm text-white/40">
+              Map ad spend to real revenue with CSV-based attribution analysis.
             </p>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="bg-maverick-dark-1 border border-white/5 rounded-xl px-4 py-2 flex items-center gap-3 shadow-xl">
-              <ShieldCheck className="w-4 h-4 text-maverick-neon" />
-              <div>
-                <p className="text-[8px] text-maverick-muted font-mono uppercase tracking-widest">Privacy</p>
-                <p className="text-[10px] font-black text-white uppercase italic">Client-Side Secure</p>
-              </div>
+          <div className="flex items-center gap-3">
+            <div className="glass-card px-4 py-2 flex items-center gap-2 !rounded-xl">
+              <ShieldCheck className="w-4 h-4 text-emerald-500" />
+              <span className="text-xs font-medium text-white/50">Client-Side Processing</span>
             </div>
           </div>
         </div>
 
-        {/* Deep Analytics Metrics */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
+        {/* Metrics */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {[
-            { label: 'True CPA', value: results ? `$${trueCpa}` : '$0.00', icon: TrendingDown, color: 'text-maverick-neon' },
-            { label: 'True ROAS', value: results ? `${trueRoas}x` : '0.0x', icon: BarChart3, color: 'text-maverick-gold' },
-            { label: 'True CVR', value: results ? `${trueCvr}%` : '0.00%', icon: Percent, color: 'text-blue-500' },
-            { label: 'Attributed Rev', value: results ? `$${totals?.revenue.toLocaleString()}` : '$0', icon: TrendingUp, color: 'text-purple-500' },
+            { label: 'True CPA', value: results ? `$${trueCpa}` : '$0.00', icon: TrendingDown, color: 'text-[#00ff88]' },
+            { label: 'True ROAS', value: results ? `${trueRoas}x` : '0.0x', icon: BarChart3, color: 'text-[#ff8400]' },
+            { label: 'True CVR', value: results ? `${trueCvr}%` : '0.00%', icon: Percent, color: 'text-blue-400' },
+            { label: 'Attributed Rev', value: results ? `$${totals?.revenue.toLocaleString()}` : '$0', icon: TrendingUp, color: 'text-purple-400' },
           ].map((m) => (
-            <div key={m.label} className="bg-maverick-dark-1 border border-white/5 p-6 rounded-2xl relative overflow-hidden group shadow-2xl">
-              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <m.icon className="w-12 h-12" />
+            <div key={m.label} className="glass-card p-5 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 p-3 opacity-5 group-hover:opacity-10 transition-opacity">
+                <m.icon className="w-10 h-10" />
               </div>
-              <p className="text-[10px] font-black text-maverick-muted uppercase tracking-widest mb-1">{m.label}</p>
-              <span className={`text-2xl font-black italic tracking-tighter ${results ? 'text-white' : 'text-white/10'}`}>
+              <p className="text-xs font-bold text-white/30 mb-1">{m.label}</p>
+              <span className={`text-xl font-bold ${results ? 'text-white' : 'text-white/10'}`}>
                 {m.value}
               </span>
             </div>
@@ -132,142 +145,141 @@ export default function AttributionPage() {
         </div>
 
         {results ? (
-          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {/* Top Performers by ROAS */}
-            <div className="bg-maverick-dark-1 border border-white/5 rounded-[2rem] overflow-hidden shadow-2xl">
-              <div className="p-6 border-b border-white/5 flex items-center justify-between bg-white/[0.01]">
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {/* Results Table */}
+            <div className="glass-card overflow-hidden">
+              <div className="p-5 flex items-center justify-between" style={{ borderBottom: '1px solid var(--swayze-border)' }}>
                 <div className="flex items-center gap-3">
-                  <TrendingUp className="w-5 h-5 text-maverick-neon" />
-                  <h3 className="text-[10px] font-black uppercase tracking-widest text-white">Campaign Synapse Table</h3>
+                  <TrendingUp className="w-4 h-4 text-[#ff8400]" />
+                  <h3 className="text-sm font-bold text-white">Campaign Attribution Table</h3>
                 </div>
-                <button onClick={() => setResults(null)} className="text-[8px] font-black text-maverick-neon hover:text-white uppercase tracking-[0.3em] transition-colors">Reset Synapse</button>
+                <button onClick={() => setResults(null)} className="text-xs font-medium text-white/30 hover:text-white transition-colors">
+                  Reset
+                </button>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full text-left text-[10px] font-mono">
+                <table className="w-full text-left text-xs">
                   <thead>
-                    <tr className="text-maverick-muted border-b border-white/5 uppercase">
-                      <th className="px-8 py-5">Campaign Intelligence</th>
-                      <th className="px-8 py-5 text-right">Ad Spend</th>
-                      <th className="px-8 py-5 text-right">CRM Revenue</th>
-                      <th className="px-8 py-5 text-right">True ROAS</th>
-                      <th className="px-8 py-5 text-right">True CPA</th>
+                    <tr className="text-white/30 border-b border-white/5">
+                      <th className="px-6 py-4 font-medium">Campaign</th>
+                      <th className="px-6 py-4 text-right font-medium">Ad Spend</th>
+                      <th className="px-6 py-4 text-right font-medium">CRM Revenue</th>
+                      <th className="px-6 py-4 text-right font-medium">True ROAS</th>
+                      <th className="px-6 py-4 text-right font-medium">True CPA</th>
                     </tr>
                   </thead>
-                  <tbody className="text-white/80">
+                  <tbody>
                     {results.slice(0, 25).map((row, i) => (
-                      <tr key={i} className="border-b border-white/[0.02] hover:bg-white/[0.03] transition-colors group">
-                        <td className="px-8 py-5">
-                          <p className="font-black text-white text-xs group-hover:text-maverick-neon transition-colors truncate max-w-xs">{row.campaign_name || 'Unnamed Campaign'}</p>
-                          <p className="text-[8px] text-maverick-muted mt-1 uppercase tracking-tighter italic">{row.campaign_id}</p>
+                      <tr key={i} className="border-b border-white/[0.02] hover:bg-white/[0.02] transition-colors">
+                        <td className="px-6 py-4">
+                          <p className="font-semibold text-white truncate max-w-xs">{row.campaign_name || 'Unnamed Campaign'}</p>
+                          <p className="text-[10px] text-white/20 mt-0.5">{row.campaign_id}</p>
                         </td>
-                        <td className="px-8 py-5 text-right text-maverick-neon font-black">${row.spend.toFixed(2)}</td>
-                        <td className="px-8 py-5 text-right text-maverick-gold font-black">${row.revenue.toFixed(2)}</td>
-                        <td className="px-8 py-5 text-right italic font-black text-xs">{(row.roas || 0).toFixed(2)}x</td>
-                        <td className="px-8 py-5 text-right font-black">${(row.cpa || 0).toFixed(2)}</td>
+                        <td className="px-6 py-4 text-right text-[#00ff88] font-semibold">${row.spend.toFixed(2)}</td>
+                        <td className="px-6 py-4 text-right text-[#ff8400] font-semibold">${row.revenue.toFixed(2)}</td>
+                        <td className="px-6 py-4 text-right font-semibold">{(row.roas || 0).toFixed(2)}x</td>
+                        <td className="px-6 py-4 text-right font-medium">${(row.cpa || 0).toFixed(2)}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
             </div>
-            
-            {/* Attribution Insights Footer */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-8 bg-maverick-dark-1 border border-white/5 rounded-3xl shadow-xl">
-                <h4 className="text-[10px] font-black uppercase tracking-widest text-maverick-muted mb-4">Channel Efficiency</h4>
-                <div className="space-y-4">
+
+            {/* Insights */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="glass-card p-6">
+                <h4 className="text-xs font-bold text-white/30 mb-3">Channel Efficiency</h4>
+                <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-white italic">Blended CPA</span>
-                    <span className="text-xs font-black text-maverick-neon">${trueCpa}</span>
+                    <span className="text-sm font-medium text-white">Blended CPA</span>
+                    <span className="text-sm font-bold text-[#00ff88]">${trueCpa}</span>
                   </div>
-                  <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
-                    <div className="h-full bg-maverick-neon" style={{ width: '70%' }} />
+                  <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                    <div className="h-full bg-[#00ff88] rounded-full" style={{ width: '70%' }} />
                   </div>
                 </div>
               </div>
-              <div className="p-8 bg-maverick-dark-1 border border-white/5 rounded-3xl shadow-xl">
-                <h4 className="text-[10px] font-black uppercase tracking-widest text-maverick-muted mb-4">Intelligence Note</h4>
-                <p className="text-[10px] leading-loose text-maverick-muted font-mono uppercase tracking-widest">
-                  ROAS Synapse successful. Discrepancies between Ad Platform and CRM are localized at 14.2%. Optimize high-ROAS creative briefs in Strategy Engine.
+              <div className="glass-card p-6">
+                <h4 className="text-xs font-bold text-white/30 mb-3">Intelligence Note</h4>
+                <p className="text-xs text-white/40 leading-relaxed">
+                  Attribution complete. Discrepancies between Ad Platform and CRM are localized. Optimize high-ROAS creative briefs in the Strategy Engine.
                 </p>
               </div>
             </div>
           </div>
         ) : (
-          /* Split Pane Upload */
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-8 items-center py-12">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 px-2">
-                <FileSpreadsheet className="w-4 h-4 text-maverick-neon" />
-                <h3 className="text-[10px] font-black uppercase tracking-widest text-white italic">Source 1: Ad Spend CSV</h3>
+          /* Upload Panes */
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-6 items-center py-8">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 px-1">
+                <FileSpreadsheet className="w-4 h-4 text-[#00ff88]" />
+                <h3 className="text-sm font-bold text-white">Source 1: Ad Spend CSV</h3>
               </div>
-              <div 
+              <div
                 onDragOver={(e) => { e.preventDefault(); setIsOver(true); }}
                 onDragLeave={() => setIsOver(false)}
                 onDrop={(e) => handleDrop(e, 'adData')}
-                className={`drop-zone group h-80 border-2 border-dashed rounded-[3rem] flex flex-col items-center justify-center transition-all ${
-                  isOver ? 'border-maverick-neon bg-maverick-neon/5' : 'border-white/5 hover:border-white/10 hover:bg-white/[0.01]'
-                } ${files.adData ? 'border-maverick-neon bg-maverick-neon/[0.02]' : ''}`}
+                onClick={() => handleFileSelect('adData')}
+                className={`glass-card h-64 flex flex-col items-center justify-center cursor-pointer transition-all border-2 border-dashed ${
+                  files.adData ? 'border-[#00ff88]/30 bg-[#00ff88]/[0.02]' : 'border-white/5 hover:border-white/10'
+                }`}
               >
                 {files.adData ? (
-                  <div className="flex flex-col items-center gap-4 animate-in zoom-in-95 duration-300">
-                    <CheckCircle2 className="w-12 h-12 text-maverick-neon shadow-[0_0_20px_rgba(0,204,102,0.4)]" />
-                    <div className="text-center px-8">
-                      <p className="text-sm font-black text-white truncate max-w-[200px] italic">{files.adData.name}</p>
-                      <button onClick={() => setFiles(p => ({...p, adData: null}))} className="text-[8px] font-black text-maverick-muted hover:text-white uppercase tracking-[0.3em] mt-3">Replace Data</button>
-                    </div>
+                  <div className="flex flex-col items-center gap-3">
+                    <CheckCircle2 className="w-10 h-10 text-[#00ff88]" />
+                    <p className="text-sm font-semibold text-white truncate max-w-[200px]">{files.adData.name}</p>
+                    <button onClick={(e) => { e.stopPropagation(); setFiles((p) => ({ ...p, adData: null })); }} className="text-xs text-white/30 hover:text-white transition-colors">
+                      Replace
+                    </button>
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center gap-6">
-                    <div className="w-14 h-14 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-center group-hover:scale-110 group-hover:border-maverick-neon/30 transition-all duration-500">
-                      <Upload className="w-6 h-6 text-maverick-muted group-hover:text-maverick-neon transition-colors" />
-                    </div>
-                    <div className="text-center px-10">
-                      <p className="text-[10px] text-white font-black uppercase tracking-[0.4em] italic">Drop Ad Platform Export</p>
-                      <p className="text-[8px] text-maverick-muted font-mono uppercase tracking-[0.2em] mt-2 opacity-50">Meta · Google · TikTok</p>
+                  <div className="flex flex-col items-center gap-4">
+                    <Upload className="w-8 h-8 text-white/20" />
+                    <div className="text-center">
+                      <p className="text-sm font-medium text-white/50">Drop Ad Platform Export</p>
+                      <p className="text-xs text-white/20 mt-1">Meta · Google · TikTok</p>
                     </div>
                   </div>
                 )}
               </div>
             </div>
 
-            <div className="flex flex-col items-center justify-center gap-4">
-              <div className="w-16 h-16 rounded-full bg-maverick-dark-1 border border-white/5 flex items-center justify-center shadow-2xl relative">
-                <ArrowRightLeft className={`w-6 h-6 transition-all duration-700 ${files.adData && files.crmData ? 'text-maverick-neon scale-110' : 'text-maverick-muted'}`} />
-                {files.adData && files.crmData && <div className="absolute inset-0 rounded-full border border-maverick-neon animate-ping opacity-20" />}
+            <div className="flex flex-col items-center justify-center gap-3">
+              <div className={`w-12 h-12 rounded-full glass-card flex items-center justify-center ${files.adData && files.crmData ? 'border-[#ff8400]/30' : ''}`}>
+                <ArrowRightLeft className={`w-5 h-5 ${files.adData && files.crmData ? 'text-[#ff8400]' : 'text-white/20'}`} />
               </div>
-              <span className="text-[8px] font-black text-maverick-muted uppercase tracking-[0.6em] italic">Synapse</span>
+              <span className="text-[10px] text-white/20 font-medium">Join</span>
             </div>
 
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 px-2">
-                <FileSpreadsheet className="w-4 h-4 text-maverick-gold" />
-                <h3 className="text-[10px] font-black uppercase tracking-widest text-white italic">Source 2: CRM Conversion</h3>
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 px-1">
+                <FileSpreadsheet className="w-4 h-4 text-[#ff8400]" />
+                <h3 className="text-sm font-bold text-white">Source 2: CRM Conversions</h3>
               </div>
-              <div 
+              <div
                 onDragOver={(e) => { e.preventDefault(); setIsOver(true); }}
                 onDragLeave={() => setIsOver(false)}
                 onDrop={(e) => handleDrop(e, 'crmData')}
-                className={`drop-zone group h-80 border-2 border-dashed rounded-[3rem] flex flex-col items-center justify-center transition-all ${
-                  isOver ? 'border-maverick-gold bg-maverick-gold/5' : 'border-white/5 hover:border-white/10 hover:bg-white/[0.01]'
-                } ${files.crmData ? 'border-maverick-gold bg-maverick-gold/[0.02]' : ''}`}
+                onClick={() => handleFileSelect('crmData')}
+                className={`glass-card h-64 flex flex-col items-center justify-center cursor-pointer transition-all border-2 border-dashed ${
+                  files.crmData ? 'border-[#ff8400]/30 bg-[#ff8400]/[0.02]' : 'border-white/5 hover:border-white/10'
+                }`}
               >
                 {files.crmData ? (
-                  <div className="flex flex-col items-center gap-4 animate-in zoom-in-95 duration-300">
-                    <CheckCircle2 className="w-12 h-12 text-maverick-gold shadow-[0_0_20px_rgba(197,160,89,0.4)]" />
-                    <div className="text-center px-8">
-                      <p className="text-sm font-black text-white truncate max-w-[200px] italic">{files.crmData.name}</p>
-                      <button onClick={() => setFiles(p => ({...p, crmData: null}))} className="text-[8px] font-black text-maverick-muted hover:text-white uppercase tracking-[0.3em] mt-3">Replace Data</button>
-                    </div>
+                  <div className="flex flex-col items-center gap-3">
+                    <CheckCircle2 className="w-10 h-10 text-[#ff8400]" />
+                    <p className="text-sm font-semibold text-white truncate max-w-[200px]">{files.crmData.name}</p>
+                    <button onClick={(e) => { e.stopPropagation(); setFiles((p) => ({ ...p, crmData: null })); }} className="text-xs text-white/30 hover:text-white transition-colors">
+                      Replace
+                    </button>
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center gap-6">
-                    <div className="w-14 h-14 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-center group-hover:scale-110 group-hover:border-maverick-gold/30 transition-all duration-500">
-                      <Upload className="w-6 h-6 text-maverick-muted group-hover:text-maverick-gold transition-colors" />
-                    </div>
-                    <div className="text-center px-10">
-                      <p className="text-[10px] text-white font-black uppercase tracking-[0.4em] italic">Drop CRM / Source of Truth</p>
-                      <p className="text-[8px] text-maverick-muted font-mono uppercase tracking-[0.2em] mt-2 opacity-50">GHL · Salesforce · HubSpot</p>
+                  <div className="flex flex-col items-center gap-4">
+                    <Upload className="w-8 h-8 text-white/20" />
+                    <div className="text-center">
+                      <p className="text-sm font-medium text-white/50">Drop CRM / Source of Truth</p>
+                      <p className="text-xs text-white/20 mt-1">GHL · Salesforce · HubSpot</p>
                     </div>
                   </div>
                 )}
@@ -276,48 +288,42 @@ export default function AttributionPage() {
           </div>
         )}
 
-        {/* Elite Action Bar */}
-        <div className="mt-12 p-8 lg:p-10 bg-maverick-dark-1 border border-white/5 rounded-[2.5rem] flex flex-col lg:flex-row items-center justify-between gap-8 shadow-2xl relative z-10">
-          <div className="flex flex-col md:flex-row items-center gap-10 w-full md:w-auto">
-            <div className="w-full md:w-auto">
-              <p className="text-[8px] text-maverick-muted font-mono uppercase tracking-[0.4em] mb-3 italic">Join Primary Key</p>
-              <select className="w-full md:w-auto bg-black/50 border border-white/10 rounded-xl px-5 py-3 text-[10px] font-black text-white outline-none focus:border-maverick-neon/50 uppercase tracking-[0.2em] cursor-pointer transition-all hover:bg-black/80">
-                <option>utm_content</option>
-                <option>campaign_id</option>
-                <option>email (Hashing required)</option>
-              </select>
-            </div>
-            <div className="hidden md:block w-px h-12 bg-white/5" />
-            <div className="flex items-center gap-4">
-              <RefreshCcw className={`w-5 h-5 ${isProcessing ? 'animate-spin text-maverick-neon' : 'text-maverick-muted'}`} />
-              <div>
-                <p className="text-[8px] text-maverick-muted font-mono uppercase tracking-[0.4em] italic">Engine Intelligence</p>
-                <p className="text-[10px] font-black text-white uppercase italic tracking-[0.1em]">
-                  {isProcessing ? 'Synapsing Sources...' : 'Auto-Mapping Active'}
-                </p>
-              </div>
+        {/* Action Bar */}
+        <div className="mt-8 glass-card p-6 flex flex-col lg:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-6">
+            <select className="bg-white/[0.02] border border-white/5 rounded-xl px-4 py-2.5 text-xs font-medium text-white focus:outline-none focus:border-[#ff8400]/30 transition-all">
+              <option>utm_content</option>
+              <option>campaign_id</option>
+              <option>email (Hashing required)</option>
+            </select>
+            <div className="flex items-center gap-3">
+              <RefreshCcw className={`w-4 h-4 ${isProcessing ? 'animate-spin text-[#ff8400]' : 'text-white/20'}`} />
+              <span className="text-xs text-white/40">
+                {isProcessing ? 'Processing...' : 'Auto-Mapping Active'}
+              </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-4 w-full lg:w-auto">
+          <div className="flex items-center gap-3">
             {results && (
-              <button className="flex-1 lg:flex-none flex items-center justify-center gap-3 px-10 py-5 border border-white/5 bg-white/[0.02] text-white font-black text-[10px] uppercase tracking-[0.3em] rounded-2xl hover:bg-white/5 transition-all active:scale-95 italic">
-                <Download className="w-4 h-4" />
+              <Button size="md" color="secondary" iconLeading={Download}>
                 Export CSV
-              </button>
+              </Button>
             )}
-            <button 
+            <Button
+              size="lg"
+              color="primary"
               onClick={processAttribution}
-              disabled={!files.adData || !files.crmData || isProcessing}
-              className="flex-[2] lg:flex-none px-16 py-5 bg-maverick-neon text-black font-black text-[11px] uppercase tracking-[0.4em] rounded-2xl hover:shadow-[0_0_50px_rgba(0,204,102,0.4)] transition-all active:scale-95 disabled:opacity-10 disabled:grayscale disabled:cursor-not-allowed italic shadow-xl"
+              isDisabled={!files.adData || !files.crmData || isProcessing}
+              isLoading={isProcessing}
             >
-              {results ? 'Re-Run Synapse' : 'Execute Attribution'}
-            </button>
+              {results ? 'Re-Run Attribution' : 'Run Attribution'}
+            </Button>
           </div>
         </div>
 
-        <p className="text-center mt-16 text-[8px] text-maverick-muted font-mono uppercase tracking-[0.8em] opacity-20">
-          Synapse Engine 1.0.4 · Institutional Attribution · Swayze Media Elite
+        <p className="text-center mt-12 text-[10px] text-white/10 font-mono">
+          Attribution Engine · Swayze Media · Free Tool
         </p>
 
       </div>

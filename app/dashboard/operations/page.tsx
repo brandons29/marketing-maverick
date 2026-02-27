@@ -1,16 +1,15 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  Layers, 
-  Activity, 
-  CheckCircle2, 
-  AlertTriangle, 
-  RefreshCcw, 
-  ExternalLink,
-  Zap,
-  Cpu,
-  ArrowRight
+import Link from 'next/link';
+import { Button } from '@/components/ui/base/buttons/button';
+import { Badge } from '@/components/ui/base/badges/badges';
+import {
+  Layers,
+  Activity,
+  AlertTriangle,
+  RefreshCcw,
+  ArrowRight,
 } from 'lucide-react';
 import { MATON_INTEGRATIONS } from '@/lib/maton';
 
@@ -43,69 +42,73 @@ export default function OperationsPage() {
   return (
     <div className="min-h-screen px-4 py-8 lg:px-10 lg:py-12 pb-32">
       <div className="max-w-7xl mx-auto">
-        
+
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <div className="w-2 h-2 rounded-full bg-maverick-gold shadow-[0_0_10px_rgba(197,160,89,0.5)]" />
-              <h1 className="text-3xl font-black uppercase tracking-tighter text-white italic">Live Operations</h1>
+              <Badge type="pill-color" color="success" size="sm">Free</Badge>
+              <h1 className="text-2xl font-black text-white tracking-tight">Operations Hub</h1>
             </div>
-            <p className="text-[10px] text-maverick-muted font-mono uppercase tracking-[0.4em]">
-              SaaS Execution Hub · Powered by Maton AI
+            <p className="text-sm text-white/40">
+              SaaS execution hub powered by Maton AI.
             </p>
           </div>
-          <button 
+          <Button
+            size="md"
+            color="secondary"
             onClick={fetchConnections}
-            className="flex items-center gap-2 px-4 py-2 bg-maverick-dark-1 border border-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest text-maverick-muted hover:text-white transition-colors"
+            isLoading={loading}
+            iconLeading={RefreshCcw}
           >
-            <RefreshCcw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
             Sync Connections
-          </button>
+          </Button>
         </div>
 
         {error ? (
-          <div className="elite-card p-12 text-center space-y-6 max-w-2xl mx-auto">
-            <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mx-auto">
-              <AlertTriangle className="w-8 h-8 text-red-500" />
+          <div className="glass-card p-12 text-center space-y-6 max-w-2xl mx-auto">
+            <div className="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center mx-auto">
+              <AlertTriangle className="w-7 h-7 text-red-500" />
             </div>
             <div>
-              <h3 className="text-xl font-black uppercase italic text-white mb-2 tracking-tight">Bridge Offline</h3>
-              <p className="text-sm text-maverick-muted leading-relaxed uppercase tracking-wider">{error}</p>
+              <h3 className="text-lg font-bold text-white mb-2">Connection Offline</h3>
+              <p className="text-sm text-white/40">{error}</p>
             </div>
-            <a href="/settings" className="btn-synapse inline-flex items-center gap-2 px-10">
-              Connect Maton Bridge
-            </a>
+            <Link href="/settings">
+              <Button size="lg" color="primary" iconTrailing={ArrowRight}>
+                Connect Maton in Settings
+              </Button>
+            </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
             {/* Status Panel */}
-            <div className="lg:col-span-4 space-y-6">
-              <div className="elite-card p-8 bg-maverick-gold/[0.02] border-maverick-gold/10">
-                <div className="flex items-center gap-3 mb-6">
-                  <Activity className="w-5 h-5 text-maverick-gold" />
-                  <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-white">Execution Health</h2>
+            <div className="lg:col-span-4 space-y-4">
+              <div className="glass-card p-6 border-[#ff8400]/10 bg-[#ff8400]/[0.02]">
+                <div className="flex items-center gap-3 mb-5">
+                  <Activity className="w-4 h-4 text-[#ff8400]" />
+                  <h2 className="text-sm font-bold text-white">Execution Health</h2>
                 </div>
-                <div className="space-y-6">
+                <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono text-maverick-muted uppercase">Maton Status</span>
-                    <span className="flex items-center gap-1.5 text-[10px] font-black text-maverick-neon uppercase italic">
-                      <div className="w-1.5 h-1.5 rounded-full bg-maverick-neon animate-pulse" />
+                    <span className="text-xs text-white/30">Maton Status</span>
+                    <span className="flex items-center gap-1.5 text-xs font-semibold text-[#00ff88]">
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#00ff88] animate-pulse" />
                       Active
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono text-maverick-muted uppercase">Connected Apps</span>
-                    <span className="text-[10px] font-black text-white italic">{connections.length} Units</span>
+                    <span className="text-xs text-white/30">Connected Apps</span>
+                    <span className="text-xs font-bold text-white">{connections.length}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="elite-card p-8">
-                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-maverick-muted mb-4 italic">Deployment Protocol</h3>
-                <p className="text-[10px] leading-loose text-maverick-muted font-mono uppercase tracking-widest">
-                  Maverick serves as the strategy shell. Maton AI provides the action primitives to push assets into your existing stack without human intervention.
+              <div className="glass-card p-6">
+                <h3 className="text-xs font-bold text-white/30 mb-3">How It Works</h3>
+                <p className="text-xs text-white/40 leading-relaxed">
+                  Maverick serves as the strategy shell. Maton AI provides the action primitives to push assets into your existing stack automatically.
                 </p>
               </div>
             </div>
@@ -116,25 +119,29 @@ export default function OperationsPage() {
                 {MATON_INTEGRATIONS.map((app) => {
                   const isConnected = connections.includes(app.app);
                   return (
-                    <div key={app.app} className={`glass-card p-8 group ${isConnected ? 'border-maverick-neon/20 bg-maverick-neon/[0.01]' : 'opacity-40 grayscale'}`}>
-                      <div className="flex items-start justify-between mb-8">
-                        <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center">
-                          <Layers className={`w-6 h-6 ${isConnected ? 'text-maverick-neon' : 'text-maverick-muted'}`} />
+                    <div key={app.app} className={`glass-card p-6 group transition-all ${isConnected ? 'border-[#00ff88]/10 bg-[#00ff88]/[0.01]' : 'opacity-50'}`}>
+                      <div className="flex items-start justify-between mb-5">
+                        <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center">
+                          <Layers className={`w-5 h-5 ${isConnected ? 'text-[#00ff88]' : 'text-white/20'}`} />
                         </div>
-                        {isConnected ? (
-                          <div className="px-3 py-1 rounded-full bg-maverick-neon/10 border border-maverick-neon/20 text-[8px] font-black text-maverick-neon uppercase tracking-widest">Linked</div>
-                        ) : (
-                          <div className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[8px] font-black text-white/20 uppercase tracking-widest">Inactive</div>
-                        )}
+                        <Badge
+                          type="pill-color"
+                          color={isConnected ? 'success' : 'gray'}
+                          size="sm"
+                        >
+                          {isConnected ? 'Linked' : 'Inactive'}
+                        </Badge>
                       </div>
-                      <h3 className="text-xl font-black uppercase italic text-white mb-2 tracking-tighter">{app.label}</h3>
-                      <p className="text-[10px] font-mono text-maverick-muted uppercase tracking-widest mb-6">
-                        {isConnected ? `${app.actions.length} Actions Available` : 'Authorization Required'}
+                      <h3 className="text-base font-bold text-white mb-1">{app.label}</h3>
+                      <p className="text-xs text-white/30 mb-4">
+                        {isConnected ? `${app.actions.length} actions available` : 'Authorization required'}
                       </p>
                       {isConnected && (
-                        <div className="flex flex-wrap gap-2 pt-4 border-t border-white/5">
-                          {app.actions.map(action => (
-                            <span key={action} className="text-[7px] font-black text-white/40 uppercase tracking-widest px-2 py-1 bg-white/5 rounded-md border border-white/5">{action}</span>
+                        <div className="flex flex-wrap gap-1.5 pt-3 border-t border-white/5">
+                          {app.actions.map((action) => (
+                            <span key={action} className="text-[10px] font-medium text-white/30 px-2 py-0.5 bg-white/[0.03] rounded border border-white/5">
+                              {action}
+                            </span>
                           ))}
                         </div>
                       )}
@@ -147,8 +154,8 @@ export default function OperationsPage() {
           </div>
         )}
 
-        <p className="text-center mt-16 text-[8px] text-maverick-muted font-mono uppercase tracking-[0.8em] opacity-20">
-          Operation Hub 1.0.1 · SaaS Execution · Swayze Media Elite
+        <p className="text-center mt-12 text-[10px] text-white/10 font-mono">
+          Operations Hub · Swayze Media · Free Tool
         </p>
 
       </div>

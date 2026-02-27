@@ -3,7 +3,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase';
 import ApiKeyInput from '@/components/ApiKeyInput';
-import { Shield, ExternalLink, Key, Info, HelpCircle } from 'lucide-react';
+import { Button } from '@/components/ui/base/buttons/button';
+import { Badge } from '@/components/ui/base/badges/badges';
+import { Shield, Key, Info, HelpCircle } from 'lucide-react';
 import { ApiHelpModal } from '@/components/ApiHelpModal';
 
 export default function Settings() {
@@ -36,7 +38,6 @@ export default function Settings() {
         const parsed = JSON.parse(data.api_key);
         setSavedProviders(Object.keys(parsed).filter(k => !!parsed[k]));
       } catch {
-        // Legacy support: single string = openai
         setSavedProviders(['openai']);
       }
     } else {
@@ -61,11 +62,7 @@ export default function Settings() {
       }
     }
 
-    const updatedKeys = {
-      ...currentKeys,
-      [provider]: key
-    };
-
+    const updatedKeys = { ...currentKeys, [provider]: key };
     const jsonString = JSON.stringify(updatedKeys);
 
     const { error } = await supabase.from('users').upsert(
@@ -106,63 +103,64 @@ export default function Settings() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
-        <div className="flex items-center gap-3 text-maverick-muted">
-          <div className="w-5 h-5 border-2 rounded-full animate-spin border-maverick-neon/30 border-t-maverick-neon" />
-          <span className="font-mono text-[10px] uppercase tracking-widest">Accessing Secure Vault...</span>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="flex items-center gap-3 text-white/30">
+          <div className="w-5 h-5 border-2 rounded-full animate-spin border-[#ff8400]/30 border-t-[#ff8400]" />
+          <span className="text-xs font-medium">Loading settings...</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen px-4 py-16 lg:py-24 bg-black">
-      <div className="max-w-xl mx-auto">
+    <div className="min-h-screen px-4 py-8 lg:px-10 lg:py-12 pb-32">
+      <div className="max-w-2xl mx-auto">
 
         {/* Page Header */}
-        <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
-            <div className="flex items-center gap-3 mb-3">
-              <Key className="w-5 h-5 text-maverick-neon" />
-              <h1 className="text-2xl font-black uppercase tracking-tighter text-white italic">
-                Engine Connection
+            <div className="flex items-center gap-3 mb-2">
+              <Badge type="pill-color" color="success" size="sm">Free</Badge>
+              <h1 className="text-2xl font-black text-white tracking-tight">
+                Settings & API Keys
               </h1>
             </div>
-            <p className="text-sm font-medium text-maverick-muted leading-relaxed uppercase tracking-wider">
-              Multi-Provider Synapse · Secure Intelligence
+            <p className="text-sm text-white/40">
+              Multi-provider BYOK engine. Your keys, your control.
             </p>
           </div>
-          <button 
+          <Button
+            size="sm"
+            color="secondary"
+            iconLeading={HelpCircle}
             onClick={() => setHelpOpen(true)}
-            className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-maverick-neon hover:text-white transition-colors border border-maverick-neon/20 px-4 py-2 rounded-full"
           >
-            <HelpCircle className="w-3 h-3" />
             Connection Guide
-          </button>
+          </Button>
         </div>
 
         {/* Main Card */}
-        <div className="elite-card p-8 lg:p-12 mb-8">
-          <div className="space-y-8">
-            <div className="space-y-4">
-              <p className="text-[11px] font-black uppercase tracking-[0.2em] text-maverick-gold italic">Intelligence Management</p>
-              <p className="text-sm leading-relaxed text-white/80 font-medium">
-                Switch providers and link keys below. Your strategy engine supports <span className="text-white font-black italic underline decoration-maverick-neon/40 underline-offset-4">OpenAI, Anthropic, Google, and xAI</span> simultaneously.
+        <div className="glass-card p-6 lg:p-8 mb-6">
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-sm font-bold text-white mb-2">Intelligence Management</h2>
+              <p className="text-sm text-white/50 leading-relaxed">
+                Switch providers and link keys below. Your strategy engine supports <span className="text-white font-semibold">OpenAI, Anthropic, Google, and xAI</span> simultaneously. This tool is completely free — you only pay your AI providers directly.
               </p>
             </div>
 
             <ApiKeyInput onSave={handleSave} savedProviders={savedProviders} />
 
             {savedProviders.length > 0 && (
-              <div className="pt-8 border-t border-white/5 space-y-4">
-                <p className="performance-label">Active Connections</p>
+              <div className="pt-6 border-t border-white/5 space-y-3">
+                <p className="text-xs font-bold uppercase tracking-widest text-white/30">Active Connections</p>
                 <div className="flex flex-wrap gap-2">
                   {savedProviders.map(p => (
-                    <div key={p} className="flex items-center gap-3 px-4 py-2 bg-white/[0.03] border border-white/5 rounded-xl">
-                      <span className="text-[10px] font-black text-white uppercase">{p}</span>
-                      <button 
+                    <div key={p} className="flex items-center gap-2 px-3 py-1.5 bg-white/[0.03] border border-white/5 rounded-lg">
+                      <Badge type="pill-color" color="success" size="sm">{p}</Badge>
+                      <button
                         onClick={() => handleRemove(p)}
-                        className="text-[10px] font-bold text-red-500/50 hover:text-red-500 transition-colors px-1"
+                        className="text-xs text-red-500/40 hover:text-red-500 transition-colors"
                       >
                         ×
                       </button>
@@ -176,18 +174,18 @@ export default function Settings() {
 
         {/* Info Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="p-6 bg-white/[0.02] border border-white/5 rounded-[2.5rem] space-y-3">
-            <Shield className="w-4 h-4 text-maverick-neon" />
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-white">Encrypted Vault</h4>
-            <p className="text-[9px] font-mono text-maverick-muted leading-relaxed uppercase">
+          <div className="glass-card p-5 space-y-3">
+            <Shield className="w-4 h-4 text-emerald-500" />
+            <h4 className="text-sm font-bold text-white">Encrypted Vault</h4>
+            <p className="text-xs text-white/35 leading-relaxed">
               Keys are stored with AES-256 row-level encryption. Multi-provider JSON is encrypted before storage.
             </p>
           </div>
-          <div className="p-6 bg-white/[0.02] border border-white/5 rounded-[2rem] space-y-3">
-            <Info className="w-4 h-4 text-maverick-gold" />
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-white">Execution Control</h4>
-            <p className="text-[9px] font-mono text-maverick-muted leading-relaxed uppercase">
-              We charge nothing. You pay your providers directly for the tokens you consume.
+          <div className="glass-card p-5 space-y-3">
+            <Info className="w-4 h-4 text-[#ff8400]" />
+            <h4 className="text-sm font-bold text-white">Zero Cost</h4>
+            <p className="text-xs text-white/35 leading-relaxed">
+              Maverick is completely free. You pay your AI providers directly for the tokens you consume. No markup, no hidden fees.
             </p>
           </div>
         </div>

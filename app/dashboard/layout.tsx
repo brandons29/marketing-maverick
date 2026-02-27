@@ -19,7 +19,7 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a]">
+    <div className="dark-mode min-h-screen" style={{ background: 'var(--swayze-bg-page)' }}>
       <DashboardNav userEmail={user.email ?? ''} />
       <main className="lg:pl-64 pt-16 lg:pt-0">
         <div className="animate-in fade-in duration-700">

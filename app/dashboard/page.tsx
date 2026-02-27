@@ -1,17 +1,18 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase';
 import { skills } from '@/prompts/marketing';
 import { MODEL_CATALOG } from '@/lib/ai-engine';
 import SkillSelector from '@/components/SkillSelector';
 import ChatWindow from '@/components/ChatWindow';
+import { Button } from '@/components/ui/base/buttons/button';
+import { Badge } from '@/components/ui/base/badges/badges';
 import {
   Zap,
   BarChart3,
   FileText,
   Key,
-  ChevronDown,
   Loader2,
   Sparkles,
 } from 'lucide-react';
@@ -22,19 +23,21 @@ function StatCard({
   icon: Icon,
   label,
   value,
+  color = 'text-[#00ff88]',
 }: {
   icon: React.ElementType;
   label: string;
   value: string;
+  color?: string;
 }) {
   return (
-    <div className="bg-[#0f0f0f] border border-white/5 rounded-2xl flex-1 min-w-[180px] flex items-center gap-4 p-5">
-      <div className="w-10 h-10 rounded-xl bg-[#00ff88]/10 flex items-center justify-center">
-        <Icon className="w-5 h-5 text-[#00ff88]" />
+    <div className="glass-card flex-1 min-w-[180px] flex items-center gap-4 p-5">
+      <div className={`w-10 h-10 rounded-xl bg-white/[0.04] border border-white/[0.06] flex items-center justify-center ${color}`}>
+        <Icon className="w-5 h-5" />
       </div>
       <div>
-        <p className="text-2xl font-bold text-white">{value}</p>
-        <p className="text-xs text-zinc-400">{label}</p>
+        <p className="text-xl font-bold text-white">{value}</p>
+        <p className="text-xs text-white/40">{label}</p>
       </div>
     </div>
   );
@@ -68,7 +71,7 @@ export default function DashboardPage() {
     if (!brief.trim() || loading) return;
     setLoading(true);
     setOutput('');
-    
+
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
@@ -77,7 +80,7 @@ export default function DashboardPage() {
           message: brief,
           selectedSkills,
           model,
-          stream: true
+          stream: true,
         }),
       });
 
@@ -87,25 +90,26 @@ export default function DashboardPage() {
       }
 
       if (!res.body) throw new Error('No response body');
-      
+
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let accumulated = '';
-      
+
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-        
+
         const chunk = decoder.decode(value, { stream: true });
         accumulated += chunk;
         setOutput(accumulated);
       }
 
-      setRunNumber(prev => prev + 1);
-      
-      const skillLabel = selectedSkills.length === 1 
-        ? (skills.find(s => s.id === selectedSkills[0])?.name ?? 'Copy')
-        : `${selectedSkills.length} Weapons`;
+      setRunNumber((prev) => prev + 1);
+
+      const skillLabel =
+        selectedSkills.length === 1
+          ? (skills.find((s) => s.id === selectedSkills[0])?.name ?? 'Copy')
+          : `${selectedSkills.length} Skills`;
 
       setRecentOutputs((prev) => [
         {
@@ -125,25 +129,28 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="flex-1 min-h-screen bg-[#070707] text-zinc-300 p-8">
+    <div className="flex-1 min-h-screen p-6 lg:p-8">
       {/* Header */}
-      <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+      <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-black text-white tracking-tight uppercase italic">
-            Maverick <span className="text-[#00ff88]">Console</span>
-          </h1>
-          <p className="text-xs font-mono text-zinc-500 mt-2 uppercase tracking-[0.3em]">
+          <div className="flex items-center gap-3 mb-1">
+            <Badge type="pill-color" color="success" size="sm">Free</Badge>
+            <h1 className="text-2xl font-black text-white tracking-tight">
+              Strategy Engine
+            </h1>
+          </div>
+          <p className="text-sm text-white/40 mt-1">
             System Status: <span className="text-[#00ff88]">Online</span> — {firstName || 'User'}
           </p>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="bg-[#0f0f0f] border border-white/5 rounded-xl px-4 py-2 flex items-center gap-3">
-            <span className="text-[10px] font-black uppercase tracking-widest text-zinc-600">Model:</span>
+          <div className="glass-card px-4 py-2 flex items-center gap-3 !rounded-xl">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-white/30">Model:</span>
             <select
               value={model}
               onChange={(e) => setModel(e.target.value)}
-              className="bg-transparent text-xs font-bold text-[#00ff88] focus:outline-none cursor-pointer"
+              className="bg-transparent text-xs font-bold text-[#ff8400] focus:outline-none cursor-pointer"
             >
               {MODEL_CATALOG.map((m) => (
                 <option key={m.id} value={m.id} className="bg-[#0f0f0f]">
@@ -156,38 +163,38 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats */}
-      <div className="flex flex-wrap gap-4 mb-10">
-        <StatCard icon={Zap} label="Weapons Active" value={String(selectedSkills.length)} />
-        <StatCard icon={BarChart3} label="System Prompts" value={String(skills.length)} />
-        <StatCard icon={FileText} label="Recent Runs" value={String(recentOutputs.length)} />
-        <StatCard icon={Key} label="API Status" value="Secure" />
+      <div className="flex flex-wrap gap-4 mb-8">
+        <StatCard icon={Zap} label="Skills Active" value={String(selectedSkills.length)} />
+        <StatCard icon={BarChart3} label="Available Skills" value={String(skills.length)} color="text-[#ff8400]" />
+        <StatCard icon={FileText} label="Recent Runs" value={String(recentOutputs.length)} color="text-[#d4af37]" />
+        <StatCard icon={Key} label="API Status" value="Secure" color="text-emerald-500" />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Sidebar: Weapon Picker */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Sidebar: Skill Picker */}
         <div className="lg:col-span-1">
-          <SkillSelector 
-            selected={selectedSkills} 
-            onChange={setSelectedSkills} 
+          <SkillSelector
+            selected={selectedSkills}
+            onChange={setSelectedSkills}
           />
-          
-          <div className="mt-6 p-5 bg-[#0f0f0f] border border-white/5 rounded-2xl">
-            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-[#555] mb-4">
+
+          <div className="mt-6 glass-card p-5">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-white/30 mb-4">
               History
             </h2>
             {recentOutputs.length === 0 ? (
-              <p className="text-[10px] font-mono text-[#333]">No recent runs.</p>
+              <p className="text-xs text-white/20 font-mono">No recent runs.</p>
             ) : (
               <div className="space-y-4">
                 {recentOutputs.map((item) => (
                   <div key={item.id} className="group cursor-pointer">
                     <div className="flex justify-between items-center mb-1">
-                      <span className="text-[10px] font-bold text-zinc-500 group-hover:text-[#00ff88] transition-colors">
+                      <span className="text-xs font-semibold text-white/40 group-hover:text-[#ff8400] transition-colors">
                         {item.title}
                       </span>
-                      <span className="text-[9px] font-mono text-[#222]">{item.date}</span>
+                      <span className="text-[10px] font-mono text-white/15">{item.date}</span>
                     </div>
-                    <p className="text-[10px] text-[#333] line-clamp-1 font-mono">
+                    <p className="text-[10px] text-white/20 line-clamp-1 font-mono">
                       {item.preview}
                     </p>
                   </div>
@@ -199,53 +206,42 @@ export default function DashboardPage() {
 
         {/* Main: Input & Output */}
         <div className="lg:col-span-3 space-y-6">
-          <div className="bg-[#0f0f0f] border border-white/5 rounded-2xl p-6 md:p-8">
+          <div className="glass-card p-6 md:p-8">
             <div className="flex items-center gap-2 mb-6">
-              <Sparkles className="w-4 h-4 text-[#00ff88]" />
-              <h2 className="text-xs font-black uppercase tracking-[0.2em] text-white">
+              <Sparkles className="w-4 h-4 text-[#ff8400]" />
+              <h2 className="text-sm font-bold text-white">
                 New Brief
               </h2>
             </div>
-            
+
             <textarea
               value={brief}
               onChange={(e) => setBrief(e.target.value)}
               placeholder="Describe what you want to sell. Who is it for? What's the offer?..."
-              className="w-full bg-[#070707] border border-white/5 rounded-xl p-5 text-sm text-white placeholder:text-[#222] focus:outline-none focus:border-[#00ff88]/30 transition-all resize-none min-h-[160px]"
+              className="input-dark resize-none min-h-[160px]"
             />
 
             <div className="mt-6 flex justify-end">
-              <button
+              <Button
+                size="lg"
+                color="primary"
                 onClick={handleGenerate}
-                disabled={loading || !brief.trim() || selectedSkills.length === 0}
-                className={`flex items-center gap-3 px-8 py-4 rounded-xl text-xs font-black uppercase tracking-[0.2em] transition-all ${
-                  loading || !brief.trim() || selectedSkills.length === 0
-                    ? 'bg-zinc-900 text-zinc-700 cursor-not-allowed'
-                    : 'bg-[#00ff88] text-black hover:shadow-[0_0_30px_rgba(0,255,136,0.3)] hover:scale-[1.02] active:scale-[0.98]'
-                }`}
+                isDisabled={loading || !brief.trim() || selectedSkills.length === 0}
+                isLoading={loading}
+                iconLeading={Zap}
               >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Crunching...
-                  </>
-                ) : (
-                  <>
-                    <Zap className="w-4 h-4 fill-black" />
-                    Engage Maverick
-                  </>
-                )}
-              </button>
+                {loading ? 'Generating...' : 'Generate Copy'}
+              </Button>
             </div>
           </div>
 
           {/* Output Window */}
           {output && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <ChatWindow 
-                content={output} 
-                runNumber={runNumber} 
-                onRemix={() => setOutput('')} 
+              <ChatWindow
+                content={output}
+                runNumber={runNumber}
+                onRemix={() => setOutput('')}
               />
             </div>
           )}

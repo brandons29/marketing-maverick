@@ -1,9 +1,10 @@
 'use client';
-// components/ChatWindow.tsx — Output display + copy/remix actions
+// components/ChatWindow.tsx — Output display + copy/remix actions with Untitled UI
 
-import { useRef } from 'react';
-import { Copy, RotateCcw, CheckCheck } from 'lucide-react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { Button } from '@/components/ui/base/buttons/button';
+import { Badge } from '@/components/ui/base/badges/badges';
+import { Copy, RotateCcw, CheckCheck, Download } from 'lucide-react';
 
 interface ChatWindowProps {
   content: string;
@@ -22,6 +23,16 @@ export default function ChatWindow({ content, runNumber, onRemix }: ChatWindowPr
     });
   };
 
+  const handleDownload = () => {
+    const blob = new Blob([content], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `maverick-output-${runNumber}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   // Lightweight markdown renderer: **bold**, *italic*, line breaks
   const render = (text: string) =>
     text
@@ -32,61 +43,45 @@ export default function ChatWindow({ content, runNumber, onRemix }: ChatWindowPr
   return (
     <div
       ref={ref}
-      className="bg-[#0a0a0a] border border-[#00ff88]/20 rounded-2xl overflow-hidden shadow-[0_0_40px_rgba(0,255,136,0.06)] mt-6"
+      className="glass-card overflow-hidden shadow-[0_0_40px_rgba(255,132,0,0.04)] mt-6"
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-[#0f0f0f]">
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-[#00ff88] animate-pulse" />
-          <span className="text-xs font-black uppercase tracking-[0.2em] text-[#00ff88]">
-            Maverick Output
+      <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: '1px solid var(--swayze-border)' }}>
+        <div className="flex items-center gap-3">
+          <Badge type="pill-color" color="success" size="sm">
+            Run #{runNumber}
+          </Badge>
+          <span className="text-xs text-white/30 font-mono">
+            {content.split(/\s+/).length} words
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <button
-            onClick={onRemix}
-            className="flex items-center gap-1.5 text-xs font-bold text-[#555] hover:text-[#888] transition-colors px-2 py-1 rounded border border-transparent hover:border-white/10"
-          >
-            <RotateCcw className="w-3 h-3" />
+          <Button size="sm" color="tertiary" iconLeading={copied ? CheckCheck : Copy} onClick={handleCopy}>
+            {copied ? 'Copied!' : 'Copy'}
+          </Button>
+          <Button size="sm" color="tertiary" iconLeading={Download} onClick={handleDownload}>
+            Export
+          </Button>
+          <Button size="sm" color="tertiary" iconLeading={RotateCcw} onClick={onRemix}>
             Remix
-          </button>
-          <button
-            onClick={handleCopy}
-            className={`flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded border transition-all ${
-              copied
-                ? 'text-[#00ff88] border-[#00ff88]/40 bg-[#00ff88]/8'
-                : 'text-[#555] border-white/10 hover:text-white hover:border-white/20'
-            }`}
-          >
-            {copied ? (
-              <>
-                <CheckCheck className="w-3 h-3" />
-                Copied!
-              </>
-            ) : (
-              <>
-                <Copy className="w-3 h-3" />
-                Copy
-              </>
-            )}
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* Content */}
-      <div className="p-6 md:p-8">
+      <div className="p-6 md:p-8 max-h-[600px] overflow-y-auto">
         <div
-          className="maverick-output text-[0.9rem] leading-7 whitespace-pre-wrap break-words"
+          className="maverick-output text-sm leading-7 whitespace-pre-wrap break-words text-white/80"
           dangerouslySetInnerHTML={{ __html: render(content) }}
         />
       </div>
 
       {/* Footer */}
-      <div className="px-6 py-3 border-t border-white/5 bg-[#0f0f0f] flex items-center justify-between">
-        <span className="text-[10px] font-mono text-[#222] uppercase tracking-widest">
-          Marketing Maverick v1.0 · Swayze Media
+      <div className="px-6 py-3 flex items-center justify-between" style={{ borderTop: '1px solid var(--swayze-border)', background: 'var(--swayze-bg-card)' }}>
+        <span className="text-[10px] font-mono text-white/15 uppercase tracking-widest">
+          Marketing Maverick · Swayze Media · Free Tool
         </span>
-        <span className="text-[10px] font-mono text-[#222]">
+        <span className="text-[10px] font-mono text-white/15">
           run #{runNumber}
         </span>
       </div>

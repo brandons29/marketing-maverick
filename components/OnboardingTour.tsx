@@ -1,56 +1,50 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  X, 
-  ChevronRight, 
-  ChevronLeft, 
-  Zap, 
-  Target, 
-  Activity, 
-  Settings, 
+import { Button } from '@/components/ui/base/buttons/button';
+import {
+  X,
+  ChevronRight,
+  ChevronLeft,
+  Zap,
+  Target,
+  Activity,
+  Settings,
   Sparkles,
-  PlayCircle
 } from 'lucide-react';
 
 interface TourStep {
   title: string;
   description: string;
   icon: any;
-  target?: string;
 }
 
 const TOUR_STEPS: TourStep[] = [
   {
-    title: "The Strategy Engine",
-    description: "This is your primary forge. Choose from 14+ specialized modules—from AEO Visibility to Offer Math—to generate $10M+ level marketing blueprints in seconds.",
+    title: 'Strategy Engine',
+    description: 'Choose from 14+ specialized marketing skills to generate high-quality copy, strategy briefs, and campaign blueprints in seconds.',
     icon: Zap,
-    target: "Performance AI"
   },
   {
-    title: "Growth Command",
-    description: "The 3-stage command center where Brandon (your virtual CMO) audits your infrastructure, identifies the 10x lever, and builds your scaling roadmap.",
+    title: 'Growth Hub',
+    description: 'The 3-stage command center that audits your infrastructure, identifies your highest-leverage opportunity, and builds your scaling roadmap.',
     icon: Sparkles,
-    target: "Growth"
   },
   {
-    title: "Attribution Bridge",
-    description: "Upload your Meta/Google CSVs to identify the 'Tracking Gap'. See exactly which campaigns are driving profit, regardless of what the ad managers claim.",
+    title: 'Attribution Engine',
+    description: 'Upload your Meta/Google CSVs and CRM data to see exactly which campaigns are driving real profit — not just platform-reported conversions.',
     icon: Target,
-    target: "Attribution"
   },
   {
-    title: "Live Operations",
-    description: "Once your strategy is ready, use the Operations hub to execute actions directly into your SaaS stack (Meta, HubSpot, Klaviyo) via Maton AI.",
+    title: 'Operations Hub',
+    description: 'Execute actions directly into your SaaS stack (Meta, HubSpot, Klaviyo) via Maton AI integration.',
     icon: Activity,
-    target: "Operations"
   },
   {
-    title: "Vault Configuration",
-    description: "The first critical step: Connect your AI providers (OpenAI, Claude, Grok) and Maton key in the Vault to unlock the full power of Maverick.",
+    title: 'Settings & API Vault',
+    description: 'Connect your AI providers (OpenAI, Claude, Gemini, Grok) and Maton key to unlock the full power of Maverick. All keys are AES-256 encrypted.',
     icon: Settings,
-    target: "Settings"
-  }
+  },
 ];
 
 export function OnboardingTour() {
@@ -60,7 +54,6 @@ export function OnboardingTour() {
   useEffect(() => {
     const hasSeenTour = localStorage.getItem('maverick_onboarding_seen');
     if (!hasSeenTour) {
-      // Small delay to let the dashboard load
       const timer = setTimeout(() => setIsVisible(true), 1500);
       return () => clearTimeout(timer);
     }
@@ -85,63 +78,59 @@ export function OnboardingTour() {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm animate-in fade-in duration-500">
-      <div className="max-w-lg w-full glass-panel border-maverick-gold/20 p-1 relative overflow-hidden shadow-[0_0_50px_rgba(212,175,55,0.15)]">
-        
+      <div className="max-w-lg w-full glass-card relative overflow-hidden">
+
         {/* Progress Bar */}
-        <div className="absolute top-0 left-0 h-1 bg-maverick-gold/20 w-full">
-          <div 
-            className="h-full bg-maverick-gold transition-all duration-500 ease-out"
+        <div className="absolute top-0 left-0 h-0.5 bg-white/5 w-full">
+          <div
+            className="h-full bg-[#ff8400] transition-all duration-500 ease-out"
             style={{ width: `${((currentStep + 1) / TOUR_STEPS.length) * 100}%` }}
           />
         </div>
 
-        <div className="p-10 bg-maverick-dark-1/50">
+        <div className="p-8">
           {/* Header */}
-          <div className="flex items-start justify-between mb-8">
-            <div className="w-12 h-12 rounded-2xl bg-maverick-gold/10 border border-maverick-gold/20 flex items-center justify-center">
-              <step.icon className="w-6 h-6 text-maverick-gold" />
+          <div className="flex items-start justify-between mb-6">
+            <div className="w-10 h-10 rounded-xl bg-[#ff8400]/10 border border-[#ff8400]/20 flex items-center justify-center">
+              <step.icon className="w-5 h-5 text-[#ff8400]" />
             </div>
-            <button onClick={closeTour} className="text-maverick-muted hover:text-white transition-colors">
+            <button onClick={closeTour} className="text-white/20 hover:text-white transition-colors">
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Content */}
-          <div className="space-y-4 mb-10">
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-maverick-gold">
+          <div className="space-y-3 mb-8">
+            <p className="text-xs font-bold text-[#ff8400]">
               Step {currentStep + 1} of {TOUR_STEPS.length}
             </p>
-            <h3 className="text-2xl font-black uppercase tracking-tighter italic text-white italic">
+            <h3 className="text-xl font-bold text-white tracking-tight">
               {step.title}
             </h3>
-            <p className="text-xs font-medium leading-loose text-maverick-muted uppercase tracking-wider">
+            <p className="text-sm text-white/40 leading-relaxed">
               {step.description}
             </p>
           </div>
 
           {/* Controls */}
           <div className="flex items-center justify-between">
-            <button 
+            <button
               onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
               disabled={currentStep === 0}
-              className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-colors ${currentStep === 0 ? 'text-white/10' : 'text-maverick-muted hover:text-white'}`}
+              className={`flex items-center gap-1 text-xs font-medium transition-colors ${currentStep === 0 ? 'text-white/10' : 'text-white/30 hover:text-white'}`}
             >
               <ChevronLeft className="w-4 h-4" /> Back
             </button>
 
-            <button 
+            <Button
+              size="md"
+              color="primary"
               onClick={nextStep}
-              className="btn-synapse px-8 py-3 flex items-center gap-2 group"
+              iconTrailing={ChevronRight}
             >
-              {currentStep === TOUR_STEPS.length - 1 ? 'Start Dominating' : 'Next Protocol'}
-              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
+              {currentStep === TOUR_STEPS.length - 1 ? 'Get Started' : 'Next'}
+            </Button>
           </div>
-        </div>
-
-        {/* Floating Context Label */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-black/40 border border-white/5 text-[8px] font-mono text-white/30 uppercase tracking-[0.3em]">
-          Maverick Institutional Induction · v1.0
         </div>
       </div>
     </div>

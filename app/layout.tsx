@@ -1,4 +1,4 @@
-// app/layout.tsx — Swayze Media branded global layout
+// app/layout.tsx — Swayze Media branded global layout with Untitled UI
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import Image from 'next/image';
@@ -13,8 +13,8 @@ import { AnimatedSynapseLogo } from '@/components/AnimatedSynapseLogo';
 const inter = Inter({ subsets: ['latin'], weight: ['400', '500', '600', '700', '800', '900'] });
 
 export const metadata: Metadata = {
-  title: 'Marketing Maverick — AI Copy That Sells | Swayze Media',
-  description: 'Free AI copywriting tool by Swayze Media. Bring your own OpenAI key and generate high-converting copy in seconds.',
+  title: 'Marketing Maverick — Free AI Copy That Sells | Swayze Media',
+  description: 'Free AI copywriting tool by Swayze Media. Bring your own API key and generate high-converting copy in seconds.',
   openGraph: {
     title: 'Marketing Maverick by Swayze Media',
     description: 'Free AI copy tool. Your key, your results.',
@@ -57,14 +57,14 @@ export default async function RootLayout({
   const user = await getUser();
 
   return (
-    <html lang="en" className="dark">
-      <body className={`${inter.className} min-h-screen relative`} style={{ backgroundColor: 'var(--bg-page)', color: 'var(--text-primary)' }}>
+    <html lang="en" className="dark-mode">
+      <body className={`${inter.className} min-h-screen relative`} style={{ backgroundColor: 'var(--swayze-bg-page)', color: 'var(--swayze-text-secondary)' }}>
 
         {/* ── STICKY NAV ── */}
         <nav className="nav-glass sticky top-0 z-50 px-6 py-0">
-          <div className="max-w-6xl mx-auto flex justify-between items-center h-[64px]">
+          <div className="max-w-6xl mx-auto flex justify-between items-center h-16">
 
-            {/* Logo — actual Swayze Media logo image + Animated Synapse */}
+            {/* Logo — Swayze Media logo + Animated Synapse */}
             <Link href="/" className="flex items-center gap-3 group">
               <div className="scale-75 -ml-2">
                 <AnimatedSynapseLogo />
@@ -77,7 +77,7 @@ export default async function RootLayout({
                 className="h-9 w-auto object-contain"
                 priority
               />
-              <span style={{ color: 'var(--border-card)', fontSize: '1rem', fontWeight: 300 }}>|</span>
+              <span className="text-white/15 text-base font-light">|</span>
               <span className="text-white font-black text-sm tracking-wider uppercase">
                 Maverick
               </span>
@@ -88,7 +88,7 @@ export default async function RootLayout({
               <div className="flex items-center gap-5">
                 <Link
                   href="/dashboard"
-                  className="text-sm font-semibold uppercase tracking-wide text-white/60 hover:text-maverick-neon transition-colors duration-150"
+                  className="text-sm font-semibold uppercase tracking-wide text-white/60 hover:text-[#00ff88] transition-colors duration-150"
                 >
                   Dashboard
                 </Link>
@@ -101,7 +101,7 @@ export default async function RootLayout({
                 <form action="/api/auth/signout" method="post">
                   <button
                     type="submit"
-                    className="text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded text-white/30 border border-white/10 hover:text-white hover:border-white/30 transition-colors"
+                    className="text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-lg text-white/30 border border-white/10 hover:text-white hover:border-white/30 transition-colors"
                   >
                     Sign Out
                   </button>
@@ -117,7 +117,7 @@ export default async function RootLayout({
                 </Link>
                 <Link
                   href="/auth/signup"
-                  className="px-5 py-2.5 bg-maverick-neon text-black text-xs font-black uppercase tracking-widest rounded-xl hover:shadow-[0_0_20px_rgba(0,204,102,0.3)] transition-all"
+                  className="px-5 py-2.5 bg-[#00ff88] text-black text-xs font-black uppercase tracking-widest rounded-xl hover:shadow-[0_0_20px_rgba(0,204,102,0.3)] transition-all"
                 >
                   Get Started Free
                 </Link>
@@ -138,7 +138,7 @@ export default async function RootLayout({
         <OnboardingTour />
 
         {/* ── FOOTER — matches swayzemedia.com footer style ── */}
-        <footer className="mt-20 py-8 px-6" style={{ borderTop: '1px solid var(--border-subtle)' }}>
+        <footer className="mt-20 py-8 px-6" style={{ borderTop: '1px solid var(--swayze-border)' }}>
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             {/* Logo */}
             <div className="flex items-center gap-2">
@@ -153,13 +153,13 @@ export default async function RootLayout({
 
             {/* Nav links */}
             <div className="flex items-center gap-6">
-              <Link href="/" className="text-xs font-medium uppercase tracking-wider transition-colors" style={{ color: 'var(--text-muted)' }}>Home</Link>
-              <Link href="/dashboard" className="text-xs font-medium uppercase tracking-wider transition-colors" style={{ color: 'var(--text-muted)' }}>Dashboard</Link>
-              <a href="https://swayzemedia.com" target="_blank" rel="noopener noreferrer" className="text-xs font-medium uppercase tracking-wider transition-colors" style={{ color: 'var(--text-muted)' }}>Swayze Media</a>
+              <Link href="/" className="text-xs font-medium uppercase tracking-wider text-white/35 hover:text-white/60 transition-colors">Home</Link>
+              <Link href="/dashboard" className="text-xs font-medium uppercase tracking-wider text-white/35 hover:text-white/60 transition-colors">Dashboard</Link>
+              <a href="https://swayzemedia.com" target="_blank" rel="noopener noreferrer" className="text-xs font-medium uppercase tracking-wider text-white/35 hover:text-white/60 transition-colors">Swayze Media</a>
             </div>
 
             {/* Copyright */}
-            <p className="text-xs" style={{ color: 'var(--text-muted)', fontFamily: 'monospace' }}>
+            <p className="text-xs text-white/35 font-mono">
               © 2026 Swayze Media. All rights reserved.
             </p>
           </div>
