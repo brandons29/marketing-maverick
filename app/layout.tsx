@@ -13,11 +13,11 @@ import { AnimatedSynapseLogo } from '@/components/AnimatedSynapseLogo';
 const inter = Inter({ subsets: ['latin'], weight: ['400', '500', '600', '700', '800', '900'] });
 
 export const metadata: Metadata = {
-  title: 'Marketing Maverick — Free AI Copy That Sells | Swayze Media',
-  description: 'Free AI copywriting tool by Swayze Media. Bring your own API key and generate high-converting copy in seconds.',
+  title: 'Marketing Maverick — Plug & Play Performance Marketing Assistant | Swayze Media',
+  description: 'Free performance marketing assistant by Swayze Media. Strategy, attribution, campaign analysis, and growth operations — powered by your own API key.',
   openGraph: {
     title: 'Marketing Maverick by Swayze Media',
-    description: 'Free AI copy tool. Your key, your results.',
+    description: 'Free plug and play performance marketing assistant. Your key, your strategy, your results.',
     type: 'website',
   },
 };

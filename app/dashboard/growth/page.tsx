@@ -36,7 +36,7 @@ export default function GrowthPlanPage() {
       id: 'execute',
       label: 'Scale Execution',
       title: 'Push to Live Ops',
-      desc: 'Automate creative briefs and copy distribution directly into your Meta and Google accounts.',
+      desc: 'Automate creative briefs and asset distribution directly into your Meta and Google accounts.',
       icon: Zap,
       action: 'Generate Strategy',
     },

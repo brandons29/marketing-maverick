@@ -19,7 +19,7 @@ import {
 import { Badge } from '@/components/ui/base/badges/badges';
 
 const navItems = [
-  { href: '/dashboard', label: 'Strategy Engine', icon: Brain, description: 'AI Copy & Skills' },
+  { href: '/dashboard', label: 'Strategy Engine', icon: Brain, description: 'Performance Marketing' },
   { href: '/dashboard/ai', label: 'AI Playground', icon: Zap, description: 'Multi-Model Chat' },
   { href: '/dashboard/growth', label: 'Growth Hub', icon: TrendingUp, description: 'Growth Playbooks' },
   { href: '/dashboard/attribution', label: 'Attribution', icon: BarChart3, description: 'Revenue Mapping' },

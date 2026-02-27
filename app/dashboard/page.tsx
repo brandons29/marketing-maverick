@@ -108,7 +108,7 @@ export default function DashboardPage() {
 
       const skillLabel =
         selectedSkills.length === 1
-          ? (skills.find((s) => s.id === selectedSkills[0])?.name ?? 'Copy')
+          ? (skills.find((s) => s.id === selectedSkills[0])?.name ?? 'Strategy')
           : `${selectedSkills.length} Skills`;
 
       setRecentOutputs((prev) => [
@@ -217,7 +217,7 @@ export default function DashboardPage() {
             <textarea
               value={brief}
               onChange={(e) => setBrief(e.target.value)}
-              placeholder="Describe what you want to sell. Who is it for? What's the offer?..."
+              placeholder="Describe your marketing challenge. What are you trying to achieve? Who is the target audience?..."
               className="input-dark resize-none min-h-[160px]"
             />
 
@@ -230,7 +230,7 @@ export default function DashboardPage() {
                 isLoading={loading}
                 iconLeading={Zap}
               >
-                {loading ? 'Generating...' : 'Generate Copy'}
+                {loading ? 'Generating...' : 'Run Strategy'}
               </Button>
             </div>
           </div>

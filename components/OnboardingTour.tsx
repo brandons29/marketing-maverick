@@ -22,7 +22,7 @@ interface TourStep {
 const TOUR_STEPS: TourStep[] = [
   {
     title: 'Strategy Engine',
-    description: 'Choose from 14+ specialized marketing skills to generate high-quality copy, strategy briefs, and campaign blueprints in seconds.',
+    description: 'Choose from 14+ specialized marketing skills to generate strategy briefs, campaign blueprints, and performance insights in seconds.',
     icon: Zap,
   },
   {

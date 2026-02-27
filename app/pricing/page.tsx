@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 
 const features = [
-  { icon: Brain, title: 'AI Strategy Engine', desc: 'Multi-skill AI copywriting with OpenAI, Anthropic, Google, and xAI support.' },
+  { icon: Brain, title: 'AI Strategy Engine', desc: 'Multi-skill performance marketing intelligence with OpenAI, Anthropic, Google, and xAI support.' },
   { icon: Zap, title: 'AI Playground', desc: 'Multi-model chat interface for testing and comparing AI outputs.' },
   { icon: BarChart3, title: 'Attribution Engine', desc: 'Map ad spend to real revenue with CSV-based attribution analysis.' },
   { icon: Layers, title: 'Operations Hub', desc: 'Connect to 100+ SaaS tools via Maton AI integration.' },
@@ -61,7 +61,7 @@ export default function PricingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
             {[
-              'Unlimited AI copy generation',
+              'Unlimited AI-powered marketing runs',
               'All marketing skills included',
               'Multi-model support (GPT, Claude, Gemini, Grok)',
               'Attribution engine',

@@ -36,7 +36,7 @@ export const MATON_INTEGRATIONS = [
 // Suggested post-synapse actions for each Maverick module
 export const SUGGESTED_MATON_ACTIONS: Record<string, { app: string; action: string; label: string; description: string }[]> = {
   'ad-copy-synapse': [
-    { app: 'notion',      action: 'create-page',    label: 'Save to Notion',     description: 'Save this ad copy as a Notion page' },
+    { app: 'notion',      action: 'create-page',    label: 'Save to Notion',     description: 'Save this ad strategy as a Notion page' },
     { app: 'google-docs', action: 'create-document', label: 'Export to Docs',    description: 'Export to Google Docs for team review' },
     { app: 'slack',       action: 'send-message',   label: 'Share to Slack',     description: 'Send to creative team Slack channel' },
   ],

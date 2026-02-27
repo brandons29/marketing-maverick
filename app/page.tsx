@@ -23,9 +23,9 @@ import { Badge } from '@/components/ui/base/badges/badges';
 
 const skills = [
   { icon: Target, label: 'AI Search Optimization', desc: 'Optimize content for AI-powered search engines.' },
-  { icon: Brain, label: 'Creative Audit', desc: 'Audit ad creatives for conversion performance.' },
+  { icon: Brain, label: 'Campaign Analysis', desc: 'Analyze campaign performance and identify optimization levers.' },
   { icon: BarChart3, label: 'Growth Playbook', desc: 'Build data-driven growth strategies.' },
-  { icon: Sparkles, label: 'Conversion Copy', desc: 'Generate high-converting marketing copy.' },
+  { icon: Sparkles, label: 'Performance Strategy', desc: 'Generate profit-first marketing strategies and playbooks.' },
   { icon: Layers, label: 'Attribution Engine', desc: 'Map ad spend to real revenue.' },
   { icon: Shield, label: 'Competitor Intel', desc: 'Analyze competitor positioning and gaps.' },
 ];
@@ -67,8 +67,8 @@ export default function Home() {
             transition={{ duration: 0.7, delay: 0.1 }}
             className="text-6xl md:text-[9rem] font-black uppercase tracking-tighter text-white mb-10 leading-[0.85] italic"
           >
-            AI Copy That{' '}
-            <span className="text-[#ff8400] drop-shadow-[0_0_30px_rgba(255,132,0,0.3)]">Sells.</span>
+            Performance Marketing{' '}
+            <span className="text-[#ff8400] drop-shadow-[0_0_30px_rgba(255,132,0,0.3)]">On Autopilot.</span>
           </motion.h1>
 
           <motion.div
@@ -78,11 +78,11 @@ export default function Home() {
             className="max-w-3xl mx-auto space-y-6 mb-16"
           >
             <p className="text-lg md:text-xl text-white/60 leading-relaxed">
-              Marketing Maverick is a <span className="text-white font-semibold">free AI copywriting tool</span> built by{' '}
+              Marketing Maverick is a <span className="text-white font-semibold">free, plug and play performance marketing assistant</span> built by{' '}
               <a href="https://swayzemedia.com" target="_blank" rel="noopener noreferrer" className="text-[#00ff88] hover:underline font-semibold">
                 Swayze Media
               </a>
-              . Bring your own API key and generate high-converting copy in seconds — no paywall, no trial, no limits.
+              . Bring your own API key and get instant access to strategy, attribution, campaign analysis, and growth operations — no paywall, no trial, no limits.
             </p>
           </motion.div>
 
@@ -126,7 +126,7 @@ export default function Home() {
 
           <div className="mb-20">
             <Badge type="pill-color" color="brand" size="sm" className="mb-4">
-              Free AI Skills
+              Performance Marketing Skills
             </Badge>
             <h2 className="text-4xl md:text-7xl font-black uppercase italic text-white tracking-tighter mb-4">
               The <span className="text-[#00ff88]">Maverick Effect.</span>
@@ -144,7 +144,7 @@ export default function Home() {
                 <Workflow className="w-12 h-12 text-[#00ff88] mb-10" />
                 <h3 className="text-3xl font-black uppercase italic text-white mb-6 tracking-tighter">Exponential<br/>Productivity</h3>
                 <p className="text-sm text-white/40 leading-relaxed">
-                  Traditional strategy takes weeks. A Maverick Synapse takes seconds. We automate the cognitive heavy lifting of audit, planning, and copywriting — enabling one operator to do the work of a 20-person agency.
+                  Traditional strategy takes weeks. Maverick takes seconds. We automate the cognitive heavy lifting of campaign analysis, attribution, and strategic planning — enabling one operator to do the work of a 20-person agency.
                 </p>
               </div>
               <div className="mt-12 pt-6 border-t border-white/5 flex items-center justify-between">
@@ -208,7 +208,7 @@ export default function Home() {
             {[
               { step: '01', title: 'Sign Up Free', desc: 'Create your free account in seconds. No credit card needed.' },
               { step: '02', title: 'Connect Your Key', desc: 'Bring your own OpenAI, Anthropic, or Google AI key. We never store or share it.' },
-              { step: '03', title: 'Generate & Win', desc: 'Pick a skill, describe your goal, and let Maverick write copy that converts.' },
+              { step: '03', title: 'Execute & Win', desc: 'Pick a skill, describe your goal, and let Maverick deliver performance marketing strategies that drive results.' },
             ].map((item, i) => (
               <motion.div
                 key={item.step}
@@ -233,10 +233,10 @@ export default function Home() {
         <div className="max-w-3xl mx-auto text-center">
           <Zap className="w-10 h-10 text-[#ff8400] mx-auto mb-6" />
           <h2 className="text-3xl md:text-5xl font-black uppercase italic text-white tracking-tighter mb-4">
-            Ready to Write Copy That Converts?
+            Ready to Dominate Your Market?
           </h2>
           <p className="text-sm text-white/40 mb-8 max-w-lg mx-auto">
-            Marketing Maverick is free, forever. Built with love by Swayze Media for marketers who want results.
+            Marketing Maverick is your free, plug and play performance marketing assistant. Built by Swayze Media for marketers who want results.
           </p>
           <Link href="/auth/signup">
             <Button size="xl" color="primary" iconTrailing={ArrowRight}>

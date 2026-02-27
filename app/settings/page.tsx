@@ -145,7 +145,7 @@ export default function Settings() {
             <div>
               <h2 className="text-sm font-bold text-white mb-2">Intelligence Management</h2>
               <p className="text-sm text-white/50 leading-relaxed">
-                Switch providers and link keys below. Your strategy engine supports <span className="text-white font-semibold">OpenAI, Anthropic, Google, and xAI</span> simultaneously. This tool is completely free — you only pay your AI providers directly.
+                Switch providers and link keys below. Your performance marketing assistant supports <span className="text-white font-semibold">OpenAI, Anthropic, Google, and xAI</span> simultaneously. This tool is completely free — you only pay your AI providers directly.
               </p>
             </div>
 

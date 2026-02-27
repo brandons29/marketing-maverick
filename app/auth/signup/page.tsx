@@ -181,7 +181,7 @@ export default function Signup() {
             </p>
             <ul className="space-y-2">
               {[
-                'Unlimited AI copy runs — no caps ever',
+                'Unlimited AI-powered marketing runs — no caps ever',
                 'All marketing skills, fully unlocked',
                 'BYOK — your API key, your cost control',
                 'Free forever — no credit card needed',
